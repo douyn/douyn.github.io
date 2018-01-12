@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="【源码解析】 Volley的用法及源码解析 前言Volley是谷歌在2013年I/O大会上推出的新的网络请求框架，如今已经被废弃，取而代之使用okhttp进行网络请求。虽然现在使用场景不多了，但是技术总有光辉的一面，而且也是面试所遇到的最常见的源码问题之一，所以此篇就作为认识源码的入门之作。 Volley简介Volley是谷歌退出的Android异步网络请求和图片加载库，特别适合网络请求量不大但是">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Sparky">
+<meta property="og:url" content="http://yoursite.com/2017/10/25/【源码解析】 Volly的基本用法和源码解析/index.html">
+<meta property="og:site_name" content="Sparky">
+<meta property="og:description" content="【源码解析】 Volley的用法及源码解析 前言Volley是谷歌在2013年I/O大会上推出的新的网络请求框架，如今已经被废弃，取而代之使用okhttp进行网络请求。虽然现在使用场景不多了，但是技术总有光辉的一面，而且也是面试所遇到的最常见的源码问题之一，所以此篇就作为认识源码的入门之作。 Volley简介Volley是谷歌退出的Android异步网络请求和图片加载库，特别适合网络请求量不大但是">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://raw.githubusercontent.com/android-cn/android-open-project-analysis/master/tool-lib/network/volley/image/CacheDispatcher-run-flow-chart.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/android-cn/android-open-project-analysis/master/tool-lib/network/volley/image/NetworkDispatcher-run-flow-chart.png">
+<meta property="og:image" content="https://developer.android.com/images/training/volley-request.png">
+<meta property="og:updated_time" content="2017-10-25T00:12:46.343Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Sparky">
+<meta name="twitter:description" content="【源码解析】 Volley的用法及源码解析 前言Volley是谷歌在2013年I/O大会上推出的新的网络请求框架，如今已经被废弃，取而代之使用okhttp进行网络请求。虽然现在使用场景不多了，但是技术总有光辉的一面，而且也是面试所遇到的最常见的源码问题之一，所以此篇就作为认识源码的入门之作。 Volley简介Volley是谷歌退出的Android异步网络请求和图片加载库，特别适合网络请求量不大但是">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/android-cn/android-open-project-analysis/master/tool-lib/network/volley/image/CacheDispatcher-run-flow-chart.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/10/25/【源码解析】 Volly的基本用法和源码解析/"/>
+
+
+
+
+
+  <title> | Sparky</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?23f2f984b557cd9c31da9a75b4da08e4";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Sparky</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/25/【源码解析】 Volly的基本用法和源码解析/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sparky">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/logo_s.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sparky">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline"></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-25T08:12:46+08:00">
+                2017-10-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>【源码解析】 Volley的用法及源码解析</p>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Volley是谷歌在2013年I/O大会上推出的新的网络请求框架，如今已经被废弃，取而代之使用okhttp进行网络请求。虽然现在使用场景不多了，但是技术总有光辉的一面，而且也是面试所遇到的最常见的源码问题之一，所以此篇就作为认识源码的入门之作。</p>
+<h2 id="Volley简介"><a href="#Volley简介" class="headerlink" title="Volley简介"></a>Volley简介</h2><p>Volley是谷歌退出的Android异步网络请求和图片加载库，特别适合网络请求量不大但是请求频繁的场景。</p>
+<p>Volley的优点：</p>
+<ul>
+<li>非常适合进行数据量不大但是通信频发的网络操作(比如加载大量小图片)</li>
+<li>对请求进行了处理，包括服务器ResponseCode(2xx,3xx,…)的处理,请求头的处理，支持重试和取消请求，加入缓存机制，支持自定义请求优先级。</li>
+<li>在api-9以上使用httpURLconnection，在api-9一下使用httpclient。</li>
+<li>提供简便的图片加载工具ImageLoader。</li>
+</ul>
+<p>Volley的缺点:</p>
+<ul>
+<li>使用的是httpurlconnection和httpclient，现在主流使用okhttp。</li>
+<li>只支持http。</li>
+<li>加载图片性能一般。</li>
+<li>对大文件下载表现糟糕。</li>
+</ul>
+<h2 id="Volley的基本用法"><a href="#Volley的基本用法" class="headerlink" title="Volley的基本用法"></a>Volley的基本用法</h2><h4 id="请求结果为JSON字符串-String-xml与此类似"><a href="#请求结果为JSON字符串-String-xml与此类似" class="headerlink" title="请求结果为JSON字符串(String/xml与此类似)"></a>请求结果为JSON字符串(String/xml与此类似)</h4><pre><code>RequestQueue mQueue = Volley.newRequestQueue(this);
+
+String url = null;
+
+JsonObjectRequest jsonRequest = new JsonObjectRequest(url, null, new Response.Listener&lt;JSONObject&gt;() {
+    @Override
+    public void onResponse(JSONObject response) {
+        // TODO
+    }
+}, new Response.ErrorListener() {
+    @Override
+    public void onErrorResponse(VolleyError error) {
+        // TODO
+    }
+});
+mQueue.add(jsonRequest);
+</code></pre><h4 id="图片加载"><a href="#图片加载" class="headerlink" title="图片加载"></a>图片加载</h4><p>1 使用ImageRequest与jsonrequest类似<br>2 使用Volley ImageLoader</p>
+<pre><code>RequestQueue mQueue = Volley.newRequestQueue(this);
+ImageLoader.ImageCache imageCahce = new ImageLoader.ImageCache() {
+    @Override
+    public Bitmap getBitmap(String url) {
+        return null;
+    }
+
+    @Override
+    public void putBitmap(String url, Bitmap bitmap) {
+        // TODO
+    }
+};
+ImageLoader imageLoader = new ImageLoader(mQueue, imageCahce);
+
+String url;
+
+ImageView imageView;
+imageLoader.get(url, ImageLoader.getImageListener(imageView, R.id.defalt_img, R.id.error_img));
+</code></pre><h2 id="Volley源码解析"><a href="#Volley源码解析" class="headerlink" title="Volley源码解析"></a>Volley源码解析</h2><p>分析上边的Volley的基本用法我们可以知道,发送请求，我们会先去创建一个RequestQueue，然后创建一个Request对象，最后把这个Request对象添加到队列里。<br>具体到代码里，分别是：</p>
+<p>创建请求队列:</p>
+<pre><code>RequestQueue mQueue = Volley.newRequestQueue(this);
+</code></pre><p>newRequestQueue()方法如下:</p>
+<pre><code>/**
+ * Creates a default instance of the worker pool and calls {@link RequestQueue#start()} on it.
+ *
+ * @param context A {@link Context} to use for creating the cache dir.
+ * @param stack An {@link HttpStack} to use for the network, or null for default.
+ * @return A started {@link RequestQueue} instance.
+ */
+public static RequestQueue newRequestQueue(Context context, HttpStack stack) {
+
+    // DiskBasedCache的参数
+    // 创建缓存目录
+    File cacheDir = new File(context.getCacheDir(), DEFAULT_CACHE_DIR);
+
+    // Stack的参数
+    // 设置userAgent，userAgent是创建AndroidHttpClient的参数
+    String userAgent = &quot;volley/0&quot;;
+    try {
+        String packageName = context.getPackageName();
+        PackageInfo info = context.getPackageManager().getPackageInfo(packageName, 0);
+        userAgent = packageName + &quot;/&quot; + info.versionCode;
+    } catch (NameNotFoundException e) {
+    }
+
+    // NetWork对象的参数
+    // 判断api等级
+    // 如果sdk &gt;= 9，使用httpurlconnection进行网络请求
+    // 如果sdk &lt; 9，使用httpclient进行网络请求
+    if (stack == null) {
+        if (Build.VERSION.SDK_INT &gt;= 9) {
+            stack = new HurlStack();
+        } else {
+            // Prior to Gingerbread, HttpUrlConnection was unreliable.
+            // See: http://android-developers.blogspot.com/2011/09/androids-http-clients.html
+            stack = new HttpClientStack(AndroidHttpClient.newInstance(userAgent));
+        }
+    }
+
+    // RequestQueue的参数
+    Network network = new BasicNetwork(stack);
+
+    // 创建RequestQueue对象
+    RequestQueue queue = new RequestQueue(new DiskBasedCache(cacheDir), network);
+
+    queue.start();
+
+    return queue;
+}
+</code></pre><p>ReuestQueue方法：</p>
+<pre><code>/**
+ * Creates the worker pool. Processing will not begin until {@link #start()} is called.
+ *
+ * @param cache A Cache to use for persisting responses to disk
+ * @param network A Network interface for performing HTTP requests
+ * @param threadPoolSize Number of network dispatcher threads to create
+ * @param delivery A ResponseDelivery interface for posting responses and errors
+ */
+public RequestQueue(Cache cache, Network network, int threadPoolSize,
+        ResponseDelivery delivery) {
+    mCache = cache;
+    mNetwork = network;
+    mDispatchers = new NetworkDispatcher[threadPoolSize];
+    mDelivery = delivery;
+}
+</code></pre><p>start()方法:</p>
+<pre><code>/**
+ * Starts the dispatchers in this queue.
+ */
+public void start() {
+    // 停止现有的网络请求
+    // 在stop()方法中,中断mCacheDispatcher线程和NetworkDispatcher线程
+    // 下边会分析到这两个线程，缓存线程和网络线程
+    stop();  // Make sure any currently running dispatchers are stopped.
+    // Create the cache dispatcher and start it.
+    // 创建并启动一个缓存线程
+    mCacheDispatcher = new CacheDispatcher(mCacheQueue, mNetworkQueue, mCache, mDelivery);
+    mCacheDispatcher.start();
+
+    // Create network dispatchers (and corresponding threads) up to the pool size.
+    // 创建并启动网络线程，默认是4条
+    for (int i = 0; i &lt; mDispatchers.length; i++) {
+        NetworkDispatcher networkDispatcher = new NetworkDispatcher(mNetworkQueue, mNetwork,
+                mCache, mDelivery);
+        mDispatchers[i] = networkDispatcher;
+        networkDispatcher.start();
+    }
+}
+</code></pre><p>stop()方法源码:</p>
+<pre><code>/**
+ * Stops the cache and network dispatchers.
+ */
+public void stop() {
+    // 中断网络线程和缓存线程
+    if (mCacheDispatcher != null) {
+        mCacheDispatcher.quit();
+    }
+    for (final NetworkDispatcher mDispatcher : mDispatchers) {
+        if (mDispatcher != null) {
+            mDispatcher.quit();
+        }
+    }
+}
+</code></pre><blockquote>
+<p>在newRequestQueue()方法里只做了两件事:创建了RequestQueue对象，执行了RequestQueue的start方法。</p>
+<ul>
+<li>其中创建RequestQueue对象的两个参数，会被设置为RequestQueue对象的字段，分别对应缓存和网络请求的配置。</li>
+<li>start方法中，先停止网络操作，然后分别创建并启动缓存线程和网络线程。</li>
+</ul>
+</blockquote>
+<p>创建一个请求:</p>
+<pre><code>JsonObjectRequest jsonRequest = new JsonObjectRequest();
+</code></pre><blockquote>
+<p>JsonObjectRequest是Request的子子类，包括两个构造方法和一个复写方法parseNetworkResponse()，网络请求时会根据这个方法的返回值判断是否需要使用缓存数据。</p>
+</blockquote>
+<p>将请求添加到队列:</p>
+<pre><code>mQueue.add(jsonRequest);
+</code></pre><p>add()方法的源码:</p>
+<pre><code>/**
+ * Adds a Request to the dispatch queue.
+ * @param request The request to service
+ * @return The passed-in request
+ */
+public &lt;T&gt; Request&lt;T&gt; add(Request&lt;T&gt; request) {
+    // Tag the request as belonging to this queue and add it to the set of current requests.
+    // 给request设置requestqueue
+    request.setRequestQueue(this);
+
+    // 添加request到currentrquests集合中
+    synchronized (mCurrentRequests) {
+        mCurrentRequests.add(request);
+    }
+
+    // Process requests in the order they are added.
+    // 设置request
+    request.setSequence(getSequenceNumber());
+    request.addMarker(&quot;add-to-queue&quot;);
+
+    // If the request is uncacheable, skip the cache queue and go straight to the network.
+    // 如果设置过request不能缓存，直接添加到网络队列返回
+    if (!request.shouldCache()) {
+        mNetworkQueue.add(request);
+        return request;
+    }
+
+    // Insert request into stage if there&apos;s already a request with the same cache key in flight.
+    // 默认是可以缓存的
+    synchronized (mWaitingRequests) {
+        String cacheKey = request.getCacheKey();
+        if (mWaitingRequests.containsKey(cacheKey)) {
+            // There is already a request in flight. Queue up.
+            // 如果已经在缓存队列中，加入到相同的等待队列中
+            Queue&lt;Request&lt;?&gt;&gt; stagedRequests = mWaitingRequests.get(cacheKey);
+            if (stagedRequests == null) {
+                stagedRequests = new LinkedList&lt;&gt;();
+            }
+            stagedRequests.add(request);
+            mWaitingRequests.put(cacheKey, stagedRequests);
+            if (VolleyLog.DEBUG) {
+                VolleyLog.v(&quot;Request for cacheKey=%s is in flight, putting on hold.&quot;, cacheKey);
+            }
+        } else {
+            // Insert &apos;null&apos; queue for this cacheKey, indicating there is now a request in
+            // flight.
+            // 添加到等待队列
+            mWaitingRequests.put(cacheKey, null);
+
+            // 添加到缓存队列
+            mCacheQueue.add(request);
+        }
+        return request;
+    }
+}
+</code></pre><blockquote>
+<p>add()方法中，先给request设置队列信息等，然后判断是否允许缓存，如果不允许缓存直接把请求加入网络队列，如果允许或者默认则会判断是否在等待队列中，如果不在等待队列中则添加到等待队列并添加到缓存队列，如果已经在等待对立中，就更新等待队列中该请求的队列信息。</p>
+</blockquote>
+<p>添加到请求队列的时候，最重要的两步就是添加到缓存队列或者添加到网络队列。在创建RequestQueue的时候，会创建一个CacheDispatcher和4个NetworkDispatcher,他们都继承Thread。其中在CacheDispatcher中还持有NetworkDispatcher对象。<br>下边分别分析这两个线程。</p>
+<h4 id="CacheDispatcher"><a href="#CacheDispatcher" class="headerlink" title="CacheDispatcher"></a>CacheDispatcher</h4><p>构造方法 // 正常的构造方法</p>
+<p>成员变量 </p>
+<pre><code>boolean DEBUG // Log的打印级别
+BlockingQueue&lt;Request&lt;?&gt;&gt; mCacheQueue // 缓存请求队列
+BlockingQueue&lt;Request&lt;?&gt;&gt; mNetworkQueue // 网络请求队列
+Cache mCache // 缓存信息，请求结果的缓存
+ResponseDelivery mDelivery // 请求结果的传递类
+boolean mQuit // 结束请求的标志
+</code></pre><p>成员方法</p>
+<pre><code>quit() // 结束线程
+
+run () // 业务逻辑
+</code></pre><p>业务流程图<br><img src="https://raw.githubusercontent.com/android-cn/android-open-project-analysis/master/tool-lib/network/volley/image/CacheDispatcher-run-flow-chart.png" alt="CacheDispatcher流程"></p>
+<h4 id="NetworkDispatcher"><a href="#NetworkDispatcher" class="headerlink" title="NetworkDispatcher"></a>NetworkDispatcher</h4><p>构造方法 // 正常的构造方法</p>
+<p>成员变量</p>
+<pre><code>BlockingQueue&lt;Request&lt;?&gt;&gt; mQueue // 网络请求队列
+Network mNetwork // 网络类，代表了一个可以执行请求的网络
+Cache mCache // 缓存结果数据
+ResponseDelivery mDelivery // 请求结果传递
+boolean mQuit // 取消请求的状态标志
+</code></pre><p>成员方法</p>
+<pre><code>quit()  // 结束网络请求
+addTrafficStatasTag(Request&lt;E&gt; request) // 给请求设置tag
+ run() // 业务逻辑
+</code></pre><p>业务流程图</p>
+<p><img src="https://raw.githubusercontent.com/android-cn/android-open-project-analysis/master/tool-lib/network/volley/image/NetworkDispatcher-run-flow-chart.png" alt="NetworkDispatcher流程图"></p>
+<p>我们总结一下流程和代码逻辑:</p>
+<p>1 创建RequestQueue</p>
+<p>首先会创建一个RequestQueue对象,在这个过程中会创建一个缓存目录和一个httpstack，这个httpstack是根据api等级选择httpURLconnection或者httpclient，然后会执行这个RequestQueue对象的start方法，在这个start方法中会首先取消当前请求，之后创建两个线程缓存线程和网络线程。</p>
+<p>2 创建request</p>
+<p>创建Request对象</p>
+<p>3 讲request添加到RequestQueue</p>
+<p>这这个过程中会首先设置request队列标志，然后判断是否需要缓存，如果已经设置过不需要缓存，那就直接添加这个request到网络队列并返回，如果要缓存，会去判断是否已经缓存过，如果没有缓存过，就就添加这个Request到缓存队列和缓存集合中，如果缓存过，需要重新设置这个Request的属性，更新到缓存集合中。</p>
+<p>然后在缓存线程和网络线程都存在一个死循环来处理缓存队列和网络队列。</p>
+<p>在缓存线程的run方法中，首先获取这个Request对象，如果请求已经被取消，需要结束这个请求，继续下一次请求，如果这个请求没有被缓存过，需要添加这个请求到网络请求队列，继续洗一次请求，已经被缓存过，需要判断请求的结果是否过期，如果过期了还是需要添加到网络队列，继续下一次请求，如果没有过期，会从缓存中获取结果，传递结果给回调处理。</p>
+<p>在网络线程的run方法中，首先会获取Request对象，如果请求已经被取消，需要结束这个请求，继续下一次请求，如果没有被取消，就让network对象执行performRequest方法，并得到networkresponse，如果结果没有被修改，并且已经有响应传递，请求结束，继续下一次请求，如果有就需要执行parseNetworkResonse方法，最后判断是否需要缓存，如果需要缓存，就讲缓存结果缓存到mCache中。</p>
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p><img src="https://developer.android.com/images/training/volley-request.png" alt="请求的生命周期"></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="http://a.codekk.com/detail/Android/grumoon/Volley%20%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90" target="_blank" rel="noopener">Volley源码解析</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/10/25/WebView和H5交互/" rel="next" title="">
+                <i class="fa fa-chevron-left"></i> 
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/10/25/Android面试题及答案/" rel="prev" title="">
+                 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/logo_s.jpg"
+                alt="Sparky" />
+            
+              <p class="site-author-name" itemprop="name">Sparky</p>
+              <p class="site-description motion-element" itemprop="description">我是谁？我在做什么？我为什么要这么做？我想做什么？我要怎么做？</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">24</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Volley简介"><span class="nav-number">2.</span> <span class="nav-text">Volley简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Volley的基本用法"><span class="nav-number">3.</span> <span class="nav-text">Volley的基本用法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#请求结果为JSON字符串-String-xml与此类似"><span class="nav-number">3.0.1.</span> <span class="nav-text">请求结果为JSON字符串(String/xml与此类似)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#图片加载"><span class="nav-number">3.0.2.</span> <span class="nav-text">图片加载</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Volley源码解析"><span class="nav-number">4.</span> <span class="nav-text">Volley源码解析</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#CacheDispatcher"><span class="nav-number">4.0.1.</span> <span class="nav-text">CacheDispatcher</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#NetworkDispatcher"><span class="nav-number">4.0.2.</span> <span class="nav-text">NetworkDispatcher</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#后记"><span class="nav-number">5.</span> <span class="nav-text">后记</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">6.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Sparky</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

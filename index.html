@@ -771,9 +771,1505 @@ Caused by: java.security.cert.CertPathValidatorException: Trust anchor for certi
 
 
     
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/02/adb/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sparky">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/logo_s.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sparky">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/01/02/adb/" itemprop="url">未命名</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-02T14:17:15+08:00">
+                2018-01-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="adb总结"><a href="#adb总结" class="headerlink" title="adb总结"></a>adb总结</h2><blockquote>
+<p>什么是adb，c/s架构，adb命令分为3种</p>
+</blockquote>
+<p>adb命令是程序自带的一些命令，adb shell是调用Android系统中的命令，这些系统是放在system/bin目录下</p>
+<h4 id="adb命令"><a href="#adb命令" class="headerlink" title="adb命令"></a>adb命令</h4><h6 id="adb-devices"><a href="#adb-devices" class="headerlink" title="adb devices"></a>adb devices</h6><h6 id="adb-get-state-device-offline-unknown"><a href="#adb-get-state-device-offline-unknown" class="headerlink" title="adb get-state:device,offline,unknown"></a><em>adb get-state:device,offline,unknown</em></h6><h6 id="adb-kill-server-adb-start-srevre"><a href="#adb-kill-server-adb-start-srevre" class="headerlink" title="adb kill-server,adb start-srevre"></a>adb kill-server,adb start-srevre</h6><h6 id="adb-bugreport-打印dumpsys-dumpstate-logcat的输出，分析错误-可以和logcat一样重定向到文件中"><a href="#adb-bugreport-打印dumpsys-dumpstate-logcat的输出，分析错误-可以和logcat一样重定向到文件中" class="headerlink" title="adb bugreport 打印dumpsys,dumpstate,logcat的输出，分析错误,可以和logcat一样重定向到文件中"></a><em>adb bugreport 打印dumpsys,dumpstate,logcat的输出，分析错误,可以和logcat一样重定向到文件中</em></h6><h6 id="adb-pull-adb-push"><a href="#adb-pull-adb-push" class="headerlink" title="adb pull,adb push"></a>adb pull,adb push</h6><h6 id="adb-install-adb-uninstall"><a href="#adb-install-adb-uninstall" class="headerlink" title="adb install, adb uninstall"></a>adb install, adb uninstall</h6><h6 id="adb-root-adb-remount-获取-root-权限，并挂载系统文件系统为可读写状态"><a href="#adb-root-adb-remount-获取-root-权限，并挂载系统文件系统为可读写状态" class="headerlink" title="adb root, adb remount 获取 root 权限，并挂载系统文件系统为可读写状态"></a><em>adb root, adb remount</em> 获取 root 权限，并挂载系统文件系统为可读写状态</h6><h6 id="adb-reboot-bootloader-重启设备，进入-fastboot-模式，同-adb-reboot-bootloader-命令"><a href="#adb-reboot-bootloader-重启设备，进入-fastboot-模式，同-adb-reboot-bootloader-命令" class="headerlink" title="adb reboot bootloader , 重启设备，进入 fastboot 模式，同 adb reboot-bootloader 命令"></a><em>adb reboot</em> bootloader , 重启设备，进入 fastboot 模式，同 adb reboot-bootloader 命令</h6><h6 id="recovery-重启设备，进入-recovery-模式，经常刷机的同学比较熟悉这个模式"><a href="#recovery-重启设备，进入-recovery-模式，经常刷机的同学比较熟悉这个模式" class="headerlink" title="recovery , 重启设备，进入 recovery 模式，经常刷机的同学比较熟悉这个模式"></a>recovery , 重启设备，进入 recovery 模式，经常刷机的同学比较熟悉这个模式</h6><h6 id="adb-forward-将-宿主机上的某个端口重定向到设备的某个端口"><a href="#adb-forward-将-宿主机上的某个端口重定向到设备的某个端口" class="headerlink" title="adb forward 将 宿主机上的某个端口重定向到设备的某个端口"></a><em>adb forward</em> 将 宿主机上的某个端口重定向到设备的某个端口</h6><h6 id="adb-connect-连接远程Android设备"><a href="#adb-connect-连接远程Android设备" class="headerlink" title="adb connect 连接远程Android设备"></a><em>adb connect</em> 连接远程Android设备</h6><p>// 根据TAG和级别过滤日志输出</p>
+<h6 id="adb-logcat"><a href="#adb-logcat" class="headerlink" title="adb logcat"></a><em>adb logcat</em></h6><p>adb logcat [-s] [ClassName:[PREVISOUS]] [*:[PREVIOUS]]</p>
+<pre><code>adb logcat // 直接输出的终端
+adb logcat &gt; c:/log.txt // 保存到文件
+adb logcat ActivityManager:I PowerManager:D *:S
+adb logcat *:W // 显示所有优先级大于等于“warning”的日志
+ adb logcat -s ActivityManager
+</code></pre><p>logcat命令列表:</p>
+<pre><code>-d 将日志显示到控制台后退出
+-c 清理已经存在的目录
+-f &lt;filename&gt; 将日志输出到文件
+-v &lt;format&gt; 设置日志输出格式控制输出字段，格式如下，默认是brief格式
+    brief--显示优先级/标记和原始进程PID
+    process--仅显示进程PID
+    tag--仅显示优先级/标记
+    thread--仅显示进程：线程和优先级/标记
+    raw--显示原始的日志信息，调用时间，优先级/标记，PID
+    time--显示日期，调用时间，优先级标记/pid
+    long--显示所有的元数据并用空行分割消息内容
+-b &lt;buffer&gt; 加载一个可使用的日志缓冲区供查看，默认是main
+    radio--查看包含在无线/电话相关的缓冲区信息
+    events--查看事件相关的消息
+    main--查看主缓冲区
+
+adb logcat -f c:/log.txt
+adb logcat -v thread // 使用thread输出格式
+adblogcat -b radio
+</code></pre><h4 id="adb-shell命令"><a href="#adb-shell命令" class="headerlink" title="adb shell命令"></a>adb shell命令</h4><p>/system/bin下或者sdk sources/android-20/com/android/commands</p>
+<h5 id="pm"><a href="#pm" class="headerlink" title="[pm]"></a>[pm]</h5><h6 id="adb-shell-pm-list-package-s-3-f-i-FILTER"><a href="#adb-shell-pm-list-package-s-3-f-i-FILTER" class="headerlink" title="adb shell pm list package [-s|-3|-f|-i] FILTER"></a>adb shell pm list package [-s|-3|-f|-i] FILTER</h6><pre><code>adb shell pm list package -i
+</code></pre><h6 id="adb-shell-pm-path-PATH"><a href="#adb-shell-pm-path-PATH" class="headerlink" title="adb shell pm path PATH"></a>adb shell pm path PATH</h6><pre><code>adb shell pm path com.tencent.mobileqq
+</code></pre><h6 id="adb-shell-pm-list-instrumentation"><a href="#adb-shell-pm-list-instrumentation" class="headerlink" title="adb shell pm list instrumentation"></a>adb shell pm list instrumentation</h6><h6 id="adb-shell-pm-dump"><a href="#adb-shell-pm-dump" class="headerlink" title="adb shell pm dump"></a>adb shell pm dump</h6><pre><code>adb shell pm dump com.tencent.mobileqq
+</code></pre><h6 id="adb-shell-pm-install-uninstall"><a href="#adb-shell-pm-install-uninstall" class="headerlink" title="adb shell pm install/uninstall"></a>adb shell pm install/uninstall</h6><h6 id="adb-shell-pm-clear"><a href="#adb-shell-pm-clear" class="headerlink" title="adb shell pm clear"></a>adb shell pm clear</h6><h6 id="adb-shell-pm-set-install-location-get-install-location"><a href="#adb-shell-pm-set-install-location-get-install-location" class="headerlink" title="adb shell pm set-install-location/get-install-location"></a>adb shell pm set-install-location/get-install-location</h6><h5 id="am"><a href="#am" class="headerlink" title="[am]"></a>[am]</h5><h6 id="adb-shell-am-start-n-S-W-a-PACKAGENAME"><a href="#adb-shell-am-start-n-S-W-a-PACKAGENAME" class="headerlink" title="adb shell am start [-n|-S|-W|-a] PACKAGENAME"></a>adb shell am start [-n|-S|-W|-a] PACKAGENAME</h6><pre><code>adb shell am start -n com.android.camera/.Camera
+</code></pre><h6 id="adb-shell-am-force-stop-PACKAGENAME"><a href="#adb-shell-am-force-stop-PACKAGENAME" class="headerlink" title="adb shell am force-stop [PACKAGENAME]"></a>adb shell am force-stop [PACKAGENAME]</h6><h6 id="adb-shell-am-startservice-CLASSNAME"><a href="#adb-shell-am-startservice-CLASSNAME" class="headerlink" title="adb shell am startservice [CLASSNAME]"></a>adb shell am startservice [CLASSNAME]</h6><h6 id="adb-shell-am-broadcast-CLASSNAME"><a href="#adb-shell-am-broadcast-CLASSNAME" class="headerlink" title="adb shell am broadcast [CLASSNAME]"></a>adb shell am broadcast [CLASSNAME]</h6><h6 id="adb-shell-am-monitor"><a href="#adb-shell-am-monitor" class="headerlink" title="adb shell am monitor"></a>adb shell am monitor</h6><h6 id="adb-shell-am-instrument"><a href="#adb-shell-am-instrument" class="headerlink" title="adb shell am instrument"></a>adb shell am instrument</h6><h5 id="input"><a href="#input" class="headerlink" title="[input]"></a>[input]</h5><h6 id="adb-shell-input-text-TEXT"><a href="#adb-shell-input-text-TEXT" class="headerlink" title="adb shell input text [TEXT]"></a>adb shell input text [TEXT]</h6><h6 id="adb-shell-input-keyevent-KEYCODE"><a href="#adb-shell-input-keyevent-KEYCODE" class="headerlink" title="adb shell input keyevent [KEYCODE]"></a>adb shell input keyevent [KEYCODE]</h6><h6 id="adb-shell-input-tap-X-Y"><a href="#adb-shell-input-tap-X-Y" class="headerlink" title="adb shell input tap [X Y]"></a>adb shell input tap [X Y]</h6><h6 id="adb-shell-input-swipe-X0-Y0-X1-Y1"><a href="#adb-shell-input-swipe-X0-Y0-X1-Y1" class="headerlink" title="adb shell input swipe [X0 Y0 X1 Y1]"></a>adb shell input swipe [X0 Y0 X1 Y1]</h6><h5 id="screencap-screenrecord"><a href="#screencap-screenrecord" class="headerlink" title="[screencap|screenrecord]"></a>[screencap|screenrecord]</h5><h6 id="adb-shell-screencap-p-PATH"><a href="#adb-shell-screencap-p-PATH" class="headerlink" title="adb shell screencap -p [PATH]"></a>adb shell screencap -p [PATH]</h6><h6 id="adb-shell-screenrecord-PATH"><a href="#adb-shell-screenrecord-PATH" class="headerlink" title="adb shell screenrecord [PATH]"></a>adb shell screenrecord [PATH]</h6><h5 id="UI-automator"><a href="#UI-automator" class="headerlink" title="[UI automator]"></a>[UI automator]</h5><h6 id="adb-shell-uiautomator-runtest-dump"><a href="#adb-shell-uiautomator-runtest-dump" class="headerlink" title="adb shell uiautomator [runtest|dump]"></a>adb shell uiautomator [runtest|dump]</h6><h5 id="ime"><a href="#ime" class="headerlink" title="[ime]"></a>[ime]</h5><h6 id="adb-shell-ime-list-s"><a href="#adb-shell-ime-list-s" class="headerlink" title="adb shell ime list -s"></a>adb shell ime list -s</h6><h6 id="adb-shell-ime-set-INPUTMETHOD"><a href="#adb-shell-ime-set-INPUTMETHOD" class="headerlink" title="adb shell ime set [INPUTMETHOD]"></a>adb shell ime set [INPUTMETHOD]</h6><h5 id="wm"><a href="#wm" class="headerlink" title="[wm]"></a>[wm]</h5><h6 id="adb-shell-wm-size"><a href="#adb-shell-wm-size" class="headerlink" title="adb shell wm size"></a>adb shell wm size</h6><h5 id="monkey"><a href="#monkey" class="headerlink" title="[monkey]"></a>[monkey]</h5><p><a href="http://xuxu1988.com/2015/05/14/2015-05-02-Monkey/" target="_blank" rel="noopener">Android Monkey的用法</a></p>
+<h5 id="settings"><a href="#settings" class="headerlink" title="[settings]"></a>[settings]</h5><p>修改系统设置<br><a href="http://testerhome.com/topics/1993" target="_blank" rel="noopener">探究下 Android4.2 中新增的 settings 命令</a></p>
+<h5 id="dumpsys"><a href="#dumpsys" class="headerlink" title="[dumpsys]"></a>[dumpsys]</h5><p><a href="http://blog.csdn.net/zhoumushui/article/details/49175097" target="_blank" rel="noopener">参考1</a></p>
+<p><a href="https://www.cnblogs.com/JianXu/p/5376642.html" target="_blank" rel="noopener">参考2</a></p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>package</td>
+<td>包查询</td>
+</tr>
+<tr>
+<td>activity</td>
+<td>所有activity信息</td>
+</tr>
+<tr>
+<td>connectivity</td>
+<td>网络连接</td>
+</tr>
+<tr>
+<td>netpolicy</td>
+<td>网络策略</td>
+</tr>
+<tr>
+<td>netstats</td>
+<td>网络状态</td>
+</tr>
+<tr>
+<td>wifi</td>
+<td>wifi信息</td>
+</tr>
+<tr>
+<td>network_manager</td>
+<td>网络管理</td>
+</tr>
+<tr>
+<td>account</td>
+<td>账号信息</td>
+</tr>
+<tr>
+<td>alarm</td>
+<td>闹钟信息</td>
+</tr>
+<tr>
+<td>meminfo</td>
+<td>内存信息</td>
+</tr>
+<tr>
+<td>cpuinfo</td>
+<td>cpu使用情况</td>
+</tr>
+<tr>
+<td>gfxinfo</td>
+<td>帧率信息</td>
+</tr>
+<tr>
+<td>display</td>
+<td>显示</td>
+</tr>
+<tr>
+<td>power</td>
+<td>电源</td>
+</tr>
+<tr>
+<td>batterystats</td>
+<td>电池状态</td>
+</tr>
+<tr>
+<td>battery</td>
+<td>电池</td>
+</tr>
+<tr>
+<td>batteryinfo $package_name</td>
+<td>电量信息及CPU使用时长</td>
+</tr>
+<tr>
+<td>diskstats</td>
+<td>磁盘相关信息</td>
+</tr>
+<tr>
+<td>usagestats</td>
+<td>每个界面的启动时间</td>
+</tr>
+<tr>
+<td>statusbar</td>
+<td>状态栏</td>
+</tr>
+<tr>
+<td>alarm</td>
+<td>闹钟</td>
+</tr>
+<tr>
+<td>location</td>
+<td>位置</td>
+</tr>
+<tr>
+<td>window</td>
+<td>窗口</td>
+</tr>
+</tbody>
+</table>
+<h5 id="log"><a href="#log" class="headerlink" title="[log]"></a>[log]</h5><pre><code>adb shell log [-p PREVIOUS] [-t TAG] [MESSAGE]
+</code></pre><h5 id="getprop"><a href="#getprop" class="headerlink" title="[getprop]"></a>[getprop]</h5><p>查看Android设备的参数信息</p>
+<pre><code>adb shell getprop [key]
+</code></pre><h4 id="linux命令"><a href="#linux命令" class="headerlink" title="linux命令"></a>linux命令</h4><pre><code>// 常用命令
+cat,cd,chmod,cp,data,df,du,grep,kill,ln,ls,lsof,netstat,ping,ps,rm,rmdir,top,touch,&gt;,&gt;&gt;,|
+</code></pre>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/27/EPUB/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sparky">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/logo_s.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sparky">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/12/27/EPUB/" itemprop="url">未命名</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-27T08:59:09+08:00">
+                2017-12-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="EPUB"><a href="#EPUB" class="headerlink" title="EPUB"></a>EPUB</h1><h2 id="什么是EPUB？"><a href="#什么是EPUB？" class="headerlink" title="什么是EPUB？"></a>什么是EPUB？</h2><p>e-pub的意思是电子出版，是IDPF制定的一个标准，这个标准是基于xml格式的电子书或者其它数字出版物。</p>
+<p>.epub文件其实就是一个简单的zip文件可以使用winrar或者linux使用归档管理器打开来看目录结构和基本文档。内容都是xml格式的。</p>
+<h2 id="epub文件的目录结构和基本文档"><a href="#epub文件的目录结构和基本文档" class="headerlink" title="epub文件的目录结构和基本文档"></a>epub文件的目录结构和基本文档</h2><h4 id="1-mimetype文件"><a href="#1-mimetype文件" class="headerlink" title="1. mimetype文件"></a>1. mimetype文件</h4><p>这个文件十分简单，里面只有</p>
+<pre><code>application/epub+zip
+</code></pre><p> 但是这个文件必须作为zip文件中的第一个文件，并且不能被压缩，必须在根目录下。同时这个文件不能有回车和换行。</p>
+<h4 id="2-META-INFO"><a href="#2-META-INFO" class="headerlink" title="2. META-INFO"></a>2. META-INFO</h4><p>META-INFO文件夹跟mimetype一样，也是必须存在的文件夹，也必须在根目录下，在文件夹下有一个container.xml文件.epub阅读系统会首先查看该文件，他指向文件图书的源数字文件的位置。这个container.xml格式如下</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;container version=&quot;1.0&quot; xmlns=&quot;urn:oasis:names:tc:opendocument:xmlns:container&quot;&gt;
+&lt;rootfiles&gt;
+&lt;rootfile full-path=&quot;OEBPS/content.opf&quot;
+media-type=&quot;application/oebps-package+xml&quot; /&gt;
+&lt;/rootfiles&gt;
+&lt;/container&gt;
+</code></pre><blockquote>
+<p>mimetype 和 container 是 EPUB 档案中仅有的两个需要严格限制位置的文件。建议将其他文件保存到 EPUB 的子目录下（通常被称为OEBPS但不是必须的）。</p>
+</blockquote>
+<h4 id="3-元数据文件-opf-packaging-format"><a href="#3-元数据文件-opf-packaging-format" class="headerlink" title="3. 元数据文件(.opf packaging format)"></a>3. 元数据文件(.opf packaging format)</h4><p>META-INFO文件夹下的container.xml所指定的rootfile的文件。该文件文件名没有特殊要求，扩展名为.opf。他指定了图书中所有内容的位置，如文本和多媒体目录。另外他还会给出一个元数据文件，它是Navigation Center eXtended (NCX) 表，有的称其为逻辑目录，opf内容示例如下所示:</p>
+<pre><code>&lt;?xml version=&apos;1.0&apos; encoding=&apos;utf-8&apos;?&gt;
+&lt;package xmlns=&quot;http://www.idpf.org/2007/opf&quot;
+xmlns:dc=&quot;http://purl.org/dc/elements/1.1/&quot;
+unique-identifier=&quot;bookid&quot; version=&quot;2.0&quot;&gt;
+&lt;metadata&gt;
+&lt;dc:title&gt;Hello World: My First EPUB&lt;/dc:title&gt;
+&lt;dc:creator&gt;My Name&lt;/dc:creator&gt;
+&lt;dc:identifier id=&quot;bookid&quot;&gt;urn:uuid:12345&lt;/dc:identifier&gt;
+&lt;meta name=&quot;cover&quot; content=&quot;cover-image&quot; /&gt;
+&lt;/metadata&gt;
+&lt;manifest&gt;
+&lt;item id=&quot;ncx&quot; href=&quot;toc.ncx&quot; media-type=&quot;text/xml&quot;/&gt;
+&lt;item id=&quot;cover&quot; href=&quot;title.html&quot; media-type=&quot;application/xhtml+xml&quot;/&gt;
+&lt;item id=&quot;content&quot; href=&quot;content.html&quot; media-type=&quot;application/xhtml+xml&quot;/&gt;
+&lt;item id=&quot;cover-image&quot; href=&quot;images/cover.png&quot; media-type=&quot;image/png&quot;/&gt;
+&lt;item id=&quot;css&quot; href=&quot;stylesheet.css&quot; media-type=&quot;text/css&quot;/&gt;
+&lt;/manifest&gt;
+&lt;spine toc=&quot;ncx&quot;&gt;
+&lt;itemref idref=&quot;cover&quot; linear=&quot;no&quot;/&gt;
+&lt;itemref idref=&quot;content&quot;/&gt;
+&lt;/spine&gt;
+&lt;guide&gt;
+&lt;reference href=&quot;cover.html&quot; type=&quot;cover&quot; title=&quot;Cover&quot;/&gt;
+&lt;/guide&gt;
+&lt;/package&gt;
+</code></pre><h5 id="3-1-命名空间"><a href="#3-1-命名空间" class="headerlink" title="3.1 命名空间 "></a>3.1 命名空间 <package></package></h5><p>文档本身必须使用命名空间 xmlns=”<a href="http://www.idpf.org/2007/opf" target="_blank" rel="noopener">http://www.idpf.org/2007/opf</a>“,<br>metadata也可以在这里指定命名空间,元数据一般使用 Dublin Core Metadata Initiative (DCMI)<br>xmlns=”<a href="http://purl.org/dc/elements/1.1/" target="_blank" rel="noopener">http://purl.org/dc/elements/1.1/</a>“</p>
+<h5 id="3-2-源数据"><a href="#3-2-源数据" class="headerlink" title="3.2 源数据 "></a>3.2 源数据 <metadata></metadata></h5><p> Dublin Core Metadata Initiative (DCMI)定义了一组常见的元数据，可以用来描述各种不同的数字资料，下边是元数据摘要：</p>
+<pre><code>...
+&lt;metadata&gt;
+&lt;dc:title&gt;Hello World: My First EPUB&lt;/dc:title&gt;
+&lt;dc:creator&gt;My Name&lt;/dc:creator&gt;
+&lt;dc:identifier id=&quot;bookid&quot;&gt;urn:uuid:12345&lt;/dc:identifier&gt;
+&lt;meta name=&quot;cover&quot; content=&quot;cover-image&quot; /&gt;
+&lt;/metadata&gt;
+...
+</code></pre><p>有两个术语是必须的，分别是title和identifier。这个identifier必须是唯一的，对于图书出版商来说这个字段一般包括ISBN编号，可以使用URL或者很大的随机生成的uuid。</p>
+<blockquote>
+<p>属性unique-identifier的值必须和dc:identifier元素的id属性匹配</p>
+</blockquote>
+<p>epub规范没有要求包含name的属性值为cover的meta元素，但是为了增加封面和图像的可移植性，一般建议加上。meta元素的content属性的值对应在这个opf文件manifest元素的id号，</p>
+<h5 id="3-3-清单数据"><a href="#3-3-清单数据" class="headerlink" title="3.3 清单数据 "></a>3.3 清单数据 <manifest></manifest></h5><p>opf文件中的manifest节点列出了epub的所有资源，通常是组成电子书的一组xhtml文件和相关的媒体文件。epub鼓励使用css设定图书内容的样式，因此manifest中也包含css。进入数字图书的所有内容必须在manifest中列出。<br>下边是manifest示例：</p>
+<pre><code>...
+&lt;manifest&gt;
+&lt;item id=&quot;ncx&quot; href=&quot;toc.ncx&quot; media-type=&quot;text/xml&quot;/&gt;
+&lt;item id=&quot;cover&quot; href=&quot;title.html&quot; media-type=&quot;application/xhtml+xml&quot;/&gt;
+&lt;item id=&quot;content&quot; href=&quot;content.html&quot; media-type=&quot;application/xhtml+xml&quot;/&gt;
+&lt;item id=&quot;cover-image&quot; href=&quot;images/cover.png&quot; media-type=&quot;image/png&quot;/&gt;
+&lt;item id=&quot;css&quot; href=&quot;stylesheet.css&quot; media-type=&quot;text/css&quot;/&gt;
+&lt;/manifest&gt;
+</code></pre><p>所有的想必须有对应的media-type</p>
+<p>epub支持三种核心图像文件类型:JPEG,PNG,GIF和Scalable Vector Graphics(SVG矢量图)</p>
+<h5 id="3-4-spine"><a href="#3-4-spine" class="headerlink" title="3.4 spine"></a>3.4 spine</h5><p>spine的意思是脊柱，作用是线性阅读顺序，可以将OPF spine看做书中的页面的顺序，按照文档顺序从上到下一次读取spine，下边是spine示例：</p>
+<pre><code>... 
+&lt;spine toc=&quot;ncx&quot;&gt; 
+&lt;itemref idref=&quot;cover&quot; linear=&quot;no&quot;/&gt; 
+&lt;itemref idref=&quot;content&quot;/&gt; 
+&lt;/spine&gt; 
+... 
+</code></pre><p>每个itemref元素都需要一个idref属性，并且和manifest中的id想匹配。toc属性也是必须的，他引用manifest中表示ncx表文件名的id。</p>
+<p>spine中的linear属性表明该项作为线性阅读顺序的一部分，还是和先后顺序无关。建议将封面定义为no。符合epub规范的阅读系统将首次打开spine中设置linear=no的第一项。</p>
+<h5 id="3-5-guide"><a href="#3-5-guide" class="headerlink" title="3.5 guide"></a>3.5 guide</h5><p>这个是可选的，最好保留，可以为epub阅读系统提供语义功能。下边是示例:</p>
+<pre><code>...
+&lt;guide&gt;
+&lt;reference href=&quot;cover.html&quot; type=&quot;cover&quot; title=&quot;Cover&quot;/&gt;
+&lt;/guide&gt;
+...
+</code></pre><blockquote>
+<p>上边就是opf文件中的所有内容，manifest文件定义epub所有物理资源，spine定义这些资源的顺序信息，guide负责解释这些部分的含义。</p>
+</blockquote>
+<h4 id="4-NCX-Navigation-Control-file-for-XML-applications"><a href="#4-NCX-Navigation-Control-file-for-XML-applications" class="headerlink" title="4. NCX(Navigation Control file for XML applications)"></a>4. NCX(Navigation Control file for XML applications)</h4><p>ncx定义了数字图书的目录表，在复杂的图书中，目录表通常采用层次结构，包括嵌套的内容，章节等信息。<br>下边是简单的toc.ncx文件内容:</p>
+<pre><code>&lt;?xml version=&apos;1.0&apos; encoding=&apos;utf-8&apos;?&gt;
+&lt;!DOCTYPE ncx PUBLIC &quot;-//NISO//DTD ncx 2005-1//EN&quot;
+&quot;http://www.daisy.org/z3986/2005/ncx-2005-1.dtd&quot;&gt;
+&lt;ncx xmlns=&quot;http://www.daisy.org/z3986/2005/ncx/&quot; version=&quot;2005-1&quot;&gt;
+&lt;head&gt;
+&lt;meta name=&quot;dtb:uid&quot; content=&quot;urn:uuid:12345&quot;/&gt;
+&lt;meta name=&quot;dtb:depth&quot; content=&quot;1&quot;/&gt;
+&lt;meta name=&quot;dtb:totalPageCount&quot; content=&quot;0&quot;/&gt;
+&lt;meta name=&quot;dtb:maxPageNumber&quot; content=&quot;0&quot;/&gt;
+&lt;/head&gt;
+&lt;docTitle&gt;
+&lt;text&gt;Hello World: My First EPUB&lt;/text&gt;
+&lt;/docTitle&gt;
+&lt;navMap&gt;
+&lt;navPoint id=&quot;navpoint-1&quot; playOrder=&quot;1&quot;&gt;
+&lt;navLabel&gt;
+&lt;text&gt;Book cover&lt;/text&gt;
+&lt;/navLabel&gt;
+&lt;content src=&quot;title.html&quot;/&gt;
+&lt;/navPoint&gt;
+&lt;navPoint id=&quot;navpoint-2&quot; playOrder=&quot;2&quot;&gt;
+&lt;navLabel&gt;
+&lt;text&gt;Contents&lt;/text&gt;
+&lt;/navLabel&gt;
+&lt;content src=&quot;content.html&quot;/&gt;
+&lt;/navPoint&gt;
+&lt;/navMap&gt;
+&lt;/ncx&gt;
+</code></pre><p>EPUB使用的DAISY的NCX DTD的命名空间<br>xmlns=”<a href="http://www.daisy.org/z3986/2005/ncx/" target="_blank" rel="noopener">http://www.daisy.org/z3986/2005/ncx/</a>“ </p>
+<h5 id="4-1-head"><a href="#4-1-head" class="headerlink" title="4.1 head"></a>4.1 head</h5><p>DTD要求ncx文件的head元素包括四个meta元素:</p>
+<ul>
+<li>dtd:uid // 数字图书的唯一id，和opf文件中的dc:identifier对应</li>
+<li>dtd:depth // 目录中层次的深度</li>
+<li>dtd:totalPageCount // 仅用于纸质图书，保留0即可</li>
+<li>dtd:maxPageNumber // 仅用于纸质图书，保留0即可</li>
+</ul>
+<h5 id="4-2-docTitle"><a href="#4-2-docTitle" class="headerlink" title="4.2 docTitle"></a>4.2 docTitle</h5><p>是图书的标题，和opf文件中的dc:title对应</p>
+<h5 id="4-3-navMap"><a href="#4-3-navMap" class="headerlink" title="4.3 navMap"></a>4.3 navMap</h5><p>navMap是ncx文件中最重要的部分，定义了电子书的目录。navmap中包括一个或者多个navPoint元素，每个navPoint都要包括下列元素：</p>
+<ul>
+<li>playOrder属性 // 说明文档的阅读顺序，和opf文件中spine中itemref元素的顺序相同</li>
+<li>navLabel/text元素 // 给出章节的标题通常是章的标题或者数字，如”第一章”</li>
+<li>content元素 // 他的src属性指向这些内容的物理资源。</li>
+<li>还可以有一个或者多个navPoint元素 // 表示层次结构</li>
+</ul>
+<h4 id="5-问题"><a href="#5-问题" class="headerlink" title="5. 问题"></a>5. 问题</h4><h5 id="5-1-NCX和OPF文件元数据交叉"><a href="#5-1-NCX和OPF文件元数据交叉" class="headerlink" title="5.1 NCX和OPF文件元数据交叉"></a>5.1 NCX和OPF文件元数据交叉</h5><p>由于 NCX 源自其他标准，使用 NCX 编码的信息和 OPF 内容之间存在重复。如果通过程序生成 EPUB，这算不上什么问题，因为同样的代码可输出到两个文件中。两个位置的信息要一致，不同的 EPUB 读者可能使用不同位置的值。（可如果手工去编写呢？）</p>
+<h5 id="5-2-NCX和OPF-spine有什么不同"><a href="#5-2-NCX和OPF-spine有什么不同" class="headerlink" title="5.2 NCX和OPF spine有什么不同"></a>5.2 NCX和OPF spine有什么不同</h5><p>opf spine主要用来描述电子书章节的顺序，比如第一章后第二章再后第三章 …</p>
+<p>ncx文件描述电子书的目录结构。</p>
+<p>一条法则就是ncx包括的节点比spine多。实际上spine的所有项都会出现在ncx中，但是ncx可能更详细。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/29/HenCode学习笔记-1.3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sparky">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/logo_s.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sparky">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/11/29/HenCode学习笔记-1.3/" itemprop="url">未命名</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-29T10:59:54+08:00">
+                2017-11-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="文字的绘制"><a href="#文字的绘制" class="headerlink" title="文字的绘制"></a>文字的绘制</h1><h2 id="1-Canvas绘制文字"><a href="#1-Canvas绘制文字" class="headerlink" title="1. Canvas绘制文字"></a>1. Canvas绘制文字</h2><p>canvas绘制文字有三种方式：1. drawText() 2. drawTextRun() 3. drawTextOnPath()</p>
+<h4 id="1-1-drawText-String-text-float-x-float-y-Paint-paint"><a href="#1-1-drawText-String-text-float-x-float-y-Paint-paint" class="headerlink" title="1.1 drawText(String text, float x,  float y, Paint paint)"></a>1.1 drawText(String text, float x,  float y, Paint paint)</h4><blockquote>
+<p>这个坐标可以认为是在文字左下角。是比较接近的位置，但是如果要精确还是以下边所说的基线为准。</p>
+</blockquote>
+<h4 id="1-2-drawTextRun"><a href="#1-2-drawTextRun" class="headerlink" title="1.2 drawTextRun()"></a>1.2 drawTextRun()</h4><p>API 23新加入的方法，比drawText有两个新的参数上下文和文字方向， 主要用于文字结构比较特殊的文字的绘制。</p>
+<h4 id="1-3-drawTextOnPath"><a href="#1-3-drawTextOnPath" class="headerlink" title="1.3 drawTextOnPath()"></a>1.3 drawTextOnPath()</h4><p>沿着一条线来绘制文字</p>
+<pre><code>mPaint.setStyle(Paint.Style.STROKE);
+mPaint.setStrokeWidth(2);
+mPaint.setColor(Color.BLUE);
+
+Path path = new Path();
+path.moveTo(100, 100);
+path.lineTo(200, 200);
+path.rLineTo(300, 100);
+path.rLineTo(400, 200);
+canvas.drawPath(path, mPaint);
+
+canvas.drawTextOnPath(&quot;Hello HenCode!&quot;, path, 0, 0, mPaint);
+</code></pre><p>方法为drawTextOnPath(String text, Path path, float hOffset, float vOffset, Paint paint), hOffset和vOffset分别是文字相对于path水平方向和垂直方向的偏移量</p>
+<h4 id="1-4-StaticLayout"><a href="#1-4-StaticLayout" class="headerlink" title="1.4 StaticLayout"></a>1.4 StaticLayout</h4><p>canvas.drawText()只能绘制单行的文字，而不能换行。</p>
+<ul>
+<li>不能在view边缘自动换行</li>
+<li>不能使用\n换行</li>
+</ul>
+<p>如果要绘制多行文字，必须把文字切断后使用drawText或者一一使用StaticLayout。</p>
+<p>他是android.text.Layout的子类，单纯用来绘制文字的。</p>
+<p>它可以设置宽度上限来使文字自动换行，或者使用\n使文字换行。</p>
+<pre><code>String text1 = &quot;Lorem Ipsum is simply dummy text of the printing and typesetting industry.&quot;;  
+StaticLayout staticLayout1 = new StaticLayout(text1, paint, 600,  
+    Layout.Alignment.ALIGN_NORMAL, 1, 0, true);
+String text2 = &quot;a\nbc\ndefghi\njklm\nnopqrst\nuvwx\nyz&quot;;  
+StaticLayout staticLayout2 = new StaticLayout(text2, paint, 600,  
+    Layout.Alignment.ALIGN_NORMAL, 1, 0, true);
+
+...
+
+canvas.save();  
+canvas.translate(50, 100);  
+staticLayout1.draw(canvas);  
+canvas.translate(0, 200);  
+staticLayout2.draw(canvas);  
+canvas.restore(); 
+</code></pre><h2 id="2-Paint对文字绘制的辅助"><a href="#2-Paint对文字绘制的辅助" class="headerlink" title="2. Paint对文字绘制的辅助"></a>2. Paint对文字绘制的辅助</h2><h4 id="2-1-设置显示效果"><a href="#2-1-设置显示效果" class="headerlink" title="2.1 设置显示效果"></a>2.1 设置显示效果</h4><p>setTextSize() // 设置文字大小</p>
+<p>setTextScaleX() // 设置文字缩放</p>
+<p>setTextAlign() // 设置对齐方式，三种LEFT,RIGHT,CENTER,默认LEFT</p>
+<p>setHinting() // 设置字体微调</p>
+<p>现在的 Android 设备大多数都是是用的矢量字体。矢量字体的原理是对每个字体给出一个字形的矢量描述，然后使用这一个矢量来对所有的尺寸的字体来生成对应的字形。由于不必为所有字号都设计它们的字体形状，所以在字号较大的时候，矢量字体也能够保持字体的圆润，这是矢量字体的优势。不过当文字的尺寸过小（比如高度小于 16 像素），有些文字会由于失去过多细节而变得不太好看。 hinting 技术就是为了解决这种问题的：通过向字体中加入 hinting 信息，让矢量字体在尺寸过小的时候得到针对性的修正，从而提高显示效果。效果图盗一张维基百科的：</p>
+<p><img src="https://ws3.sinaimg.cn/large/52eb2279ly1fig65wwv1yj20ki0bywje.jpg" alt=""></p>
+<p><strong>setTextSkewX() // 设置文字倾斜</strong></p>
+<p>setTextLocation() // 设置语言区域</p>
+<p><strong>setLetterPadding() // 设置字符间距</strong></p>
+<p><strong>setFontFeatureSettings() // 设置字体样式</strong></p>
+<pre><code>paint.setFontFeatureSettings(&quot;scmp&quot;); // 设置为small cap
+canvas.drawText(&quot;Hello Hencode&quot;, 100, 100, paint);
+</code></pre><p>这个东西不懂，以后<a href="https://www.w3.org/TR/css-fonts-3/#font-feature-settings-prop" target="_blank" rel="noopener">补充一下</a></p>
+<p><strong>setTypeFace() // 设置字体</strong></p>
+<pre><code>paint.setTypeface(Typeface.DEFAULT);
+
+paint.setTypeface(Typeface.SERIF);
+
+paint.setTypeface(Typeface.createFromAssert(getContext().getAssert(), &quot;xx.ttf&quot;))
+</code></pre><p>setUnderlineText() // 是否加下划线<br>setFakeBoldText() // 设置伪粗体<br>setStrikeThruText() // 是否加删除线</p>
+<p><strong>setElegantTextHeight(boolean elegant) // 是否开启优雅的高度</strong></p>
+<ol>
+<li>把「大高个」文字的高度恢复为原始高度；</li>
+<li>增大每行文字的上下边界，来容纳被加高了的文字。</li>
+</ol>
+<p><strong>setSubpixelText() // 是否开启次像素级抗锯齿，就是增强抗锯齿效果。</strong></p>
+<p><strong>setLinearText() // 设置liear text</strong></p>
+<h4 id="2-2-测量文字尺寸"><a href="#2-2-测量文字尺寸" class="headerlink" title="2.2 测量文字尺寸"></a>2.2 测量文字尺寸</h4><h5 id="2-2-1-getFontSpacing-获得推荐的行距-即是相邻的baseline之间的距离，如下图所示"><a href="#2-2-1-getFontSpacing-获得推荐的行距-即是相邻的baseline之间的距离，如下图所示" class="headerlink" title="2.2.1 getFontSpacing() // 获得推荐的行距,即是相邻的baseline之间的距离，如下图所示"></a>2.2.1 getFontSpacing() // 获得推荐的行距,即是相邻的baseline之间的距离，如下图所示</h5><pre><code>canvas.drawText(texts[0], 100, 150, paint);  
+canvas.drawText(texts[1], 100, 150 + paint.getFontSpacing, paint);  
+canvas.drawText(texts[2], 100, 150 + paint.getFontSpacing * 2, paint);  
+</code></pre><p><img src="https://ws3.sinaimg.cn/large/52eb2279ly1fig66d27efj20ev06j401.jpg" alt=""></p>
+<h5 id="2-2-2-getFontMatrics-获得FontMatrix，-FontMatrix是一个相对专业的工具类，提供了几个文字排印方面的数值：ascent-descent-top-bottom-leading"><a href="#2-2-2-getFontMatrics-获得FontMatrix，-FontMatrix是一个相对专业的工具类，提供了几个文字排印方面的数值：ascent-descent-top-bottom-leading" class="headerlink" title="2.2.2 getFontMatrics() // 获得FontMatrix， FontMatrix是一个相对专业的工具类，提供了几个文字排印方面的数值：ascent, descent, top,bottom, leading;"></a>2.2.2 getFontMatrics() // 获得FontMatrix， FontMatrix是一个相对专业的工具类，提供了几个文字排印方面的数值：ascent, descent, top,bottom, leading;</h5><p><img src="https://ws3.sinaimg.cn/large/52eb2279ly1fig66iud3gj20ik0bn41l.jpg" alt=""></p>
+<p>这个不知道什么时候用到</p>
+<h5 id="2-2-3-getTextBounds-String-text-int-start-int-end-Rect-bounds-获得文字的显示范围"><a href="#2-2-3-getTextBounds-String-text-int-start-int-end-Rect-bounds-获得文字的显示范围" class="headerlink" title="2.2.3 getTextBounds(String text, int start, int end, Rect bounds) // 获得文字的显示范围"></a>2.2.3 getTextBounds(String text, int start, int end, Rect bounds) // 获得文字的显示范围</h5><p>text是文字，start,end是指待测的文本的开始位置和结束位置，rect是测量完要赋值的矩形。</p>
+<pre><code>paint.setStyle(Paint.Style.FILL);  
+canvas.drawText(text, offsetX, offsetY, paint);
+
+paint.getTextBounds(text, 0, text.length(), bounds);  
+bounds.left += offsetX;  
+bounds.top += offsetY;  
+bounds.right += offsetX;  
+bounds.bottom += offsetY;  
+paint.setStyle(Paint.Style.STROKE);  
+canvas.drawRect(bounds, paint);  
+</code></pre><p><img src="https://ws3.sinaimg.cn/large/52eb2279ly1fig66pdyg4j20ct02tmxf.jpg" alt=""></p>
+<h4 id="2-2-4-measureText-String-text-测量文字宽度"><a href="#2-2-4-measureText-String-text-测量文字宽度" class="headerlink" title="2.2.4 measureText(String text) //  测量文字宽度"></a>2.2.4 measureText(String text) //  测量文字宽度</h4><pre><code>canvas.drawText(text, offsetX, offsetY, paint);  
+float textWidth = paint.measureText(text);  
+canvas.drawLine(offsetX, offsetY, offsetX + textWidth, offsetY, paint);  
+</code></pre><p><img src="https://ws3.sinaimg.cn/large/52eb2279ly1fig671on56j20or04a0te.jpg" alt=""></p>
+<blockquote>
+<p>注意： getTextBounds()和measureText()的区别：</p>
+<p>如果你用代码分别使用 getTextBounds() 和 measureText() 来测量文字的宽度，你会发现 measureText() 测出来的宽度总是比 getTextBounds() 大一点点。这是因为这两个方法其实测量的是两个不一样的东西。</p>
+<ul>
+<li>getTextBounds()测量的是文字的显示范围，这个矩形恰好能够包裹住文字</li>
+<li>measureText()测量的是文字绘制时所占的宽度，包括了字符间距等</li>
+</ul>
+</blockquote>
+<h4 id="2-2-5-getTextWidths-String-text-float-widths-获取每个字符的宽度，并传入width数组中"><a href="#2-2-5-getTextWidths-String-text-float-widths-获取每个字符的宽度，并传入width数组中" class="headerlink" title="2.2.5 getTextWidths(String text, float[] widths) // 获取每个字符的宽度，并传入width数组中"></a>2.2.5 getTextWidths(String text, float[] widths) // 获取每个字符的宽度，并传入width数组中</h4><h4 id="2-2-6-breakText-截取某长度的字符串"><a href="#2-2-6-breakText-截取某长度的字符串" class="headerlink" title="2.2.6 breakText() // 截取某长度的字符串"></a>2.2.6 breakText() // 截取某长度的字符串</h4><p>google api是这样写的<br>Measure the text, stopping early if the measured width exceeds maxWidth.意思是测量文本，如果宽度超过给定的宽度就停止测量。其效果就是如果你的字符串的长度大于breakText()中指定的最大长度，drawtext的时候就只显示这个被截取的定长的文字。返回值为截取的字符的个数。</p>
+<pre><code>String text = &quot;Hencode is very very very ... nice!&quot;;
+mPaint.setTextSize(64);
+int i = mPaint.breakText(text.toCharArray(), 0, 17, 600, new float[]{});
+canvas.drawText(text.toCharArray(), 0, i, 100, 100, mPaint);
+</code></pre><p><img src="https://ws3.sinaimg.cn/large/52eb2279ly1fig67950cnj21080m4grf.jpg" alt=""></p>
+<h4 id="2-2-7-光标相关"><a href="#2-2-7-光标相关" class="headerlink" title="2.2.7 光标相关"></a>2.2.7 光标相关</h4><p>对于像EditText一样的场景，就会需要绘制光标，在API 23开始引入两个新方法来计算光标。(这跟光标没有毛线关系貌似，主要是测量字符的宽度)</p>
+<h5 id="2-2-7-1-getRunAdvance-String-text-int-start-int-end-int-contextStart-int-contextEnd-boolean-isRtl-int-offset"><a href="#2-2-7-1-getRunAdvance-String-text-int-start-int-end-int-contextStart-int-contextEnd-boolean-isRtl-int-offset" class="headerlink" title="2.2.7.1 getRunAdvance(String text, int start, int end, int contextStart, int contextEnd, boolean isRtl, int offset) //"></a>2.2.7.1 getRunAdvance(String text, int start, int end, int contextStart, int contextEnd, boolean isRtl, int offset) //</h5><table>
+<thead>
+<tr>
+<th>params</th>
+<th>des</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>text</td>
+<td>CharSequence: the text to measure. Cannot be null.</td>
+</tr>
+<tr>
+<td>start</td>
+<td>int: the index of the start of the range to measure</td>
+</tr>
+<tr>
+<td>end</td>
+<td>int: the index + 1 of the end of the range to measure</td>
+</tr>
+<tr>
+<td>contextStart</td>
+<td>int: the index of the start of the shaping context</td>
+</tr>
+<tr>
+<td>contextEnd</td>
+<td>int: the index + 1 of the end of the shaping context</td>
+</tr>
+<tr>
+<td>isRtl</td>
+<td>boolean: whether the run is in RTL direction</td>
+</tr>
+<tr>
+<td>offset</td>
+<td>int: index of caret position</td>
+</tr>
+</tbody>
+</table>
+<p>return : width measurement between start and offset</p>
+<p>即是说 text指的是原文本，start,end指的是要测量的开始和结束的位置，contextStart，contextEnd不知道什么意思， isrtl是否反转字符串，offset指要插入的位置。</p>
+<p>返回的是start和offset之间的距离。</p>
+<pre><code>mPaint.setTextSize(36);
+// 包含特殊符号的绘制（如 emoji 表情）
+String text = &quot;Hello HenCoder \uD83C\uDDE8\uD83C\uDDF3&quot;; // &quot;Hello HenCoder 🇨🇳&quot;
+int start = 0;
+int end = text.length();
+int contextStart = 0;
+int contextEnd = text.length();
+boolean isRtl = false;
+int offset = text.length();
+float advance = mPaint.getRunAdvance(text, start, end, contextStart, contextEnd, isRtl, offset - 4);
+canvas.drawText(text, 100, 100, mPaint);
+canvas.drawLine(100 + advance, 60, 100 + advance, 100, mPaint);
+</code></pre><p><img src="https://ws3.sinaimg.cn/large/52eb2279ly1fig67pon53j215s0owdru.jpg" alt=""></p>
+<h5 id="2-2-7-2-getOffsetForAdvance-CharSequence-text-int-start-int-end-int-contextStart-int-contextEnd-boolean-isRtl-float-advance-给出一个位置的像素值，计算出文字中最接近这个位置的字符偏移量"><a href="#2-2-7-2-getOffsetForAdvance-CharSequence-text-int-start-int-end-int-contextStart-int-contextEnd-boolean-isRtl-float-advance-给出一个位置的像素值，计算出文字中最接近这个位置的字符偏移量" class="headerlink" title="2.2.7.2 getOffsetForAdvance(CharSequence text, int start, int end, int contextStart, int contextEnd, boolean isRtl, float advance) // 给出一个位置的像素值，计算出文字中最接近这个位置的字符偏移量"></a>2.2.7.2 getOffsetForAdvance(CharSequence text, int start, int end, int contextStart, int contextEnd, boolean isRtl, float advance) // 给出一个位置的像素值，计算出文字中最接近这个位置的字符偏移量</h5><h5 id="2-2-8-hasGlyph-String-string-检查指定的字符串中是否是一个单独的字形。"><a href="#2-2-8-hasGlyph-String-string-检查指定的字符串中是否是一个单独的字形。" class="headerlink" title="2.2.8 hasGlyph(String string) // 检查指定的字符串中是否是一个单独的字形。"></a>2.2.8 hasGlyph(String string) // 检查指定的字符串中是否是一个单独的字形。</h5><p><img src="https://ws1.sinaimg.cn/large/006tNc79ly1flgaf31rskj31120damyn.jpg" alt=""></p>
+<h2 id="练习"><a href="#练习" class="headerlink" title="练习"></a>练习</h2><h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/29/HenCode学习笔记-1.4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sparky">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/logo_s.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sparky">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/11/29/HenCode学习笔记-1.4/" itemprop="url">未命名</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-29T10:59:53+08:00">
+                2017-11-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="Canvas对绘制的辅助"><a href="#Canvas对绘制的辅助" class="headerlink" title="Canvas对绘制的辅助"></a>Canvas对绘制的辅助</h1><p>本文主要两个知识点： 范围剪切和几何变换</p>
+<h2 id="1-范围剪切"><a href="#1-范围剪切" class="headerlink" title="1. 范围剪切"></a>1. 范围剪切</h2><p>范围裁剪有2个API，分别是clipRect()和clipPath()</p>
+<h4 id="1-1-clipRect-裁剪一个矩形区域"><a href="#1-1-clipRect-裁剪一个矩形区域" class="headerlink" title="1.1 clipRect() // 裁剪一个矩形区域"></a>1.1 clipRect() // 裁剪一个矩形区域</h4><pre><code>canvas.save();  
+canvas.clipRect(left, top, right, bottom);  
+canvas.drawBitmap(bitmap, x, y, paint);  
+canvas.restore();   
+</code></pre><p><img src="https://ws3.sinaimg.cn/large/52eb2279ly1fig5rzjhx8j21cq0r2aig.jpg" alt=""></p>
+<h4 id="1-2-clipPath-裁剪出path指定的形状"><a href="#1-2-clipPath-裁剪出path指定的形状" class="headerlink" title="1.2 clipPath() // 裁剪出path指定的形状"></a>1.2 clipPath() // 裁剪出path指定的形状</h4><pre><code>canvas.save();  
+canvas.clipPath(path1);  
+canvas.drawBitmap(bitmap, point1.x, point1.y, paint);  
+canvas.restore();
+</code></pre><p><img src="https://ws3.sinaimg.cn/large/52eb2279ly1fig5sems3tj21920ma7bk.jpg" alt=""></p>
+<h2 id="2-几何变换"><a href="#2-几何变换" class="headerlink" title="2. 几何变换"></a>2. 几何变换</h2><p>几何变换大致分为3类:</p>
+<ul>
+<li>直接通过canvas提供的方法实现简单的二维变换</li>
+<li>通过Matrix来做复杂的二维变换</li>
+<li>通过camera来做三维变换</li>
+</ul>
+<h4 id="2-1-使用canvas做简单二维变换"><a href="#2-1-使用canvas做简单二维变换" class="headerlink" title="2.1 使用canvas做简单二维变换"></a>2.1 使用canvas做简单二维变换</h4><p>canvas.translate(float dx, float dy); // 平移(x，y平移距离)</p>
+<p>canvas.rotate(float degree, float px, float py) // 旋转(旋转角度，轴心位子)</p>
+<p>canvas.scale(float scaleX, float scaleY, float px, float py) // 缩放(x轴缩放比例，y轴缩放比例，轴心位置) </p>
+<p>canvas.skew(float sx, float sy) // 倾斜(x轴倾斜系数， y轴倾斜系数)</p>
+<p>sx,sy表示倾斜度数的tan值。</p>
+<p><img src="https://ws3.sinaimg.cn/large/52eb2279ly1fig5ug5zo7j20pu0d6dl7.jpg" alt=""></p>
+<h4 id="2-2-使用Matrix做二维变换"><a href="#2-2-使用Matrix做二维变换" class="headerlink" title="2.2 使用Matrix做二维变换"></a>2.2 使用Matrix做二维变换</h4><h5 id="2-2-1-使用Matrix做简单的二维变换"><a href="#2-2-1-使用Matrix做简单的二维变换" class="headerlink" title="2.2.1 使用Matrix做简单的二维变换"></a>2.2.1 使用Matrix做简单的二维变换</h5><p>Matrix做常见变换的方式：</p>
+<ol>
+<li>创建Matrix对象</li>
+<li>调用Matrix的 pre/post Translate/Rotate/Scale/</li>
+<li>方法来设置几何变换</li>
+<li>canvas调用setMatrix(matrix)或者contact(matrix)方法来把几何变换应用到canvas。</li>
+</ol>
+<p>代码流程如下</p>
+<pre><code>Matrix matrix = new Matrix();
+...
+matrix.reset();  
+matrix.postTranslate();  
+matrix.postRotate();
+
+canvas.save();  
+canvas.concat(matrix);  
+canvas.drawBitmap(bitmap, x, y, paint);  
+canvas.restore();  
+</code></pre><h5 id="2-2-2-使用Matrix做自定义变幻"><a href="#2-2-2-使用Matrix做自定义变幻" class="headerlink" title="2.2.2 使用Matrix做自定义变幻"></a>2.2.2 使用Matrix做自定义变幻</h5><p>Matrix使用自定义变换使用的是setPolyToPoly()方法。</p>
+<p>poly的意思是多。setPolyToPoly()的作用就是通过多点映射的方式来直接设置变换。</p>
+<pre><code>Matrix matrix = new Matrix();  
+float pointsSrc = {left, top, right, top, left, bottom, right, bottom};  
+float pointsDst = {left - 10, top + 50, right + 120, top - 90, left + 20, bottom + 30, right + 20, bottom + 60};
+
+...
+
+matrix.reset();  
+matrix.setPolyToPoly(pointsSrc, 0, pointsDst, 0, 4);
+
+canvas.save();  
+canvas.concat(matrix);  
+canvas.drawBitmap(bitmap, x, y, paint);  
+canvas.restore(); 
+</code></pre><p><img src="https://ws3.sinaimg.cn/large/52eb2279ly1fig5uw4t2jj20q60fcag4.jpg" alt=""></p>
+<h4 id="2-3-使用camera做三维变换"><a href="#2-3-使用camera做三维变换" class="headerlink" title="2.3 使用camera做三维变换"></a>2.3 使用camera做三维变换</h4><p>camera的三维变换有3种，旋转，平移，移动相机。</p>
+<h5 id="2-3-1-旋转"><a href="#2-3-1-旋转" class="headerlink" title="2.3.1 旋转"></a>2.3.1 旋转</h5><p>Camera.rotate*() 一共有四个方法： rotateX(deg) rotateY(deg) rotateZ(deg) rotate(x, y, z)</p>
+<pre><code>canvas.save();
+
+camera.save(); //保存Camera的状态
+camera.rotateX(30); // 旋转 Camera 的三维空间  
+camera.applyToCanvas(canvas); // 把旋转投影到 Canvas
+camera.restore(); // 恢复Camera的状态
+
+canvas.drawBitmap(bitmap, point1.x, point1.y, paint);  
+canvas.restore();  
+</code></pre><p><img src="https://ws3.sinaimg.cn/large/52eb2279ly1fig5vam5fij20rq0g0agl.jpg" alt=""></p>
+<p>这样旋转之后的图形并不是对称，需要配合canvas.translate()</p>
+<pre><code>canvas.save();
+
+camera.save(); // 保存 Camera 的状态  
+camera.rotateX(30); // 旋转 Camera 的三维空间  
+canvas.translate(centerX, centerY); // 旋转之后把投影移动回来  
+camera.applyToCanvas(canvas); // 把旋转投影到 Canvas  
+canvas.translate(-centerX, -centerY); // 旋转之前把绘制内容移动到轴心（原点）  
+camera.restore(); // 恢复 Camera 的状态
+
+canvas.drawBitmap(bitmap, point1.x, point1.y, paint);  
+canvas.restore();  
+</code></pre><blockquote>
+<p>Canvas 的几何变换顺序是反的，所以要把移动到中心的代码写在下面，把从中心移动回来的代码写在上面。</p>
+</blockquote>
+<h5 id="2-3-2-平移-camera-transilate-float-x-float-y-float-z"><a href="#2-3-2-平移-camera-transilate-float-x-float-y-float-z" class="headerlink" title="2.3.2 平移 camera.transilate(float x, float y, float z)"></a>2.3.2 平移 camera.transilate(float x, float y, float z)</h5><h5 id="2-3-3-移动相机-camera-setLocation-x-y-z"><a href="#2-3-3-移动相机-camera-setLocation-x-y-z" class="headerlink" title="2.3.3 移动相机 camera.setLocation(x, y, z)"></a>2.3.3 移动相机 camera.setLocation(x, y, z)</h5><p>设置相机的位置</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/24/HenCode学习笔记-1.1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sparky">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/logo_s.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sparky">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/11/24/HenCode学习笔记-1.1/" itemprop="url">未命名</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-24T18:33:40+08:00">
+                2017-11-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="HenCode学习笔记-View-1-1-绘制基础"><a href="#HenCode学习笔记-View-1-1-绘制基础" class="headerlink" title="[HenCode学习笔记] View-1.1 绘制基础"></a>[HenCode学习笔记] View-1.1 绘制基础</h1><p>绘制基础对于有一定自定义view经验的开发者来说是比较简单的，所以这里的笔记也简单做一下</p>
+<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>自定义绘制的方法是重写绘制方法，最常用的是onDraw();</p>
+<p>绘制的关键是Canvas:</p>
+<ul>
+<li>绘制类方法: drawXXX(关键参数 Paint)</li>
+<li>辅助类方法: 裁剪范围和几何变换</li>
+</ul>
+<p>可以使用不同的绘制方法来控制遮盖关系</p>
+<h2 id="自定义绘制的四个级别"><a href="#自定义绘制的四个级别" class="headerlink" title="自定义绘制的四个级别"></a>自定义绘制的四个级别</h2><ol>
+<li>熟练使用drawXXX()和paint的常见用法</li>
+<li>熟练使用paint</li>
+<li>熟练canvas对绘制的辅助-裁剪和几何变换</li>
+<li>使用不同的绘制方法来控制绘制顺序</li>
+</ol>
+<h2 id="onDraw"><a href="#onDraw" class="headerlink" title="onDraw()"></a>onDraw()</h2><h2 id="canvas-drawXXX和Paint基础"><a href="#canvas-drawXXX和Paint基础" class="headerlink" title="canvas.drawXXX和Paint基础"></a>canvas.drawXXX和Paint基础</h2><p>主要包括</p>
+<ul>
+<li>Canvas类下的所有drawXXX(),例如drawCicle(), drawBitmap()</li>
+<li>Paint类中的几个常见方法,例如<ul>
+<li>Paint.setStyle() // 设置绘制模式</li>
+<li>Paint.setColor() // 设置画笔颜色</li>
+<li>Paint.setStrockWidth() // 设置线条宽度</li>
+<li>Paint.setTextSize() // 设置文字大小</li>
+<li>Paint.setAntiAlias() // 设置是否开启抗锯齿</li>
+</ul>
+</li>
+</ul>
+<h2 id="canvas-drawColor-颜色填充-设置画布颜色"><a href="#canvas-drawColor-颜色填充-设置画布颜色" class="headerlink" title="canvas.drawColor() // 颜色填充,设置画布颜色"></a>canvas.drawColor() // 颜色填充,设置画布颜色</h2><blockquote>
+<p>drawRGB,drawARGB作用一样</p>
+</blockquote>
+<h2 id="drawCircle-画圆"><a href="#drawCircle-画圆" class="headerlink" title="drawCircle // 画圆"></a>drawCircle // 画圆</h2><p>? 参数：圆心x轴坐标，圆心Y轴坐标，圆心半径，画笔Paint提供除基本信息外所有风格信息</p>
+<h2 id="drawRect-画矩形"><a href="#drawRect-画矩形" class="headerlink" title="drawRect // 画矩形"></a>drawRect // 画矩形</h2><h2 id="drawPoint-画点"><a href="#drawPoint-画点" class="headerlink" title="drawPoint // 画点"></a>drawPoint // 画点</h2><blockquote>
+<p>画点不指是圆点，还有方块等</p>
+<p>点的大小可以通过paint.setStrockWidth()来设置</p>
+<p>点的形状可以通过paint.setStrockCap()来设置,这个方法其实是用来设置笔触风格，就像现实中的钢笔，毛笔，圆珠笔一样，同样在纸上点一下，会出现不同的形状，这个形状就叫笔触，下图中的线冒也是指的笔触，不过下边的就比较形象。笔触有三种, BUTT(无),SQUARE(方形),ROUND(圆形)<br><img src="http://img.blog.csdn.net/20160330083020037?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQv/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt=""></p>
+<p>setStrokeJoin 用来设置接合处的形状。如下图所示<img src="http://img.blog.csdn.net/20160330083742743?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQv/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt=""><br>可以设置三种参数Join.MITER(锐角), Join.BEVEL(直角), Join.Round(圆角)</p>
+</blockquote>
+<h2 id="drawOval-left-top-right-bottom-paint-画椭圆，左上右下分别对应椭圆的四个边界"><a href="#drawOval-left-top-right-bottom-paint-画椭圆，左上右下分别对应椭圆的四个边界" class="headerlink" title="drawOval(left, top, right, bottom, paint) // 画椭圆，左上右下分别对应椭圆的四个边界"></a>drawOval(left, top, right, bottom, paint) // 画椭圆，左上右下分别对应椭圆的四个边界</h2><h2 id="drawLine-startX-startY-endX-endY-paint"><a href="#drawLine-startX-startY-endX-endY-paint" class="headerlink" title="drawLine(startX, startY, endX, endY, paint)"></a>drawLine(startX, startY, endX, endY, paint)</h2><blockquote>
+<p>由于直线不是封闭图形，所以setStyle对直线没有影响。(这句话不一定对)</p>
+</blockquote>
+<h2 id="drawRoundRect-画圆角矩形"><a href="#drawRoundRect-画圆角矩形" class="headerlink" title="drawRoundRect() // 画圆角矩形"></a>drawRoundRect() // 画圆角矩形</h2><h2 id="drawArc-left-top-right-bottom-startAngle-sweepAngle-useCenter-paint-画弧形和扇形"><a href="#drawArc-left-top-right-bottom-startAngle-sweepAngle-useCenter-paint-画弧形和扇形" class="headerlink" title="drawArc(left, top, right, bottom, startAngle, sweepAngle, useCenter, paint) // 画弧形和扇形"></a>drawArc(left, top, right, bottom, startAngle, sweepAngle, useCenter, paint) // 画弧形和扇形</h2><blockquote>
+<p>左上右下用来描述圆弧所在的椭圆的，startAngle起始的角度(x轴的正向，即正右方向为0度的位置，顺时针为正向，逆时针为负向)，sweepAngle是弧形扫过的角度，useCenter表示是否连接到圆心，即是如果连接到圆心表示扇形，不连接到圆心表示弧形。</p>
+</blockquote>
+<h2 id="drawPath-path-paint-画自定义图形"><a href="#drawPath-path-paint-画自定义图形" class="headerlink" title="drawPath(path, paint) // 画自定义图形"></a>drawPath(path, paint) // 画自定义图形</h2><p>Path就是用来描述图形路径的对象，这个类中的几个常见方法:</p>
+<p>Path.arcTo();</p>
+<p>Path.lineTo();</p>
+<p>Path.addArc();</p>
+<p>…</p>
+<p>Path可以描述直线，二次曲线，三次曲线，园，椭圆，弧形，矩形，圆角矩形等，并可以将这些图形组合起来形成各种复杂的图形。</p>
+<h2 id="Path有两种方法"><a href="#Path有两种方法" class="headerlink" title="Path有两种方法:"></a>Path有两种方法:</h2><h3 id="第一种：-直接描述路径，又可以分为两种"><a href="#第一种：-直接描述路径，又可以分为两种" class="headerlink" title="第一种： 直接描述路径，又可以分为两种"></a>第一种： 直接描述路径，又可以分为两种</h3><h5 id="1-addXXX-–-添加子图形"><a href="#1-addXXX-–-添加子图形" class="headerlink" title="1. addXXX – 添加子图形"></a>1. addXXX – 添加子图形</h5><p>addCircle(centerX, centerY, radius, direction)</p>
+<blockquote>
+<p>Path的方向有两种 CW(顺时针)和CCW(逆时针)，当图形为填充并且图形有自相交时，需要根据方向判断填充范围。</p>
+<h5 id="2-xxxTo-–-划线（直线或者曲线）"><a href="#2-xxxTo-–-划线（直线或者曲线）" class="headerlink" title="2. xxxTo – 划线（直线或者曲线）"></a>2. xxxTo – 划线（直线或者曲线）</h5><p>lineTo(x,y) // 从当前位置向目标位置划线。<br>rLineTo(x,y) // 从相对当前位置向目标位置划线。</p>
+</blockquote>
+<pre><code>paint.setStyle(Style.STROKE);  
+path.lineTo(100, 100); // 由当前位置 (0, 0) 向 (100, 100) 画一条直线  
+path.rLineTo(100, 0); // 由当前位置 (100, 100) 向正右方 100 像素的位置画一条直线 
+</code></pre><p>quadTo(x1, y1, x2, y2) // 是指从当前位置向目标位置画二次贝塞尔曲线。(x1,y1)是控制点的坐标，(x2,y2)是目标点坐标</p>
+<p>cubicTo() // 三次贝塞尔曲线，两个控制点</p>
+<p>moveTo(x,y)/rMoveTo(x,y) // 移动当前位置或者相对位置的坐标</p>
+<blockquote>
+<p>arcTo(rectf, startAngle, sweepAngle, forceMoveTo) // arcTo方法没有UseCenter参数，因为path只能画弧线，forceMoveTo为true表示强制移动到弧线起点位置(无痕迹)，为false表示要把当前位置到弧线起点位置连起来。</p>
+<p>close封闭当前图形。即是将当前图形封闭，我看来是当前位置到相对位置连接起来</p>
+</blockquote>
+<pre><code>paint.setStyle(Style.STROKE);  
+path.moveTo(100, 100);  
+path.lineTo(200, 100);  
+path.lineTo(150, 150);  
+// 子图形未封闭
+</code></pre><p><img src="https://ws1.sinaimg.cn/large/006tNc79ly1fig7zidfmtj304p0330sl.jpg" alt=""></p>
+<pre><code>paint.setStyle(Style.STROKE);  
+path.moveTo(100, 100);  
+path.lineTo(200, 100);  
+path.lineTo(150, 150);  
+path.close(); // 使用 close() 封闭子图形。等价于 path.lineTo(100, 100)  
+</code></pre><p><img src="https://ws2.sinaimg.cn/large/006tNc79ly1fig7zqj7llj304n03aglh.jpg" alt=""></p>
+<pre><code>paint.setStyle(Style.FILL);
+  path.moveTo(100, 100);
+  path.lineTo(200, 100);
+  path.lineTo(150, 150);
+  // 这里只绘制了两条边，但由于 Style 是 FILL ，所以绘制时会自动封口
+</code></pre><p><img src="https://ws3.sinaimg.cn/large/006tNc79ly1fig80a2v95j304z035glh.jpg" alt=""></p>
+<h3 id="第二种-辅助的设计或者计算"><a href="#第二种-辅助的设计或者计算" class="headerlink" title="第二种: 辅助的设计或者计算"></a>第二种: 辅助的设计或者计算</h3><p>Path.setFillType(fillType) // 前面在说 dir 参数的时候提到，这个方法是用来设置图形自相交时的填充算法的：<br><img src="https://ws3.sinaimg.cn/large/006tNc79ly1fig8042q9jj30hb0aodg6.jpg" alt=""></p>
+<p>FillType四种类型:</p>
+<ul>
+<li>EVEN_ODD</li>
+<li>WINDING(默认)</li>
+<li>INVERSE_EVEN_ODD</li>
+<li>INVERSE_WINDING</li>
+</ul>
+<p><img src="https://ws1.sinaimg.cn/large/006tNc79ly1fig7zyzjtrj30kx0jugn9.jpg" alt=""></p>
+<h6 id="ENVEN-ODD"><a href="#ENVEN-ODD" class="headerlink" title="ENVEN_ODD"></a>ENVEN_ODD</h6><p>即 even-odd rule （奇偶原则）：对于平面中的任意一点，向任意方向射出一条射线，这条射线和图形相交的次数（相交才算，相切不算哦）如果是奇数，则这个点被认为在图形内部，是要被涂色的区域；如果是偶数，则这个点被认为在图形外部，是不被涂色的区域。还以左右相交的双圆为例：</p>
+<p><img src="https://ws3.sinaimg.cn/large/006tNc79ly1fig811a7tnj30jj06h74p.jpg" alt=""></p>
+<h6 id="WINDING"><a href="#WINDING" class="headerlink" title="WINDING"></a>WINDING</h6><p>即 non-zero winding rule （非零环绕数原则）：首先，它需要你图形中的所有线条都是有绘制方向的：</p>
+<p><img src="https://ws4.sinaimg.cn/large/006tNc79ly1fig81dw60ej307b0bm3yq.jpg" alt=""></p>
+<p>然后，同样是从平面中的点向任意方向射出一条射线，但计算规则不一样：以 0 为初始值，对于射线和图形的所有交点，遇到每个顺时针的交点（图形从射线的左边向右穿过）把结果加 1，遇到每个逆时针的交点（图形从射线的右边向左穿过）把结果减 1，最终把所有的交点都算上，得到的结果如果不是 0，则认为这个点在图形内部，是要被涂色的区域；如果是 0，则认为这个点在图形外部，是不被涂色的区域。<br><img src="https://ws3.sinaimg.cn/large/006tNc79ly1fig81scem2j30k90digmo.jpg" alt=""></p>
+<h2 id="drawBitmap-bitmap-left-top"><a href="#drawBitmap-bitmap-left-top" class="headerlink" title="drawBitmap(bitmap, left, top)"></a>drawBitmap(bitmap, left, top)</h2><h2 id="drawText-text-x-y-paint-x-y可以认为是绘制起点的坐标"><a href="#drawText-text-x-y-paint-x-y可以认为是绘制起点的坐标" class="headerlink" title="drawText(text, x, y, paint) // x,y可以认为是绘制起点的坐标"></a>drawText(text, x, y, paint) // x,y可以认为是绘制起点的坐标</h2><h2 id="练习"><a href="#练习" class="headerlink" title="练习"></a>练习</h2>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/24/HenCode学习笔记/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sparky">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/logo_s.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sparky">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/11/24/HenCode学习笔记/" itemprop="url">未命名</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-24T18:33:40+08:00">
+                2017-11-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="Hencode学习笔记-前言"><a href="#Hencode学习笔记-前言" class="headerlink" title="[Hencode学习笔记]-前言"></a>[Hencode学习笔记]-前言</h1><p>自定义view三个最关键的知识点：</p>
+<ul>
+<li>布局</li>
+<li>绘制</li>
+<li>触摸反馈</li>
+</ul>
+<p>这个系列文章也是分为这三个部分</p>
+<p>第一部分 绘制（已结束）</p>
+<p>第二部分 布局（正在进行）</p>
+<p>第三部分 触摸反馈（未开始）</p>
+<p>虽然没有结束，但是先做好目标，一是希望在这个里边学到自定义view的精髓，二是边学边看，希望能够做出几个拿得出手的自定义view。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/24/HenCode学习笔记-1.2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sparky">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/logo_s.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sparky">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/11/24/HenCode学习笔记-1.2/" itemprop="url">未命名</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-24T18:33:40+08:00">
+                2017-11-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="HenCode学习笔记-1-2-Paint详解"><a href="#HenCode学习笔记-1-2-Paint详解" class="headerlink" title="[HenCode学习笔记]-1.2 Paint详解"></a>[HenCode学习笔记]-1.2 Paint详解</h1><h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>Paint类的API大致分为4种</p>
+<ul>
+<li>颜色</li>
+<li>效果</li>
+<li>drawText()相关</li>
+<li>初始化</li>
+</ul>
+<h2 id="1-颜色"><a href="#1-颜色" class="headerlink" title="1. 颜色"></a>1. 颜色</h2><p>canvas绘制的内容，有三层对颜色的处理<br><img src="https://ws3.sinaimg.cn/large/52eb2279ly1fig6dcywn2j20j909yabu.jpg" alt=""></p>
+<h4 id="1-1-基本颜色"><a href="#1-1-基本颜色" class="headerlink" title="1.1 基本颜色"></a>1.1 基本颜色</h4><p>设置基本像素颜色的方式</p>
+<ul>
+<li>canvas.drawColor()/canvas.drawRGB()/canvas.drawARGB() // color参数</li>
+<li>canvas.drawBitmap() 通过bitmap设置颜色 // bitmap参数</li>
+<li>通过paint设置颜色 // paint参数</li>
+</ul>
+<p><img src="https://ws3.sinaimg.cn/large/52eb2279ly1fig6gxcusnj20iw04xmzr.jpg" alt=""></p>
+<p>Paint设置颜色的方式有两种：<br>一种是直接调用Paint.setColor()/paint.setARGB()设置颜色，另一种是通过shader来指定颜色。</p>
+<h5 id="Shader"><a href="#Shader" class="headerlink" title="Shader"></a>Shader</h5><p>着色器Shader,它有几个子类:</p>
+<ul>
+<li>LinearGradient // 线性渐变</li>
+<li>RadialGradient // 辐射渐变</li>
+<li>SweepGradient // 扫描渐变</li>
+<li>BitmapShader // Bitmap着色器</li>
+<li>ComposeShader // 混合着色器</li>
+</ul>
+<h2 id="2-效果"><a href="#2-效果" class="headerlink" title="2. 效果"></a>2. 效果</h2><h2 id="3-drawText-相关"><a href="#3-drawText-相关" class="headerlink" title="3. drawText()相关"></a>3. drawText()相关</h2><h2 id="4-初始化"><a href="#4-初始化" class="headerlink" title="4. 初始化"></a>4. 初始化</h2>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
   </section>
 
   
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+  </nav>
+
 
 
           </div>
@@ -821,7 +2317,7 @@ Caused by: java.security.cert.CertPathValidatorException: Trust anchor for certi
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-count">24</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

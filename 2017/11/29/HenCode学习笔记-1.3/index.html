@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="文字的绘制1. Canvas绘制文字canvas绘制文字有三种方式：1. drawText() 2. drawTextRun() 3. drawTextOnPath() 1.1 drawText(String text, float x,  float y, Paint paint) 这个坐标可以认为是在文字左下角。是比较接近的位置，但是如果要精确还是以下边所说的基线为准。  1.2 drawTe">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Sparky">
+<meta property="og:url" content="http://yoursite.com/2017/11/29/HenCode学习笔记-1.3/index.html">
+<meta property="og:site_name" content="Sparky">
+<meta property="og:description" content="文字的绘制1. Canvas绘制文字canvas绘制文字有三种方式：1. drawText() 2. drawTextRun() 3. drawTextOnPath() 1.1 drawText(String text, float x,  float y, Paint paint) 这个坐标可以认为是在文字左下角。是比较接近的位置，但是如果要精确还是以下边所说的基线为准。  1.2 drawTe">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://ws3.sinaimg.cn/large/52eb2279ly1fig65wwv1yj20ki0bywje.jpg">
+<meta property="og:image" content="https://ws3.sinaimg.cn/large/52eb2279ly1fig66d27efj20ev06j401.jpg">
+<meta property="og:image" content="https://ws3.sinaimg.cn/large/52eb2279ly1fig66iud3gj20ik0bn41l.jpg">
+<meta property="og:image" content="https://ws3.sinaimg.cn/large/52eb2279ly1fig66pdyg4j20ct02tmxf.jpg">
+<meta property="og:image" content="https://ws3.sinaimg.cn/large/52eb2279ly1fig671on56j20or04a0te.jpg">
+<meta property="og:image" content="https://ws3.sinaimg.cn/large/52eb2279ly1fig67950cnj21080m4grf.jpg">
+<meta property="og:image" content="https://ws3.sinaimg.cn/large/52eb2279ly1fig67pon53j215s0owdru.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/006tNc79ly1flgaf31rskj31120damyn.jpg">
+<meta property="og:updated_time" content="2017-11-28T07:57:54.129Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Sparky">
+<meta name="twitter:description" content="文字的绘制1. Canvas绘制文字canvas绘制文字有三种方式：1. drawText() 2. drawTextRun() 3. drawTextOnPath() 1.1 drawText(String text, float x,  float y, Paint paint) 这个坐标可以认为是在文字左下角。是比较接近的位置，但是如果要精确还是以下边所说的基线为准。  1.2 drawTe">
+<meta name="twitter:image" content="https://ws3.sinaimg.cn/large/52eb2279ly1fig65wwv1yj20ki0bywje.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/11/29/HenCode学习笔记-1.3/"/>
+
+
+
+
+
+  <title> | Sparky</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?23f2f984b557cd9c31da9a75b4da08e4";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Sparky</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/29/HenCode学习笔记-1.3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sparky">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/logo_s.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sparky">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline"></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-29T10:59:54+08:00">
+                2017-11-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="文字的绘制"><a href="#文字的绘制" class="headerlink" title="文字的绘制"></a>文字的绘制</h1><h2 id="1-Canvas绘制文字"><a href="#1-Canvas绘制文字" class="headerlink" title="1. Canvas绘制文字"></a>1. Canvas绘制文字</h2><p>canvas绘制文字有三种方式：1. drawText() 2. drawTextRun() 3. drawTextOnPath()</p>
+<h4 id="1-1-drawText-String-text-float-x-float-y-Paint-paint"><a href="#1-1-drawText-String-text-float-x-float-y-Paint-paint" class="headerlink" title="1.1 drawText(String text, float x,  float y, Paint paint)"></a>1.1 drawText(String text, float x,  float y, Paint paint)</h4><blockquote>
+<p>这个坐标可以认为是在文字左下角。是比较接近的位置，但是如果要精确还是以下边所说的基线为准。</p>
+</blockquote>
+<h4 id="1-2-drawTextRun"><a href="#1-2-drawTextRun" class="headerlink" title="1.2 drawTextRun()"></a>1.2 drawTextRun()</h4><p>API 23新加入的方法，比drawText有两个新的参数上下文和文字方向， 主要用于文字结构比较特殊的文字的绘制。</p>
+<h4 id="1-3-drawTextOnPath"><a href="#1-3-drawTextOnPath" class="headerlink" title="1.3 drawTextOnPath()"></a>1.3 drawTextOnPath()</h4><p>沿着一条线来绘制文字</p>
+<pre><code>mPaint.setStyle(Paint.Style.STROKE);
+mPaint.setStrokeWidth(2);
+mPaint.setColor(Color.BLUE);
+
+Path path = new Path();
+path.moveTo(100, 100);
+path.lineTo(200, 200);
+path.rLineTo(300, 100);
+path.rLineTo(400, 200);
+canvas.drawPath(path, mPaint);
+
+canvas.drawTextOnPath(&quot;Hello HenCode!&quot;, path, 0, 0, mPaint);
+</code></pre><p>方法为drawTextOnPath(String text, Path path, float hOffset, float vOffset, Paint paint), hOffset和vOffset分别是文字相对于path水平方向和垂直方向的偏移量</p>
+<h4 id="1-4-StaticLayout"><a href="#1-4-StaticLayout" class="headerlink" title="1.4 StaticLayout"></a>1.4 StaticLayout</h4><p>canvas.drawText()只能绘制单行的文字，而不能换行。</p>
+<ul>
+<li>不能在view边缘自动换行</li>
+<li>不能使用\n换行</li>
+</ul>
+<p>如果要绘制多行文字，必须把文字切断后使用drawText或者一一使用StaticLayout。</p>
+<p>他是android.text.Layout的子类，单纯用来绘制文字的。</p>
+<p>它可以设置宽度上限来使文字自动换行，或者使用\n使文字换行。</p>
+<pre><code>String text1 = &quot;Lorem Ipsum is simply dummy text of the printing and typesetting industry.&quot;;  
+StaticLayout staticLayout1 = new StaticLayout(text1, paint, 600,  
+    Layout.Alignment.ALIGN_NORMAL, 1, 0, true);
+String text2 = &quot;a\nbc\ndefghi\njklm\nnopqrst\nuvwx\nyz&quot;;  
+StaticLayout staticLayout2 = new StaticLayout(text2, paint, 600,  
+    Layout.Alignment.ALIGN_NORMAL, 1, 0, true);
+
+...
+
+canvas.save();  
+canvas.translate(50, 100);  
+staticLayout1.draw(canvas);  
+canvas.translate(0, 200);  
+staticLayout2.draw(canvas);  
+canvas.restore(); 
+</code></pre><h2 id="2-Paint对文字绘制的辅助"><a href="#2-Paint对文字绘制的辅助" class="headerlink" title="2. Paint对文字绘制的辅助"></a>2. Paint对文字绘制的辅助</h2><h4 id="2-1-设置显示效果"><a href="#2-1-设置显示效果" class="headerlink" title="2.1 设置显示效果"></a>2.1 设置显示效果</h4><p>setTextSize() // 设置文字大小</p>
+<p>setTextScaleX() // 设置文字缩放</p>
+<p>setTextAlign() // 设置对齐方式，三种LEFT,RIGHT,CENTER,默认LEFT</p>
+<p>setHinting() // 设置字体微调</p>
+<p>现在的 Android 设备大多数都是是用的矢量字体。矢量字体的原理是对每个字体给出一个字形的矢量描述，然后使用这一个矢量来对所有的尺寸的字体来生成对应的字形。由于不必为所有字号都设计它们的字体形状，所以在字号较大的时候，矢量字体也能够保持字体的圆润，这是矢量字体的优势。不过当文字的尺寸过小（比如高度小于 16 像素），有些文字会由于失去过多细节而变得不太好看。 hinting 技术就是为了解决这种问题的：通过向字体中加入 hinting 信息，让矢量字体在尺寸过小的时候得到针对性的修正，从而提高显示效果。效果图盗一张维基百科的：</p>
+<p><img src="https://ws3.sinaimg.cn/large/52eb2279ly1fig65wwv1yj20ki0bywje.jpg" alt=""></p>
+<p><strong>setTextSkewX() // 设置文字倾斜</strong></p>
+<p>setTextLocation() // 设置语言区域</p>
+<p><strong>setLetterPadding() // 设置字符间距</strong></p>
+<p><strong>setFontFeatureSettings() // 设置字体样式</strong></p>
+<pre><code>paint.setFontFeatureSettings(&quot;scmp&quot;); // 设置为small cap
+canvas.drawText(&quot;Hello Hencode&quot;, 100, 100, paint);
+</code></pre><p>这个东西不懂，以后<a href="https://www.w3.org/TR/css-fonts-3/#font-feature-settings-prop" target="_blank" rel="noopener">补充一下</a></p>
+<p><strong>setTypeFace() // 设置字体</strong></p>
+<pre><code>paint.setTypeface(Typeface.DEFAULT);
+
+paint.setTypeface(Typeface.SERIF);
+
+paint.setTypeface(Typeface.createFromAssert(getContext().getAssert(), &quot;xx.ttf&quot;))
+</code></pre><p>setUnderlineText() // 是否加下划线<br>setFakeBoldText() // 设置伪粗体<br>setStrikeThruText() // 是否加删除线</p>
+<p><strong>setElegantTextHeight(boolean elegant) // 是否开启优雅的高度</strong></p>
+<ol>
+<li>把「大高个」文字的高度恢复为原始高度；</li>
+<li>增大每行文字的上下边界，来容纳被加高了的文字。</li>
+</ol>
+<p><strong>setSubpixelText() // 是否开启次像素级抗锯齿，就是增强抗锯齿效果。</strong></p>
+<p><strong>setLinearText() // 设置liear text</strong></p>
+<h4 id="2-2-测量文字尺寸"><a href="#2-2-测量文字尺寸" class="headerlink" title="2.2 测量文字尺寸"></a>2.2 测量文字尺寸</h4><h5 id="2-2-1-getFontSpacing-获得推荐的行距-即是相邻的baseline之间的距离，如下图所示"><a href="#2-2-1-getFontSpacing-获得推荐的行距-即是相邻的baseline之间的距离，如下图所示" class="headerlink" title="2.2.1 getFontSpacing() // 获得推荐的行距,即是相邻的baseline之间的距离，如下图所示"></a>2.2.1 getFontSpacing() // 获得推荐的行距,即是相邻的baseline之间的距离，如下图所示</h5><pre><code>canvas.drawText(texts[0], 100, 150, paint);  
+canvas.drawText(texts[1], 100, 150 + paint.getFontSpacing, paint);  
+canvas.drawText(texts[2], 100, 150 + paint.getFontSpacing * 2, paint);  
+</code></pre><p><img src="https://ws3.sinaimg.cn/large/52eb2279ly1fig66d27efj20ev06j401.jpg" alt=""></p>
+<h5 id="2-2-2-getFontMatrics-获得FontMatrix，-FontMatrix是一个相对专业的工具类，提供了几个文字排印方面的数值：ascent-descent-top-bottom-leading"><a href="#2-2-2-getFontMatrics-获得FontMatrix，-FontMatrix是一个相对专业的工具类，提供了几个文字排印方面的数值：ascent-descent-top-bottom-leading" class="headerlink" title="2.2.2 getFontMatrics() // 获得FontMatrix， FontMatrix是一个相对专业的工具类，提供了几个文字排印方面的数值：ascent, descent, top,bottom, leading;"></a>2.2.2 getFontMatrics() // 获得FontMatrix， FontMatrix是一个相对专业的工具类，提供了几个文字排印方面的数值：ascent, descent, top,bottom, leading;</h5><p><img src="https://ws3.sinaimg.cn/large/52eb2279ly1fig66iud3gj20ik0bn41l.jpg" alt=""></p>
+<p>这个不知道什么时候用到</p>
+<h5 id="2-2-3-getTextBounds-String-text-int-start-int-end-Rect-bounds-获得文字的显示范围"><a href="#2-2-3-getTextBounds-String-text-int-start-int-end-Rect-bounds-获得文字的显示范围" class="headerlink" title="2.2.3 getTextBounds(String text, int start, int end, Rect bounds) // 获得文字的显示范围"></a>2.2.3 getTextBounds(String text, int start, int end, Rect bounds) // 获得文字的显示范围</h5><p>text是文字，start,end是指待测的文本的开始位置和结束位置，rect是测量完要赋值的矩形。</p>
+<pre><code>paint.setStyle(Paint.Style.FILL);  
+canvas.drawText(text, offsetX, offsetY, paint);
+
+paint.getTextBounds(text, 0, text.length(), bounds);  
+bounds.left += offsetX;  
+bounds.top += offsetY;  
+bounds.right += offsetX;  
+bounds.bottom += offsetY;  
+paint.setStyle(Paint.Style.STROKE);  
+canvas.drawRect(bounds, paint);  
+</code></pre><p><img src="https://ws3.sinaimg.cn/large/52eb2279ly1fig66pdyg4j20ct02tmxf.jpg" alt=""></p>
+<h4 id="2-2-4-measureText-String-text-测量文字宽度"><a href="#2-2-4-measureText-String-text-测量文字宽度" class="headerlink" title="2.2.4 measureText(String text) //  测量文字宽度"></a>2.2.4 measureText(String text) //  测量文字宽度</h4><pre><code>canvas.drawText(text, offsetX, offsetY, paint);  
+float textWidth = paint.measureText(text);  
+canvas.drawLine(offsetX, offsetY, offsetX + textWidth, offsetY, paint);  
+</code></pre><p><img src="https://ws3.sinaimg.cn/large/52eb2279ly1fig671on56j20or04a0te.jpg" alt=""></p>
+<blockquote>
+<p>注意： getTextBounds()和measureText()的区别：</p>
+<p>如果你用代码分别使用 getTextBounds() 和 measureText() 来测量文字的宽度，你会发现 measureText() 测出来的宽度总是比 getTextBounds() 大一点点。这是因为这两个方法其实测量的是两个不一样的东西。</p>
+<ul>
+<li>getTextBounds()测量的是文字的显示范围，这个矩形恰好能够包裹住文字</li>
+<li>measureText()测量的是文字绘制时所占的宽度，包括了字符间距等</li>
+</ul>
+</blockquote>
+<h4 id="2-2-5-getTextWidths-String-text-float-widths-获取每个字符的宽度，并传入width数组中"><a href="#2-2-5-getTextWidths-String-text-float-widths-获取每个字符的宽度，并传入width数组中" class="headerlink" title="2.2.5 getTextWidths(String text, float[] widths) // 获取每个字符的宽度，并传入width数组中"></a>2.2.5 getTextWidths(String text, float[] widths) // 获取每个字符的宽度，并传入width数组中</h4><h4 id="2-2-6-breakText-截取某长度的字符串"><a href="#2-2-6-breakText-截取某长度的字符串" class="headerlink" title="2.2.6 breakText() // 截取某长度的字符串"></a>2.2.6 breakText() // 截取某长度的字符串</h4><p>google api是这样写的<br>Measure the text, stopping early if the measured width exceeds maxWidth.意思是测量文本，如果宽度超过给定的宽度就停止测量。其效果就是如果你的字符串的长度大于breakText()中指定的最大长度，drawtext的时候就只显示这个被截取的定长的文字。返回值为截取的字符的个数。</p>
+<pre><code>String text = &quot;Hencode is very very very ... nice!&quot;;
+mPaint.setTextSize(64);
+int i = mPaint.breakText(text.toCharArray(), 0, 17, 600, new float[]{});
+canvas.drawText(text.toCharArray(), 0, i, 100, 100, mPaint);
+</code></pre><p><img src="https://ws3.sinaimg.cn/large/52eb2279ly1fig67950cnj21080m4grf.jpg" alt=""></p>
+<h4 id="2-2-7-光标相关"><a href="#2-2-7-光标相关" class="headerlink" title="2.2.7 光标相关"></a>2.2.7 光标相关</h4><p>对于像EditText一样的场景，就会需要绘制光标，在API 23开始引入两个新方法来计算光标。(这跟光标没有毛线关系貌似，主要是测量字符的宽度)</p>
+<h5 id="2-2-7-1-getRunAdvance-String-text-int-start-int-end-int-contextStart-int-contextEnd-boolean-isRtl-int-offset"><a href="#2-2-7-1-getRunAdvance-String-text-int-start-int-end-int-contextStart-int-contextEnd-boolean-isRtl-int-offset" class="headerlink" title="2.2.7.1 getRunAdvance(String text, int start, int end, int contextStart, int contextEnd, boolean isRtl, int offset) //"></a>2.2.7.1 getRunAdvance(String text, int start, int end, int contextStart, int contextEnd, boolean isRtl, int offset) //</h5><table>
+<thead>
+<tr>
+<th>params</th>
+<th>des</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>text</td>
+<td>CharSequence: the text to measure. Cannot be null.</td>
+</tr>
+<tr>
+<td>start</td>
+<td>int: the index of the start of the range to measure</td>
+</tr>
+<tr>
+<td>end</td>
+<td>int: the index + 1 of the end of the range to measure</td>
+</tr>
+<tr>
+<td>contextStart</td>
+<td>int: the index of the start of the shaping context</td>
+</tr>
+<tr>
+<td>contextEnd</td>
+<td>int: the index + 1 of the end of the shaping context</td>
+</tr>
+<tr>
+<td>isRtl</td>
+<td>boolean: whether the run is in RTL direction</td>
+</tr>
+<tr>
+<td>offset</td>
+<td>int: index of caret position</td>
+</tr>
+</tbody>
+</table>
+<p>return : width measurement between start and offset</p>
+<p>即是说 text指的是原文本，start,end指的是要测量的开始和结束的位置，contextStart，contextEnd不知道什么意思， isrtl是否反转字符串，offset指要插入的位置。</p>
+<p>返回的是start和offset之间的距离。</p>
+<pre><code>mPaint.setTextSize(36);
+// 包含特殊符号的绘制（如 emoji 表情）
+String text = &quot;Hello HenCoder \uD83C\uDDE8\uD83C\uDDF3&quot;; // &quot;Hello HenCoder 🇨🇳&quot;
+int start = 0;
+int end = text.length();
+int contextStart = 0;
+int contextEnd = text.length();
+boolean isRtl = false;
+int offset = text.length();
+float advance = mPaint.getRunAdvance(text, start, end, contextStart, contextEnd, isRtl, offset - 4);
+canvas.drawText(text, 100, 100, mPaint);
+canvas.drawLine(100 + advance, 60, 100 + advance, 100, mPaint);
+</code></pre><p><img src="https://ws3.sinaimg.cn/large/52eb2279ly1fig67pon53j215s0owdru.jpg" alt=""></p>
+<h5 id="2-2-7-2-getOffsetForAdvance-CharSequence-text-int-start-int-end-int-contextStart-int-contextEnd-boolean-isRtl-float-advance-给出一个位置的像素值，计算出文字中最接近这个位置的字符偏移量"><a href="#2-2-7-2-getOffsetForAdvance-CharSequence-text-int-start-int-end-int-contextStart-int-contextEnd-boolean-isRtl-float-advance-给出一个位置的像素值，计算出文字中最接近这个位置的字符偏移量" class="headerlink" title="2.2.7.2 getOffsetForAdvance(CharSequence text, int start, int end, int contextStart, int contextEnd, boolean isRtl, float advance) // 给出一个位置的像素值，计算出文字中最接近这个位置的字符偏移量"></a>2.2.7.2 getOffsetForAdvance(CharSequence text, int start, int end, int contextStart, int contextEnd, boolean isRtl, float advance) // 给出一个位置的像素值，计算出文字中最接近这个位置的字符偏移量</h5><h5 id="2-2-8-hasGlyph-String-string-检查指定的字符串中是否是一个单独的字形。"><a href="#2-2-8-hasGlyph-String-string-检查指定的字符串中是否是一个单独的字形。" class="headerlink" title="2.2.8 hasGlyph(String string) // 检查指定的字符串中是否是一个单独的字形。"></a>2.2.8 hasGlyph(String string) // 检查指定的字符串中是否是一个单独的字形。</h5><p><img src="https://ws1.sinaimg.cn/large/006tNc79ly1flgaf31rskj31120damyn.jpg" alt=""></p>
+<h2 id="练习"><a href="#练习" class="headerlink" title="练习"></a>练习</h2><h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/11/29/HenCode学习笔记-1.4/" rel="next" title="">
+                <i class="fa fa-chevron-left"></i> 
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/12/27/EPUB/" rel="prev" title="">
+                 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/logo_s.jpg"
+                alt="Sparky" />
+            
+              <p class="site-author-name" itemprop="name">Sparky</p>
+              <p class="site-description motion-element" itemprop="description">我是谁？我在做什么？我为什么要这么做？我想做什么？我要怎么做？</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">24</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#文字的绘制"><span class="nav-number">1.</span> <span class="nav-text">文字的绘制</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Canvas绘制文字"><span class="nav-number">1.1.</span> <span class="nav-text">1. Canvas绘制文字</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-drawText-String-text-float-x-float-y-Paint-paint"><span class="nav-number">1.1.0.1.</span> <span class="nav-text">1.1 drawText(String text, float x,  float y, Paint paint)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-drawTextRun"><span class="nav-number">1.1.0.2.</span> <span class="nav-text">1.2 drawTextRun()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-3-drawTextOnPath"><span class="nav-number">1.1.0.3.</span> <span class="nav-text">1.3 drawTextOnPath()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-4-StaticLayout"><span class="nav-number">1.1.0.4.</span> <span class="nav-text">1.4 StaticLayout</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Paint对文字绘制的辅助"><span class="nav-number">1.2.</span> <span class="nav-text">2. Paint对文字绘制的辅助</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-设置显示效果"><span class="nav-number">1.2.0.1.</span> <span class="nav-text">2.1 设置显示效果</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-测量文字尺寸"><span class="nav-number">1.2.0.2.</span> <span class="nav-text">2.2 测量文字尺寸</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#2-2-1-getFontSpacing-获得推荐的行距-即是相邻的baseline之间的距离，如下图所示"><span class="nav-number">1.2.0.2.1.</span> <span class="nav-text">2.2.1 getFontSpacing() // 获得推荐的行距,即是相邻的baseline之间的距离，如下图所示</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-2-2-getFontMatrics-获得FontMatrix，-FontMatrix是一个相对专业的工具类，提供了几个文字排印方面的数值：ascent-descent-top-bottom-leading"><span class="nav-number">1.2.0.2.2.</span> <span class="nav-text">2.2.2 getFontMatrics() // 获得FontMatrix， FontMatrix是一个相对专业的工具类，提供了几个文字排印方面的数值：ascent, descent, top,bottom, leading;</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-2-3-getTextBounds-String-text-int-start-int-end-Rect-bounds-获得文字的显示范围"><span class="nav-number">1.2.0.2.3.</span> <span class="nav-text">2.2.3 getTextBounds(String text, int start, int end, Rect bounds) // 获得文字的显示范围</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-4-measureText-String-text-测量文字宽度"><span class="nav-number">1.2.0.3.</span> <span class="nav-text">2.2.4 measureText(String text) //  测量文字宽度</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-5-getTextWidths-String-text-float-widths-获取每个字符的宽度，并传入width数组中"><span class="nav-number">1.2.0.4.</span> <span class="nav-text">2.2.5 getTextWidths(String text, float[] widths) // 获取每个字符的宽度，并传入width数组中</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-6-breakText-截取某长度的字符串"><span class="nav-number">1.2.0.5.</span> <span class="nav-text">2.2.6 breakText() // 截取某长度的字符串</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-7-光标相关"><span class="nav-number">1.2.0.6.</span> <span class="nav-text">2.2.7 光标相关</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#2-2-7-1-getRunAdvance-String-text-int-start-int-end-int-contextStart-int-contextEnd-boolean-isRtl-int-offset"><span class="nav-number">1.2.0.6.1.</span> <span class="nav-text">2.2.7.1 getRunAdvance(String text, int start, int end, int contextStart, int contextEnd, boolean isRtl, int offset) //</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-2-7-2-getOffsetForAdvance-CharSequence-text-int-start-int-end-int-contextStart-int-contextEnd-boolean-isRtl-float-advance-给出一个位置的像素值，计算出文字中最接近这个位置的字符偏移量"><span class="nav-number">1.2.0.6.2.</span> <span class="nav-text">2.2.7.2 getOffsetForAdvance(CharSequence text, int start, int end, int contextStart, int contextEnd, boolean isRtl, float advance) // 给出一个位置的像素值，计算出文字中最接近这个位置的字符偏移量</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-2-8-hasGlyph-String-string-检查指定的字符串中是否是一个单独的字形。"><span class="nav-number">1.2.0.6.3.</span> <span class="nav-text">2.2.8 hasGlyph(String string) // 检查指定的字符串中是否是一个单独的字形。</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#练习"><span class="nav-number">1.3.</span> <span class="nav-text">练习</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小结"><span class="nav-number">1.4.</span> <span class="nav-text">小结</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Sparky</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="[HenCode学习笔记] View-1.1 绘制基础绘制基础对于有一定自定义view经验的开发者来说是比较简单的，所以这里的笔记也简单做一下 概述自定义绘制的方法是重写绘制方法，最常用的是onDraw(); 绘制的关键是Canvas:  绘制类方法: drawXXX(关键参数 Paint) 辅助类方法: 裁剪范围和几何变换  可以使用不同的绘制方法来控制遮盖关系 自定义绘制的四个级别 熟练使用d">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Sparky">
+<meta property="og:url" content="http://yoursite.com/2017/11/24/HenCode学习笔记-1.1/index.html">
+<meta property="og:site_name" content="Sparky">
+<meta property="og:description" content="[HenCode学习笔记] View-1.1 绘制基础绘制基础对于有一定自定义view经验的开发者来说是比较简单的，所以这里的笔记也简单做一下 概述自定义绘制的方法是重写绘制方法，最常用的是onDraw(); 绘制的关键是Canvas:  绘制类方法: drawXXX(关键参数 Paint) 辅助类方法: 裁剪范围和几何变换  可以使用不同的绘制方法来控制遮盖关系 自定义绘制的四个级别 熟练使用d">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://img.blog.csdn.net/20160330083020037?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQv/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20160330083742743?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQv/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/006tNc79ly1fig7zidfmtj304p0330sl.jpg">
+<meta property="og:image" content="https://ws2.sinaimg.cn/large/006tNc79ly1fig7zqj7llj304n03aglh.jpg">
+<meta property="og:image" content="https://ws3.sinaimg.cn/large/006tNc79ly1fig80a2v95j304z035glh.jpg">
+<meta property="og:image" content="https://ws3.sinaimg.cn/large/006tNc79ly1fig8042q9jj30hb0aodg6.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/006tNc79ly1fig7zyzjtrj30kx0jugn9.jpg">
+<meta property="og:image" content="https://ws3.sinaimg.cn/large/006tNc79ly1fig811a7tnj30jj06h74p.jpg">
+<meta property="og:image" content="https://ws4.sinaimg.cn/large/006tNc79ly1fig81dw60ej307b0bm3yq.jpg">
+<meta property="og:image" content="https://ws3.sinaimg.cn/large/006tNc79ly1fig81scem2j30k90digmo.jpg">
+<meta property="og:updated_time" content="2017-11-24T10:11:03.679Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Sparky">
+<meta name="twitter:description" content="[HenCode学习笔记] View-1.1 绘制基础绘制基础对于有一定自定义view经验的开发者来说是比较简单的，所以这里的笔记也简单做一下 概述自定义绘制的方法是重写绘制方法，最常用的是onDraw(); 绘制的关键是Canvas:  绘制类方法: drawXXX(关键参数 Paint) 辅助类方法: 裁剪范围和几何变换  可以使用不同的绘制方法来控制遮盖关系 自定义绘制的四个级别 熟练使用d">
+<meta name="twitter:image" content="http://img.blog.csdn.net/20160330083020037?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQv/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/11/24/HenCode学习笔记-1.1/"/>
+
+
+
+
+
+  <title> | Sparky</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?23f2f984b557cd9c31da9a75b4da08e4";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Sparky</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/24/HenCode学习笔记-1.1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sparky">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/logo_s.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sparky">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline"></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-24T18:33:40+08:00">
+                2017-11-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="HenCode学习笔记-View-1-1-绘制基础"><a href="#HenCode学习笔记-View-1-1-绘制基础" class="headerlink" title="[HenCode学习笔记] View-1.1 绘制基础"></a>[HenCode学习笔记] View-1.1 绘制基础</h1><p>绘制基础对于有一定自定义view经验的开发者来说是比较简单的，所以这里的笔记也简单做一下</p>
+<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>自定义绘制的方法是重写绘制方法，最常用的是onDraw();</p>
+<p>绘制的关键是Canvas:</p>
+<ul>
+<li>绘制类方法: drawXXX(关键参数 Paint)</li>
+<li>辅助类方法: 裁剪范围和几何变换</li>
+</ul>
+<p>可以使用不同的绘制方法来控制遮盖关系</p>
+<h2 id="自定义绘制的四个级别"><a href="#自定义绘制的四个级别" class="headerlink" title="自定义绘制的四个级别"></a>自定义绘制的四个级别</h2><ol>
+<li>熟练使用drawXXX()和paint的常见用法</li>
+<li>熟练使用paint</li>
+<li>熟练canvas对绘制的辅助-裁剪和几何变换</li>
+<li>使用不同的绘制方法来控制绘制顺序</li>
+</ol>
+<h2 id="onDraw"><a href="#onDraw" class="headerlink" title="onDraw()"></a>onDraw()</h2><h2 id="canvas-drawXXX和Paint基础"><a href="#canvas-drawXXX和Paint基础" class="headerlink" title="canvas.drawXXX和Paint基础"></a>canvas.drawXXX和Paint基础</h2><p>主要包括</p>
+<ul>
+<li>Canvas类下的所有drawXXX(),例如drawCicle(), drawBitmap()</li>
+<li>Paint类中的几个常见方法,例如<ul>
+<li>Paint.setStyle() // 设置绘制模式</li>
+<li>Paint.setColor() // 设置画笔颜色</li>
+<li>Paint.setStrockWidth() // 设置线条宽度</li>
+<li>Paint.setTextSize() // 设置文字大小</li>
+<li>Paint.setAntiAlias() // 设置是否开启抗锯齿</li>
+</ul>
+</li>
+</ul>
+<h2 id="canvas-drawColor-颜色填充-设置画布颜色"><a href="#canvas-drawColor-颜色填充-设置画布颜色" class="headerlink" title="canvas.drawColor() // 颜色填充,设置画布颜色"></a>canvas.drawColor() // 颜色填充,设置画布颜色</h2><blockquote>
+<p>drawRGB,drawARGB作用一样</p>
+</blockquote>
+<h2 id="drawCircle-画圆"><a href="#drawCircle-画圆" class="headerlink" title="drawCircle // 画圆"></a>drawCircle // 画圆</h2><p>? 参数：圆心x轴坐标，圆心Y轴坐标，圆心半径，画笔Paint提供除基本信息外所有风格信息</p>
+<h2 id="drawRect-画矩形"><a href="#drawRect-画矩形" class="headerlink" title="drawRect // 画矩形"></a>drawRect // 画矩形</h2><h2 id="drawPoint-画点"><a href="#drawPoint-画点" class="headerlink" title="drawPoint // 画点"></a>drawPoint // 画点</h2><blockquote>
+<p>画点不指是圆点，还有方块等</p>
+<p>点的大小可以通过paint.setStrockWidth()来设置</p>
+<p>点的形状可以通过paint.setStrockCap()来设置,这个方法其实是用来设置笔触风格，就像现实中的钢笔，毛笔，圆珠笔一样，同样在纸上点一下，会出现不同的形状，这个形状就叫笔触，下图中的线冒也是指的笔触，不过下边的就比较形象。笔触有三种, BUTT(无),SQUARE(方形),ROUND(圆形)<br><img src="http://img.blog.csdn.net/20160330083020037?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQv/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt=""></p>
+<p>setStrokeJoin 用来设置接合处的形状。如下图所示<img src="http://img.blog.csdn.net/20160330083742743?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQv/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt=""><br>可以设置三种参数Join.MITER(锐角), Join.BEVEL(直角), Join.Round(圆角)</p>
+</blockquote>
+<h2 id="drawOval-left-top-right-bottom-paint-画椭圆，左上右下分别对应椭圆的四个边界"><a href="#drawOval-left-top-right-bottom-paint-画椭圆，左上右下分别对应椭圆的四个边界" class="headerlink" title="drawOval(left, top, right, bottom, paint) // 画椭圆，左上右下分别对应椭圆的四个边界"></a>drawOval(left, top, right, bottom, paint) // 画椭圆，左上右下分别对应椭圆的四个边界</h2><h2 id="drawLine-startX-startY-endX-endY-paint"><a href="#drawLine-startX-startY-endX-endY-paint" class="headerlink" title="drawLine(startX, startY, endX, endY, paint)"></a>drawLine(startX, startY, endX, endY, paint)</h2><blockquote>
+<p>由于直线不是封闭图形，所以setStyle对直线没有影响。(这句话不一定对)</p>
+</blockquote>
+<h2 id="drawRoundRect-画圆角矩形"><a href="#drawRoundRect-画圆角矩形" class="headerlink" title="drawRoundRect() // 画圆角矩形"></a>drawRoundRect() // 画圆角矩形</h2><h2 id="drawArc-left-top-right-bottom-startAngle-sweepAngle-useCenter-paint-画弧形和扇形"><a href="#drawArc-left-top-right-bottom-startAngle-sweepAngle-useCenter-paint-画弧形和扇形" class="headerlink" title="drawArc(left, top, right, bottom, startAngle, sweepAngle, useCenter, paint) // 画弧形和扇形"></a>drawArc(left, top, right, bottom, startAngle, sweepAngle, useCenter, paint) // 画弧形和扇形</h2><blockquote>
+<p>左上右下用来描述圆弧所在的椭圆的，startAngle起始的角度(x轴的正向，即正右方向为0度的位置，顺时针为正向，逆时针为负向)，sweepAngle是弧形扫过的角度，useCenter表示是否连接到圆心，即是如果连接到圆心表示扇形，不连接到圆心表示弧形。</p>
+</blockquote>
+<h2 id="drawPath-path-paint-画自定义图形"><a href="#drawPath-path-paint-画自定义图形" class="headerlink" title="drawPath(path, paint) // 画自定义图形"></a>drawPath(path, paint) // 画自定义图形</h2><p>Path就是用来描述图形路径的对象，这个类中的几个常见方法:</p>
+<p>Path.arcTo();</p>
+<p>Path.lineTo();</p>
+<p>Path.addArc();</p>
+<p>…</p>
+<p>Path可以描述直线，二次曲线，三次曲线，园，椭圆，弧形，矩形，圆角矩形等，并可以将这些图形组合起来形成各种复杂的图形。</p>
+<h2 id="Path有两种方法"><a href="#Path有两种方法" class="headerlink" title="Path有两种方法:"></a>Path有两种方法:</h2><h3 id="第一种：-直接描述路径，又可以分为两种"><a href="#第一种：-直接描述路径，又可以分为两种" class="headerlink" title="第一种： 直接描述路径，又可以分为两种"></a>第一种： 直接描述路径，又可以分为两种</h3><h5 id="1-addXXX-–-添加子图形"><a href="#1-addXXX-–-添加子图形" class="headerlink" title="1. addXXX – 添加子图形"></a>1. addXXX – 添加子图形</h5><p>addCircle(centerX, centerY, radius, direction)</p>
+<blockquote>
+<p>Path的方向有两种 CW(顺时针)和CCW(逆时针)，当图形为填充并且图形有自相交时，需要根据方向判断填充范围。</p>
+<h5 id="2-xxxTo-–-划线（直线或者曲线）"><a href="#2-xxxTo-–-划线（直线或者曲线）" class="headerlink" title="2. xxxTo – 划线（直线或者曲线）"></a>2. xxxTo – 划线（直线或者曲线）</h5><p>lineTo(x,y) // 从当前位置向目标位置划线。<br>rLineTo(x,y) // 从相对当前位置向目标位置划线。</p>
+</blockquote>
+<pre><code>paint.setStyle(Style.STROKE);  
+path.lineTo(100, 100); // 由当前位置 (0, 0) 向 (100, 100) 画一条直线  
+path.rLineTo(100, 0); // 由当前位置 (100, 100) 向正右方 100 像素的位置画一条直线 
+</code></pre><p>quadTo(x1, y1, x2, y2) // 是指从当前位置向目标位置画二次贝塞尔曲线。(x1,y1)是控制点的坐标，(x2,y2)是目标点坐标</p>
+<p>cubicTo() // 三次贝塞尔曲线，两个控制点</p>
+<p>moveTo(x,y)/rMoveTo(x,y) // 移动当前位置或者相对位置的坐标</p>
+<blockquote>
+<p>arcTo(rectf, startAngle, sweepAngle, forceMoveTo) // arcTo方法没有UseCenter参数，因为path只能画弧线，forceMoveTo为true表示强制移动到弧线起点位置(无痕迹)，为false表示要把当前位置到弧线起点位置连起来。</p>
+<p>close封闭当前图形。即是将当前图形封闭，我看来是当前位置到相对位置连接起来</p>
+</blockquote>
+<pre><code>paint.setStyle(Style.STROKE);  
+path.moveTo(100, 100);  
+path.lineTo(200, 100);  
+path.lineTo(150, 150);  
+// 子图形未封闭
+</code></pre><p><img src="https://ws1.sinaimg.cn/large/006tNc79ly1fig7zidfmtj304p0330sl.jpg" alt=""></p>
+<pre><code>paint.setStyle(Style.STROKE);  
+path.moveTo(100, 100);  
+path.lineTo(200, 100);  
+path.lineTo(150, 150);  
+path.close(); // 使用 close() 封闭子图形。等价于 path.lineTo(100, 100)  
+</code></pre><p><img src="https://ws2.sinaimg.cn/large/006tNc79ly1fig7zqj7llj304n03aglh.jpg" alt=""></p>
+<pre><code>paint.setStyle(Style.FILL);
+  path.moveTo(100, 100);
+  path.lineTo(200, 100);
+  path.lineTo(150, 150);
+  // 这里只绘制了两条边，但由于 Style 是 FILL ，所以绘制时会自动封口
+</code></pre><p><img src="https://ws3.sinaimg.cn/large/006tNc79ly1fig80a2v95j304z035glh.jpg" alt=""></p>
+<h3 id="第二种-辅助的设计或者计算"><a href="#第二种-辅助的设计或者计算" class="headerlink" title="第二种: 辅助的设计或者计算"></a>第二种: 辅助的设计或者计算</h3><p>Path.setFillType(fillType) // 前面在说 dir 参数的时候提到，这个方法是用来设置图形自相交时的填充算法的：<br><img src="https://ws3.sinaimg.cn/large/006tNc79ly1fig8042q9jj30hb0aodg6.jpg" alt=""></p>
+<p>FillType四种类型:</p>
+<ul>
+<li>EVEN_ODD</li>
+<li>WINDING(默认)</li>
+<li>INVERSE_EVEN_ODD</li>
+<li>INVERSE_WINDING</li>
+</ul>
+<p><img src="https://ws1.sinaimg.cn/large/006tNc79ly1fig7zyzjtrj30kx0jugn9.jpg" alt=""></p>
+<h6 id="ENVEN-ODD"><a href="#ENVEN-ODD" class="headerlink" title="ENVEN_ODD"></a>ENVEN_ODD</h6><p>即 even-odd rule （奇偶原则）：对于平面中的任意一点，向任意方向射出一条射线，这条射线和图形相交的次数（相交才算，相切不算哦）如果是奇数，则这个点被认为在图形内部，是要被涂色的区域；如果是偶数，则这个点被认为在图形外部，是不被涂色的区域。还以左右相交的双圆为例：</p>
+<p><img src="https://ws3.sinaimg.cn/large/006tNc79ly1fig811a7tnj30jj06h74p.jpg" alt=""></p>
+<h6 id="WINDING"><a href="#WINDING" class="headerlink" title="WINDING"></a>WINDING</h6><p>即 non-zero winding rule （非零环绕数原则）：首先，它需要你图形中的所有线条都是有绘制方向的：</p>
+<p><img src="https://ws4.sinaimg.cn/large/006tNc79ly1fig81dw60ej307b0bm3yq.jpg" alt=""></p>
+<p>然后，同样是从平面中的点向任意方向射出一条射线，但计算规则不一样：以 0 为初始值，对于射线和图形的所有交点，遇到每个顺时针的交点（图形从射线的左边向右穿过）把结果加 1，遇到每个逆时针的交点（图形从射线的右边向左穿过）把结果减 1，最终把所有的交点都算上，得到的结果如果不是 0，则认为这个点在图形内部，是要被涂色的区域；如果是 0，则认为这个点在图形外部，是不被涂色的区域。<br><img src="https://ws3.sinaimg.cn/large/006tNc79ly1fig81scem2j30k90digmo.jpg" alt=""></p>
+<h2 id="drawBitmap-bitmap-left-top"><a href="#drawBitmap-bitmap-left-top" class="headerlink" title="drawBitmap(bitmap, left, top)"></a>drawBitmap(bitmap, left, top)</h2><h2 id="drawText-text-x-y-paint-x-y可以认为是绘制起点的坐标"><a href="#drawText-text-x-y-paint-x-y可以认为是绘制起点的坐标" class="headerlink" title="drawText(text, x, y, paint) // x,y可以认为是绘制起点的坐标"></a>drawText(text, x, y, paint) // x,y可以认为是绘制起点的坐标</h2><h2 id="练习"><a href="#练习" class="headerlink" title="练习"></a>练习</h2>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/11/24/HenCode学习笔记/" rel="next" title="">
+                <i class="fa fa-chevron-left"></i> 
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/11/29/HenCode学习笔记-1.4/" rel="prev" title="">
+                 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/logo_s.jpg"
+                alt="Sparky" />
+            
+              <p class="site-author-name" itemprop="name">Sparky</p>
+              <p class="site-description motion-element" itemprop="description">我是谁？我在做什么？我为什么要这么做？我想做什么？我要怎么做？</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">24</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#HenCode学习笔记-View-1-1-绘制基础"><span class="nav-number">1.</span> <span class="nav-text">[HenCode学习笔记] View-1.1 绘制基础</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#概述"><span class="nav-number">1.1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自定义绘制的四个级别"><span class="nav-number">1.2.</span> <span class="nav-text">自定义绘制的四个级别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#onDraw"><span class="nav-number">1.3.</span> <span class="nav-text">onDraw()</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#canvas-drawXXX和Paint基础"><span class="nav-number">1.4.</span> <span class="nav-text">canvas.drawXXX和Paint基础</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#canvas-drawColor-颜色填充-设置画布颜色"><span class="nav-number">1.5.</span> <span class="nav-text">canvas.drawColor() // 颜色填充,设置画布颜色</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#drawCircle-画圆"><span class="nav-number">1.6.</span> <span class="nav-text">drawCircle // 画圆</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#drawRect-画矩形"><span class="nav-number">1.7.</span> <span class="nav-text">drawRect // 画矩形</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#drawPoint-画点"><span class="nav-number">1.8.</span> <span class="nav-text">drawPoint // 画点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#drawOval-left-top-right-bottom-paint-画椭圆，左上右下分别对应椭圆的四个边界"><span class="nav-number">1.9.</span> <span class="nav-text">drawOval(left, top, right, bottom, paint) // 画椭圆，左上右下分别对应椭圆的四个边界</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#drawLine-startX-startY-endX-endY-paint"><span class="nav-number">1.10.</span> <span class="nav-text">drawLine(startX, startY, endX, endY, paint)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#drawRoundRect-画圆角矩形"><span class="nav-number">1.11.</span> <span class="nav-text">drawRoundRect() // 画圆角矩形</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#drawArc-left-top-right-bottom-startAngle-sweepAngle-useCenter-paint-画弧形和扇形"><span class="nav-number">1.12.</span> <span class="nav-text">drawArc(left, top, right, bottom, startAngle, sweepAngle, useCenter, paint) // 画弧形和扇形</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#drawPath-path-paint-画自定义图形"><span class="nav-number">1.13.</span> <span class="nav-text">drawPath(path, paint) // 画自定义图形</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Path有两种方法"><span class="nav-number">1.14.</span> <span class="nav-text">Path有两种方法:</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#第一种：-直接描述路径，又可以分为两种"><span class="nav-number">1.14.1.</span> <span class="nav-text">第一种： 直接描述路径，又可以分为两种</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-addXXX-–-添加子图形"><span class="nav-number">1.14.1.0.1.</span> <span class="nav-text">1. addXXX – 添加子图形</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-xxxTo-–-划线（直线或者曲线）"><span class="nav-number">1.14.1.0.2.</span> <span class="nav-text">2. xxxTo – 划线（直线或者曲线）</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第二种-辅助的设计或者计算"><span class="nav-number">1.14.2.</span> <span class="nav-text">第二种: 辅助的设计或者计算</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#ENVEN-ODD"><span class="nav-number">1.14.2.0.0.1.</span> <span class="nav-text">ENVEN_ODD</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#WINDING"><span class="nav-number">1.14.2.0.0.2.</span> <span class="nav-text">WINDING</span></a></li></ol></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#drawBitmap-bitmap-left-top"><span class="nav-number">1.15.</span> <span class="nav-text">drawBitmap(bitmap, left, top)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#drawText-text-x-y-paint-x-y可以认为是绘制起点的坐标"><span class="nav-number">1.16.</span> <span class="nav-text">drawText(text, x, y, paint) // x,y可以认为是绘制起点的坐标</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#练习"><span class="nav-number">1.17.</span> <span class="nav-text">练习</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Sparky</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

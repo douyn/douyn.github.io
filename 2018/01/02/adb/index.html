@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="adb总结 什么是adb，c/s架构，adb命令分为3种  adb命令是程序自带的一些命令，adb shell是调用Android系统中的命令，这些系统是放在system/bin目录下 adb命令adb devicesadb get-state:device,offline,unknownadb kill-server,adb start-srevreadb bugreport 打印dumpsys">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Sparky">
+<meta property="og:url" content="http://yoursite.com/2018/01/02/adb/index.html">
+<meta property="og:site_name" content="Sparky">
+<meta property="og:description" content="adb总结 什么是adb，c/s架构，adb命令分为3种  adb命令是程序自带的一些命令，adb shell是调用Android系统中的命令，这些系统是放在system/bin目录下 adb命令adb devicesadb get-state:device,offline,unknownadb kill-server,adb start-srevreadb bugreport 打印dumpsys">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-01-02T06:17:15.995Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Sparky">
+<meta name="twitter:description" content="adb总结 什么是adb，c/s架构，adb命令分为3种  adb命令是程序自带的一些命令，adb shell是调用Android系统中的命令，这些系统是放在system/bin目录下 adb命令adb devicesadb get-state:device,offline,unknownadb kill-server,adb start-srevreadb bugreport 打印dumpsys">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/01/02/adb/"/>
+
+
+
+
+
+  <title> | Sparky</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?23f2f984b557cd9c31da9a75b4da08e4";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Sparky</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/02/adb/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sparky">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/logo_s.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sparky">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline"></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-02T14:17:15+08:00">
+                2018-01-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="adb总结"><a href="#adb总结" class="headerlink" title="adb总结"></a>adb总结</h2><blockquote>
+<p>什么是adb，c/s架构，adb命令分为3种</p>
+</blockquote>
+<p>adb命令是程序自带的一些命令，adb shell是调用Android系统中的命令，这些系统是放在system/bin目录下</p>
+<h4 id="adb命令"><a href="#adb命令" class="headerlink" title="adb命令"></a>adb命令</h4><h6 id="adb-devices"><a href="#adb-devices" class="headerlink" title="adb devices"></a>adb devices</h6><h6 id="adb-get-state-device-offline-unknown"><a href="#adb-get-state-device-offline-unknown" class="headerlink" title="adb get-state:device,offline,unknown"></a><em>adb get-state:device,offline,unknown</em></h6><h6 id="adb-kill-server-adb-start-srevre"><a href="#adb-kill-server-adb-start-srevre" class="headerlink" title="adb kill-server,adb start-srevre"></a>adb kill-server,adb start-srevre</h6><h6 id="adb-bugreport-打印dumpsys-dumpstate-logcat的输出，分析错误-可以和logcat一样重定向到文件中"><a href="#adb-bugreport-打印dumpsys-dumpstate-logcat的输出，分析错误-可以和logcat一样重定向到文件中" class="headerlink" title="adb bugreport 打印dumpsys,dumpstate,logcat的输出，分析错误,可以和logcat一样重定向到文件中"></a><em>adb bugreport 打印dumpsys,dumpstate,logcat的输出，分析错误,可以和logcat一样重定向到文件中</em></h6><h6 id="adb-pull-adb-push"><a href="#adb-pull-adb-push" class="headerlink" title="adb pull,adb push"></a>adb pull,adb push</h6><h6 id="adb-install-adb-uninstall"><a href="#adb-install-adb-uninstall" class="headerlink" title="adb install, adb uninstall"></a>adb install, adb uninstall</h6><h6 id="adb-root-adb-remount-获取-root-权限，并挂载系统文件系统为可读写状态"><a href="#adb-root-adb-remount-获取-root-权限，并挂载系统文件系统为可读写状态" class="headerlink" title="adb root, adb remount 获取 root 权限，并挂载系统文件系统为可读写状态"></a><em>adb root, adb remount</em> 获取 root 权限，并挂载系统文件系统为可读写状态</h6><h6 id="adb-reboot-bootloader-重启设备，进入-fastboot-模式，同-adb-reboot-bootloader-命令"><a href="#adb-reboot-bootloader-重启设备，进入-fastboot-模式，同-adb-reboot-bootloader-命令" class="headerlink" title="adb reboot bootloader , 重启设备，进入 fastboot 模式，同 adb reboot-bootloader 命令"></a><em>adb reboot</em> bootloader , 重启设备，进入 fastboot 模式，同 adb reboot-bootloader 命令</h6><h6 id="recovery-重启设备，进入-recovery-模式，经常刷机的同学比较熟悉这个模式"><a href="#recovery-重启设备，进入-recovery-模式，经常刷机的同学比较熟悉这个模式" class="headerlink" title="recovery , 重启设备，进入 recovery 模式，经常刷机的同学比较熟悉这个模式"></a>recovery , 重启设备，进入 recovery 模式，经常刷机的同学比较熟悉这个模式</h6><h6 id="adb-forward-将-宿主机上的某个端口重定向到设备的某个端口"><a href="#adb-forward-将-宿主机上的某个端口重定向到设备的某个端口" class="headerlink" title="adb forward 将 宿主机上的某个端口重定向到设备的某个端口"></a><em>adb forward</em> 将 宿主机上的某个端口重定向到设备的某个端口</h6><h6 id="adb-connect-连接远程Android设备"><a href="#adb-connect-连接远程Android设备" class="headerlink" title="adb connect 连接远程Android设备"></a><em>adb connect</em> 连接远程Android设备</h6><p>// 根据TAG和级别过滤日志输出</p>
+<h6 id="adb-logcat"><a href="#adb-logcat" class="headerlink" title="adb logcat"></a><em>adb logcat</em></h6><p>adb logcat [-s] [ClassName:[PREVISOUS]] [*:[PREVIOUS]]</p>
+<pre><code>adb logcat // 直接输出的终端
+adb logcat &gt; c:/log.txt // 保存到文件
+adb logcat ActivityManager:I PowerManager:D *:S
+adb logcat *:W // 显示所有优先级大于等于“warning”的日志
+ adb logcat -s ActivityManager
+</code></pre><p>logcat命令列表:</p>
+<pre><code>-d 将日志显示到控制台后退出
+-c 清理已经存在的目录
+-f &lt;filename&gt; 将日志输出到文件
+-v &lt;format&gt; 设置日志输出格式控制输出字段，格式如下，默认是brief格式
+    brief--显示优先级/标记和原始进程PID
+    process--仅显示进程PID
+    tag--仅显示优先级/标记
+    thread--仅显示进程：线程和优先级/标记
+    raw--显示原始的日志信息，调用时间，优先级/标记，PID
+    time--显示日期，调用时间，优先级标记/pid
+    long--显示所有的元数据并用空行分割消息内容
+-b &lt;buffer&gt; 加载一个可使用的日志缓冲区供查看，默认是main
+    radio--查看包含在无线/电话相关的缓冲区信息
+    events--查看事件相关的消息
+    main--查看主缓冲区
+
+adb logcat -f c:/log.txt
+adb logcat -v thread // 使用thread输出格式
+adblogcat -b radio
+</code></pre><h4 id="adb-shell命令"><a href="#adb-shell命令" class="headerlink" title="adb shell命令"></a>adb shell命令</h4><p>/system/bin下或者sdk sources/android-20/com/android/commands</p>
+<h5 id="pm"><a href="#pm" class="headerlink" title="[pm]"></a>[pm]</h5><h6 id="adb-shell-pm-list-package-s-3-f-i-FILTER"><a href="#adb-shell-pm-list-package-s-3-f-i-FILTER" class="headerlink" title="adb shell pm list package [-s|-3|-f|-i] FILTER"></a>adb shell pm list package [-s|-3|-f|-i] FILTER</h6><pre><code>adb shell pm list package -i
+</code></pre><h6 id="adb-shell-pm-path-PATH"><a href="#adb-shell-pm-path-PATH" class="headerlink" title="adb shell pm path PATH"></a>adb shell pm path PATH</h6><pre><code>adb shell pm path com.tencent.mobileqq
+</code></pre><h6 id="adb-shell-pm-list-instrumentation"><a href="#adb-shell-pm-list-instrumentation" class="headerlink" title="adb shell pm list instrumentation"></a>adb shell pm list instrumentation</h6><h6 id="adb-shell-pm-dump"><a href="#adb-shell-pm-dump" class="headerlink" title="adb shell pm dump"></a>adb shell pm dump</h6><pre><code>adb shell pm dump com.tencent.mobileqq
+</code></pre><h6 id="adb-shell-pm-install-uninstall"><a href="#adb-shell-pm-install-uninstall" class="headerlink" title="adb shell pm install/uninstall"></a>adb shell pm install/uninstall</h6><h6 id="adb-shell-pm-clear"><a href="#adb-shell-pm-clear" class="headerlink" title="adb shell pm clear"></a>adb shell pm clear</h6><h6 id="adb-shell-pm-set-install-location-get-install-location"><a href="#adb-shell-pm-set-install-location-get-install-location" class="headerlink" title="adb shell pm set-install-location/get-install-location"></a>adb shell pm set-install-location/get-install-location</h6><h5 id="am"><a href="#am" class="headerlink" title="[am]"></a>[am]</h5><h6 id="adb-shell-am-start-n-S-W-a-PACKAGENAME"><a href="#adb-shell-am-start-n-S-W-a-PACKAGENAME" class="headerlink" title="adb shell am start [-n|-S|-W|-a] PACKAGENAME"></a>adb shell am start [-n|-S|-W|-a] PACKAGENAME</h6><pre><code>adb shell am start -n com.android.camera/.Camera
+</code></pre><h6 id="adb-shell-am-force-stop-PACKAGENAME"><a href="#adb-shell-am-force-stop-PACKAGENAME" class="headerlink" title="adb shell am force-stop [PACKAGENAME]"></a>adb shell am force-stop [PACKAGENAME]</h6><h6 id="adb-shell-am-startservice-CLASSNAME"><a href="#adb-shell-am-startservice-CLASSNAME" class="headerlink" title="adb shell am startservice [CLASSNAME]"></a>adb shell am startservice [CLASSNAME]</h6><h6 id="adb-shell-am-broadcast-CLASSNAME"><a href="#adb-shell-am-broadcast-CLASSNAME" class="headerlink" title="adb shell am broadcast [CLASSNAME]"></a>adb shell am broadcast [CLASSNAME]</h6><h6 id="adb-shell-am-monitor"><a href="#adb-shell-am-monitor" class="headerlink" title="adb shell am monitor"></a>adb shell am monitor</h6><h6 id="adb-shell-am-instrument"><a href="#adb-shell-am-instrument" class="headerlink" title="adb shell am instrument"></a>adb shell am instrument</h6><h5 id="input"><a href="#input" class="headerlink" title="[input]"></a>[input]</h5><h6 id="adb-shell-input-text-TEXT"><a href="#adb-shell-input-text-TEXT" class="headerlink" title="adb shell input text [TEXT]"></a>adb shell input text [TEXT]</h6><h6 id="adb-shell-input-keyevent-KEYCODE"><a href="#adb-shell-input-keyevent-KEYCODE" class="headerlink" title="adb shell input keyevent [KEYCODE]"></a>adb shell input keyevent [KEYCODE]</h6><h6 id="adb-shell-input-tap-X-Y"><a href="#adb-shell-input-tap-X-Y" class="headerlink" title="adb shell input tap [X Y]"></a>adb shell input tap [X Y]</h6><h6 id="adb-shell-input-swipe-X0-Y0-X1-Y1"><a href="#adb-shell-input-swipe-X0-Y0-X1-Y1" class="headerlink" title="adb shell input swipe [X0 Y0 X1 Y1]"></a>adb shell input swipe [X0 Y0 X1 Y1]</h6><h5 id="screencap-screenrecord"><a href="#screencap-screenrecord" class="headerlink" title="[screencap|screenrecord]"></a>[screencap|screenrecord]</h5><h6 id="adb-shell-screencap-p-PATH"><a href="#adb-shell-screencap-p-PATH" class="headerlink" title="adb shell screencap -p [PATH]"></a>adb shell screencap -p [PATH]</h6><h6 id="adb-shell-screenrecord-PATH"><a href="#adb-shell-screenrecord-PATH" class="headerlink" title="adb shell screenrecord [PATH]"></a>adb shell screenrecord [PATH]</h6><h5 id="UI-automator"><a href="#UI-automator" class="headerlink" title="[UI automator]"></a>[UI automator]</h5><h6 id="adb-shell-uiautomator-runtest-dump"><a href="#adb-shell-uiautomator-runtest-dump" class="headerlink" title="adb shell uiautomator [runtest|dump]"></a>adb shell uiautomator [runtest|dump]</h6><h5 id="ime"><a href="#ime" class="headerlink" title="[ime]"></a>[ime]</h5><h6 id="adb-shell-ime-list-s"><a href="#adb-shell-ime-list-s" class="headerlink" title="adb shell ime list -s"></a>adb shell ime list -s</h6><h6 id="adb-shell-ime-set-INPUTMETHOD"><a href="#adb-shell-ime-set-INPUTMETHOD" class="headerlink" title="adb shell ime set [INPUTMETHOD]"></a>adb shell ime set [INPUTMETHOD]</h6><h5 id="wm"><a href="#wm" class="headerlink" title="[wm]"></a>[wm]</h5><h6 id="adb-shell-wm-size"><a href="#adb-shell-wm-size" class="headerlink" title="adb shell wm size"></a>adb shell wm size</h6><h5 id="monkey"><a href="#monkey" class="headerlink" title="[monkey]"></a>[monkey]</h5><p><a href="http://xuxu1988.com/2015/05/14/2015-05-02-Monkey/" target="_blank" rel="noopener">Android Monkey的用法</a></p>
+<h5 id="settings"><a href="#settings" class="headerlink" title="[settings]"></a>[settings]</h5><p>修改系统设置<br><a href="http://testerhome.com/topics/1993" target="_blank" rel="noopener">探究下 Android4.2 中新增的 settings 命令</a></p>
+<h5 id="dumpsys"><a href="#dumpsys" class="headerlink" title="[dumpsys]"></a>[dumpsys]</h5><p><a href="http://blog.csdn.net/zhoumushui/article/details/49175097" target="_blank" rel="noopener">参考1</a></p>
+<p><a href="https://www.cnblogs.com/JianXu/p/5376642.html" target="_blank" rel="noopener">参考2</a></p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>package</td>
+<td>包查询</td>
+</tr>
+<tr>
+<td>activity</td>
+<td>所有activity信息</td>
+</tr>
+<tr>
+<td>connectivity</td>
+<td>网络连接</td>
+</tr>
+<tr>
+<td>netpolicy</td>
+<td>网络策略</td>
+</tr>
+<tr>
+<td>netstats</td>
+<td>网络状态</td>
+</tr>
+<tr>
+<td>wifi</td>
+<td>wifi信息</td>
+</tr>
+<tr>
+<td>network_manager</td>
+<td>网络管理</td>
+</tr>
+<tr>
+<td>account</td>
+<td>账号信息</td>
+</tr>
+<tr>
+<td>alarm</td>
+<td>闹钟信息</td>
+</tr>
+<tr>
+<td>meminfo</td>
+<td>内存信息</td>
+</tr>
+<tr>
+<td>cpuinfo</td>
+<td>cpu使用情况</td>
+</tr>
+<tr>
+<td>gfxinfo</td>
+<td>帧率信息</td>
+</tr>
+<tr>
+<td>display</td>
+<td>显示</td>
+</tr>
+<tr>
+<td>power</td>
+<td>电源</td>
+</tr>
+<tr>
+<td>batterystats</td>
+<td>电池状态</td>
+</tr>
+<tr>
+<td>battery</td>
+<td>电池</td>
+</tr>
+<tr>
+<td>batteryinfo $package_name</td>
+<td>电量信息及CPU使用时长</td>
+</tr>
+<tr>
+<td>diskstats</td>
+<td>磁盘相关信息</td>
+</tr>
+<tr>
+<td>usagestats</td>
+<td>每个界面的启动时间</td>
+</tr>
+<tr>
+<td>statusbar</td>
+<td>状态栏</td>
+</tr>
+<tr>
+<td>alarm</td>
+<td>闹钟</td>
+</tr>
+<tr>
+<td>location</td>
+<td>位置</td>
+</tr>
+<tr>
+<td>window</td>
+<td>窗口</td>
+</tr>
+</tbody>
+</table>
+<h5 id="log"><a href="#log" class="headerlink" title="[log]"></a>[log]</h5><pre><code>adb shell log [-p PREVIOUS] [-t TAG] [MESSAGE]
+</code></pre><h5 id="getprop"><a href="#getprop" class="headerlink" title="[getprop]"></a>[getprop]</h5><p>查看Android设备的参数信息</p>
+<pre><code>adb shell getprop [key]
+</code></pre><h4 id="linux命令"><a href="#linux命令" class="headerlink" title="linux命令"></a>linux命令</h4><pre><code>// 常用命令
+cat,cd,chmod,cp,data,df,du,grep,kill,ln,ls,lsof,netstat,ping,ps,rm,rmdir,top,touch,&gt;,&gt;&gt;,|
+</code></pre>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/12/27/EPUB/" rel="next" title="">
+                <i class="fa fa-chevron-left"></i> 
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/01/12/hello-world/" rel="prev" title="Hello World">
+                Hello World <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/logo_s.jpg"
+                alt="Sparky" />
+            
+              <p class="site-author-name" itemprop="name">Sparky</p>
+              <p class="site-description motion-element" itemprop="description">我是谁？我在做什么？我为什么要这么做？我想做什么？我要怎么做？</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">24</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#adb总结"><span class="nav-number">1.</span> <span class="nav-text">adb总结</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#adb命令"><span class="nav-number">1.0.1.</span> <span class="nav-text">adb命令</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#adb-devices"><span class="nav-number">1.0.1.0.1.</span> <span class="nav-text">adb devices</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#adb-get-state-device-offline-unknown"><span class="nav-number">1.0.1.0.2.</span> <span class="nav-text">adb get-state:device,offline,unknown</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#adb-kill-server-adb-start-srevre"><span class="nav-number">1.0.1.0.3.</span> <span class="nav-text">adb kill-server,adb start-srevre</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#adb-bugreport-打印dumpsys-dumpstate-logcat的输出，分析错误-可以和logcat一样重定向到文件中"><span class="nav-number">1.0.1.0.4.</span> <span class="nav-text">adb bugreport 打印dumpsys,dumpstate,logcat的输出，分析错误,可以和logcat一样重定向到文件中</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#adb-pull-adb-push"><span class="nav-number">1.0.1.0.5.</span> <span class="nav-text">adb pull,adb push</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#adb-install-adb-uninstall"><span class="nav-number">1.0.1.0.6.</span> <span class="nav-text">adb install, adb uninstall</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#adb-root-adb-remount-获取-root-权限，并挂载系统文件系统为可读写状态"><span class="nav-number">1.0.1.0.7.</span> <span class="nav-text">adb root, adb remount 获取 root 权限，并挂载系统文件系统为可读写状态</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#adb-reboot-bootloader-重启设备，进入-fastboot-模式，同-adb-reboot-bootloader-命令"><span class="nav-number">1.0.1.0.8.</span> <span class="nav-text">adb reboot bootloader , 重启设备，进入 fastboot 模式，同 adb reboot-bootloader 命令</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#recovery-重启设备，进入-recovery-模式，经常刷机的同学比较熟悉这个模式"><span class="nav-number">1.0.1.0.9.</span> <span class="nav-text">recovery , 重启设备，进入 recovery 模式，经常刷机的同学比较熟悉这个模式</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#adb-forward-将-宿主机上的某个端口重定向到设备的某个端口"><span class="nav-number">1.0.1.0.10.</span> <span class="nav-text">adb forward 将 宿主机上的某个端口重定向到设备的某个端口</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#adb-connect-连接远程Android设备"><span class="nav-number">1.0.1.0.11.</span> <span class="nav-text">adb connect 连接远程Android设备</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#adb-logcat"><span class="nav-number">1.0.1.0.12.</span> <span class="nav-text">adb logcat</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#adb-shell命令"><span class="nav-number">1.0.2.</span> <span class="nav-text">adb shell命令</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#pm"><span class="nav-number">1.0.2.1.</span> <span class="nav-text">[pm]</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#adb-shell-pm-list-package-s-3-f-i-FILTER"><span class="nav-number">1.0.2.1.1.</span> <span class="nav-text">adb shell pm list package [-s|-3|-f|-i] FILTER</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#adb-shell-pm-path-PATH"><span class="nav-number">1.0.2.1.2.</span> <span class="nav-text">adb shell pm path PATH</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#adb-shell-pm-list-instrumentation"><span class="nav-number">1.0.2.1.3.</span> <span class="nav-text">adb shell pm list instrumentation</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#adb-shell-pm-dump"><span class="nav-number">1.0.2.1.4.</span> <span class="nav-text">adb shell pm dump</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#adb-shell-pm-install-uninstall"><span class="nav-number">1.0.2.1.5.</span> <span class="nav-text">adb shell pm install/uninstall</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#adb-shell-pm-clear"><span class="nav-number">1.0.2.1.6.</span> <span class="nav-text">adb shell pm clear</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#adb-shell-pm-set-install-location-get-install-location"><span class="nav-number">1.0.2.1.7.</span> <span class="nav-text">adb shell pm set-install-location/get-install-location</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#am"><span class="nav-number">1.0.2.2.</span> <span class="nav-text">[am]</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#adb-shell-am-start-n-S-W-a-PACKAGENAME"><span class="nav-number">1.0.2.2.1.</span> <span class="nav-text">adb shell am start [-n|-S|-W|-a] PACKAGENAME</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#adb-shell-am-force-stop-PACKAGENAME"><span class="nav-number">1.0.2.2.2.</span> <span class="nav-text">adb shell am force-stop [PACKAGENAME]</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#adb-shell-am-startservice-CLASSNAME"><span class="nav-number">1.0.2.2.3.</span> <span class="nav-text">adb shell am startservice [CLASSNAME]</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#adb-shell-am-broadcast-CLASSNAME"><span class="nav-number">1.0.2.2.4.</span> <span class="nav-text">adb shell am broadcast [CLASSNAME]</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#adb-shell-am-monitor"><span class="nav-number">1.0.2.2.5.</span> <span class="nav-text">adb shell am monitor</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#adb-shell-am-instrument"><span class="nav-number">1.0.2.2.6.</span> <span class="nav-text">adb shell am instrument</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#input"><span class="nav-number">1.0.2.3.</span> <span class="nav-text">[input]</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#adb-shell-input-text-TEXT"><span class="nav-number">1.0.2.3.1.</span> <span class="nav-text">adb shell input text [TEXT]</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#adb-shell-input-keyevent-KEYCODE"><span class="nav-number">1.0.2.3.2.</span> <span class="nav-text">adb shell input keyevent [KEYCODE]</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#adb-shell-input-tap-X-Y"><span class="nav-number">1.0.2.3.3.</span> <span class="nav-text">adb shell input tap [X Y]</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#adb-shell-input-swipe-X0-Y0-X1-Y1"><span class="nav-number">1.0.2.3.4.</span> <span class="nav-text">adb shell input swipe [X0 Y0 X1 Y1]</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#screencap-screenrecord"><span class="nav-number">1.0.2.4.</span> <span class="nav-text">[screencap|screenrecord]</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#adb-shell-screencap-p-PATH"><span class="nav-number">1.0.2.4.1.</span> <span class="nav-text">adb shell screencap -p [PATH]</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#adb-shell-screenrecord-PATH"><span class="nav-number">1.0.2.4.2.</span> <span class="nav-text">adb shell screenrecord [PATH]</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#UI-automator"><span class="nav-number">1.0.2.5.</span> <span class="nav-text">[UI automator]</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#adb-shell-uiautomator-runtest-dump"><span class="nav-number">1.0.2.5.1.</span> <span class="nav-text">adb shell uiautomator [runtest|dump]</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#ime"><span class="nav-number">1.0.2.6.</span> <span class="nav-text">[ime]</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#adb-shell-ime-list-s"><span class="nav-number">1.0.2.6.1.</span> <span class="nav-text">adb shell ime list -s</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#adb-shell-ime-set-INPUTMETHOD"><span class="nav-number">1.0.2.6.2.</span> <span class="nav-text">adb shell ime set [INPUTMETHOD]</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#wm"><span class="nav-number">1.0.2.7.</span> <span class="nav-text">[wm]</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#adb-shell-wm-size"><span class="nav-number">1.0.2.7.1.</span> <span class="nav-text">adb shell wm size</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#monkey"><span class="nav-number">1.0.2.8.</span> <span class="nav-text">[monkey]</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#settings"><span class="nav-number">1.0.2.9.</span> <span class="nav-text">[settings]</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#dumpsys"><span class="nav-number">1.0.2.10.</span> <span class="nav-text">[dumpsys]</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#log"><span class="nav-number">1.0.2.11.</span> <span class="nav-text">[log]</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#getprop"><span class="nav-number">1.0.2.12.</span> <span class="nav-text">[getprop]</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#linux命令"><span class="nav-number">1.0.3.</span> <span class="nav-text">linux命令</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Sparky</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

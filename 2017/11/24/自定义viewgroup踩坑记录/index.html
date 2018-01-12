@@ -79,17 +79,17 @@
 
 
 
-<meta name="description" content="This is for test">
+<meta name="description" content="【踩坑记录】自定义ViewGroup1.获取自定义viewgroup对象为空解决方法: 检查自定义viewgroup的构造方法 public SearchHistoryView(Context context) {     this(context, null); }  public SearchHistoryView(Context context, AttributeSet attrs) {">
 <meta property="og:type" content="article">
-<meta property="og:title" content="The First">
-<meta property="og:url" content="http://yoursite.com/2018/01/12/测试/index.html">
+<meta property="og:title" content="Sparky">
+<meta property="og:url" content="http://yoursite.com/2017/11/24/自定义viewgroup踩坑记录/index.html">
 <meta property="og:site_name" content="Sparky">
-<meta property="og:description" content="This is for test">
+<meta property="og:description" content="【踩坑记录】自定义ViewGroup1.获取自定义viewgroup对象为空解决方法: 检查自定义viewgroup的构造方法 public SearchHistoryView(Context context) {     this(context, null); }  public SearchHistoryView(Context context, AttributeSet attrs) {">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-01-12T02:01:18.502Z">
+<meta property="og:updated_time" content="2017-11-24T10:33:25.616Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="The First">
-<meta name="twitter:description" content="This is for test">
+<meta name="twitter:title" content="Sparky">
+<meta name="twitter:description" content="【踩坑记录】自定义ViewGroup1.获取自定义viewgroup对象为空解决方法: 检查自定义viewgroup的构造方法 public SearchHistoryView(Context context) {     this(context, null); }  public SearchHistoryView(Context context, AttributeSet attrs) {">
 
 
 
@@ -119,13 +119,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/01/12/测试/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/11/24/自定义viewgroup踩坑记录/"/>
 
 
 
 
 
-  <title>The First | Sparky</title>
+  <title> | Sparky</title>
   
 
 
@@ -242,7 +242,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/12/测试/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/24/自定义viewgroup踩坑记录/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Sparky">
@@ -259,7 +259,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">The First</h1>
+          <h1 class="post-title" itemprop="name headline"></h1>
         
 
         <div class="post-meta">
@@ -271,8 +271,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-12T09:59:19+08:00">
-                2018-01-12
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-24T18:33:25+08:00">
+                2017-11-24
               </time>
             
 
@@ -309,7 +309,77 @@
       
 
       
-        <p>This is for test</p>
+        <h1 id="【踩坑记录】自定义ViewGroup"><a href="#【踩坑记录】自定义ViewGroup" class="headerlink" title="【踩坑记录】自定义ViewGroup"></a>【踩坑记录】自定义ViewGroup</h1><h4 id="1-获取自定义viewgroup对象为空"><a href="#1-获取自定义viewgroup对象为空" class="headerlink" title="1.获取自定义viewgroup对象为空"></a>1.获取自定义viewgroup对象为空</h4><p>解决方法:</p>
+<p>检查自定义viewgroup的构造方法</p>
+<pre><code>public SearchHistoryView(Context context) {
+    this(context, null);
+}
+
+public SearchHistoryView(Context context, AttributeSet attrs) {
+    this(context, attrs, 0);
+}
+
+public SearchHistoryView(Context context, AttributeSet attrs, int defStyleAttr) {
+    super(context, attrs, defStyleAttr);
+}
+</code></pre><p>看构造方法调用是否正确，参数是否正确。我出现这个错误是在两个参数的构造方法中把第二个参数写成了null导致这个错误。</p>
+<p>原因:</p>
+<p>在自定义viewgroup的类中，构造方法中一般会调用两个参数的构造方法，在写构造方法时注意，一般都是最后调用this(arg1, arg2,arg3)这个构造方法，如果出现对象为空的情况，检查构造方法，参数是否正确，是否调用正确。</p>
+<h4 id="2-自定义viewgroup，直接在布局中添加子view正常，代码添加view时出现java-lang-ClassCastException-android-view-ViewGroup-LayoutParams-cannot-be-cast-to-android-view-ViewGroup-MarginLayoutParams"><a href="#2-自定义viewgroup，直接在布局中添加子view正常，代码添加view时出现java-lang-ClassCastException-android-view-ViewGroup-LayoutParams-cannot-be-cast-to-android-view-ViewGroup-MarginLayoutParams" class="headerlink" title="2.自定义viewgroup，直接在布局中添加子view正常，代码添加view时出现java.lang.ClassCastException: android.view.ViewGroup$LayoutParams cannot be cast to android.view.ViewGroup$MarginLayoutParams"></a>2.自定义viewgroup，直接在布局中添加子view正常，代码添加view时出现java.lang.ClassCastException: android.view.ViewGroup$LayoutParams cannot be cast to android.view.ViewGroup$MarginLayoutParams</h4><p>解决方法:</p>
+<p>自定义LayoutParams类，</p>
+<pre><code>public class LayoutParams extends MarginLayoutParams {
+
+    public int gravity = -1;
+
+    public LayoutParams(Context c, AttributeSet attrs) {
+        super(c, attrs);
+    }
+
+    public LayoutParams(int width, int height) {
+        super(width, height);
+        gravity = Gravity.TOP;
+    }
+
+    public LayoutParams(int width, int height, int gravity) {
+        super(width, height);
+        this.gravity = gravity;
+    }
+
+    public LayoutParams(ViewGroup.LayoutParams source) {
+        super(source);
+    }
+}
+</code></pre><p>并在自定义viewgroup类中重写如下几个构造方法</p>
+<pre><code>@Override
+protected LayoutParams generateDefaultLayoutParams() {
+    return new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+}
+
+@Override
+protected boolean checkLayoutParams(ViewGroup.LayoutParams p) {
+    return super.checkLayoutParams(p) &amp;&amp; p instanceof LayoutParams;
+}
+
+@Override
+protected LayoutParams generateLayoutParams(ViewGroup.LayoutParams p) {
+    return new LayoutParams(p);
+}
+
+@Override
+public LayoutParams generateLayoutParams(AttributeSet attrs) {
+    return new LayoutParams(getContext(), attrs);
+}
+</code></pre><p>原因:</p>
+<p>我是按照网上的zhy大神的flowlayout教程写下来的，他是在自定义viewgroup中重写了generatelayoutparams()方法，然后在onmeasure中直接讲layoutparams直接强转成marginlayoutparams，做demo的时候因为是直接在xml中把子view添加到viewgroup控件中，这种做法是没有问题的，但是在写项目的时候因为需要动态添加布局，这时候就出现了以上的问题。建议去看一下layoutparams的知识。</p>
+<h4 id="3-子view设置了margin，但是在viewgroup中看到log打印margin还是0"><a href="#3-子view设置了margin，但是在viewgroup中看到log打印margin还是0" class="headerlink" title="3.子view设置了margin，但是在viewgroup中看到log打印margin还是0"></a>3.子view设置了margin，但是在viewgroup中看到log打印margin还是0</h4><p>解决方法：</p>
+<p>因为我使用的是动态添加子view的方式</p>
+<pre><code>TextView textView = (TextView) LayoutInflater.from(SearchActivity.this).inflate(R.layout.item_shv_textview, null, false);
+           textView.setText(bean);
+</code></pre><p>上边的代码一般都是我写inflat view的代码，3个参数中,arg1代表资源文件，arg2代表父布局，arg3代表是否依赖父布局，一般情况下用到的时候我都是上边的代码，但是在这里用要改为</p>
+<pre><code>TextView textView = (TextView) LayoutInflater.from(SearchActivity.this).inflate(R.layout.item_shv_textview, mParent, false);
+            textView.setText(bean);
+</code></pre><p> 就是说必须指定他所在的viewgroup，margin属性才有值.</p>
+<p>原因：</p>
 
       
     </div>
@@ -334,8 +404,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/01/12/hello-world/" rel="next" title="Hello World">
-                <i class="fa fa-chevron-left"></i> Hello World
+              <a href="/2017/11/24/知识体系/" rel="next" title="">
+                <i class="fa fa-chevron-left"></i> 
               </a>
             
           </div>
@@ -344,7 +414,7 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/01/12/Retrofit配置HTTPS请求踩坑记/" rel="prev" title="">
+              <a href="/2017/11/24/获取Android系统权限/" rel="prev" title="">
                  <i class="fa fa-chevron-right"></i>
               </a>
             
@@ -398,8 +468,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -445,6 +524,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#【踩坑记录】自定义ViewGroup"><span class="nav-number">1.</span> <span class="nav-text">【踩坑记录】自定义ViewGroup</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-获取自定义viewgroup对象为空"><span class="nav-number">1.0.0.1.</span> <span class="nav-text">1.获取自定义viewgroup对象为空</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-自定义viewgroup，直接在布局中添加子view正常，代码添加view时出现java-lang-ClassCastException-android-view-ViewGroup-LayoutParams-cannot-be-cast-to-android-view-ViewGroup-MarginLayoutParams"><span class="nav-number">1.0.0.2.</span> <span class="nav-text">2.自定义viewgroup，直接在布局中添加子view正常，代码添加view时出现java.lang.ClassCastException: android.view.ViewGroup$LayoutParams cannot be cast to android.view.ViewGroup$MarginLayoutParams</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-子view设置了margin，但是在viewgroup中看到log打印margin还是0"><span class="nav-number">1.0.0.3.</span> <span class="nav-text">3.子view设置了margin，但是在viewgroup中看到log打印margin还是0</span></a></li></ol></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       

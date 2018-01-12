@@ -79,17 +79,17 @@
 
 
 
-<meta name="description" content="This is for test">
+<meta name="description" content="Android如何阅读开源项目源代码开源项目一般分为完整项目和第三方类库，对于完整项目主要分析项目架构，引用第三方类库，总体代码风格等，分析第三方类库主要集中在功能和实现思路，设计思想等。 // 了解功能，考虑实现方式 1 总 —- 功能了解了解项目功能(Sample 和文档)以及主要分为几个大块。另外明白你的需求，比如 PullToRefresh 的下拉实现。PS：（1）大家可以自己先想想如果是">
 <meta property="og:type" content="article">
-<meta property="og:title" content="The First">
-<meta property="og:url" content="http://yoursite.com/2018/01/12/测试/index.html">
+<meta property="og:title" content="Sparky">
+<meta property="og:url" content="http://yoursite.com/2017/10/25/如何阅读开源项目/index.html">
 <meta property="og:site_name" content="Sparky">
-<meta property="og:description" content="This is for test">
+<meta property="og:description" content="Android如何阅读开源项目源代码开源项目一般分为完整项目和第三方类库，对于完整项目主要分析项目架构，引用第三方类库，总体代码风格等，分析第三方类库主要集中在功能和实现思路，设计思想等。 // 了解功能，考虑实现方式 1 总 —- 功能了解了解项目功能(Sample 和文档)以及主要分为几个大块。另外明白你的需求，比如 PullToRefresh 的下拉实现。PS：（1）大家可以自己先想想如果是">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-01-12T02:01:18.502Z">
+<meta property="og:updated_time" content="2017-10-25T00:12:46.349Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="The First">
-<meta name="twitter:description" content="This is for test">
+<meta name="twitter:title" content="Sparky">
+<meta name="twitter:description" content="Android如何阅读开源项目源代码开源项目一般分为完整项目和第三方类库，对于完整项目主要分析项目架构，引用第三方类库，总体代码风格等，分析第三方类库主要集中在功能和实现思路，设计思想等。 // 了解功能，考虑实现方式 1 总 —- 功能了解了解项目功能(Sample 和文档)以及主要分为几个大块。另外明白你的需求，比如 PullToRefresh 的下拉实现。PS：（1）大家可以自己先想想如果是">
 
 
 
@@ -119,13 +119,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/01/12/测试/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/10/25/如何阅读开源项目/"/>
 
 
 
 
 
-  <title>The First | Sparky</title>
+  <title> | Sparky</title>
   
 
 
@@ -242,7 +242,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/12/测试/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/25/如何阅读开源项目/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Sparky">
@@ -259,7 +259,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">The First</h1>
+          <h1 class="post-title" itemprop="name headline"></h1>
         
 
         <div class="post-meta">
@@ -271,8 +271,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-12T09:59:19+08:00">
-                2018-01-12
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-25T08:12:46+08:00">
+                2017-10-25
               </time>
             
 
@@ -309,7 +309,15 @@
       
 
       
-        <p>This is for test</p>
+        <h1 id="Android如何阅读开源项目源代码"><a href="#Android如何阅读开源项目源代码" class="headerlink" title="Android如何阅读开源项目源代码"></a>Android如何阅读开源项目源代码</h1><p>开源项目一般分为完整项目和第三方类库，对于完整项目主要分析项目架构，引用第三方类库，总体代码风格等，分析第三方类库主要集中在功能和实现思路，设计思想等。</p>
+<p>// 了解功能，考虑实现方式</p>
+<h4 id="1-总-—-功能了解"><a href="#1-总-—-功能了解" class="headerlink" title="1 总 —- 功能了解"></a>1 总 —- 功能了解</h4><p>了解项目功能(Sample 和文档)以及主要分为几个大块。另外明白你的需求，比如 PullToRefresh 的下拉实现。<br>PS：<br>（1）大家可以自己先想想如果是自己会怎么去实现这个项目，或许看源码过程中会发现思想碰撞。<br>（2）如果时间比较紧，可以先 Google 一些该项目相关的文档结合代码看看，帮助快速掌握，不过网上分析文章参差不齐，需谨慎。</p>
+<p>// 分析项目代码目录结构 –&gt; 核心类 –&gt; 核心方法 –&gt; 找到分析重心</p>
+<h4 id="2-分-—-详细设计"><a href="#2-分-—-详细设计" class="headerlink" title="2 分 —- 详细设计"></a>2 分 —- 详细设计</h4><p>这里正式开始代码分析，分析过程中如果脑子记不住，多动手记下主要类、函数等作用<br>(1) 入口对完整 App 来说就是 Manifest 找到入口 Activity，对于工具库从调用接口中判断入口类。然后在 IDE 中一步步深入即可。PS：一般不错的开源项目规范都比较好，类、函数、变量从名字上就可以了解作用，所以如果需要快速掌握原理的话看觉得是重点的函数即可。<br>(2) 核心类在上面的一步步深入过程中已经接触了不少类，大致了解各个类的主要作用</p>
+<p>// 分析重心，分析流程</p>
+<h4 id="3-总-—-总体设计"><a href="#3-总-—-总体设计" class="headerlink" title="3 总 —- 总体设计"></a>3 总 —- 总体设计</h4><p>(1) 功能流程图上面 2-(1) 的过程完成后已经大致了解项目的流程，不费事的话可以简单画下流程及相关类、函数。如 Retrofit、Volley 的请求处理流程，Android-Universal-Image-Loader 的图片处理流程图。<br>(2) 总体设计整个库分为哪些模块及模块之间的调用关系。如大多数图片缓存会分为 Loader 和 Processer 等模块。</p>
+<p>// 顺序分析</p>
+<h4 id="4-回顾"><a href="#4-回顾" class="headerlink" title="4 回顾"></a>4 回顾</h4><p>这时候从 3-2-1（总体设计-&gt;流程图-&gt;详细设计-&gt;功能介绍）<br>反序看，大致就能了解作者最初是怎么设计的了对于快速分析可以走 1-2(1)-2(2)-3(1) 的步骤。</p>
 
       
     </div>
@@ -334,8 +342,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/01/12/hello-world/" rel="next" title="Hello World">
-                <i class="fa fa-chevron-left"></i> Hello World
+              <a href="/2017/10/25/View 事件传递/" rel="next" title="">
+                <i class="fa fa-chevron-left"></i> 
               </a>
             
           </div>
@@ -344,7 +352,7 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/01/12/Retrofit配置HTTPS请求踩坑记/" rel="prev" title="">
+              <a href="/2017/11/24/[Android WIFI开发]/" rel="prev" title="">
                  <i class="fa fa-chevron-right"></i>
               </a>
             
@@ -398,8 +406,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -445,6 +462,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Android如何阅读开源项目源代码"><span class="nav-number">1.</span> <span class="nav-text">Android如何阅读开源项目源代码</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-总-—-功能了解"><span class="nav-number">1.0.0.1.</span> <span class="nav-text">1 总 —- 功能了解</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-分-—-详细设计"><span class="nav-number">1.0.0.2.</span> <span class="nav-text">2 分 —- 详细设计</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-总-—-总体设计"><span class="nav-number">1.0.0.3.</span> <span class="nav-text">3 总 —- 总体设计</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-回顾"><span class="nav-number">1.0.0.4.</span> <span class="nav-text">4 回顾</span></a></li></ol></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       

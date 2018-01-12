@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="EPUB什么是EPUB？e-pub的意思是电子出版，是IDPF制定的一个标准，这个标准是基于xml格式的电子书或者其它数字出版物。 .epub文件其实就是一个简单的zip文件可以使用winrar或者linux使用归档管理器打开来看目录结构和基本文档。内容都是xml格式的。 epub文件的目录结构和基本文档1. mimetype文件这个文件十分简单，里面只有 application/epub+zip">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Sparky">
+<meta property="og:url" content="http://yoursite.com/2017/12/27/EPUB/index.html">
+<meta property="og:site_name" content="Sparky">
+<meta property="og:description" content="EPUB什么是EPUB？e-pub的意思是电子出版，是IDPF制定的一个标准，这个标准是基于xml格式的电子书或者其它数字出版物。 .epub文件其实就是一个简单的zip文件可以使用winrar或者linux使用归档管理器打开来看目录结构和基本文档。内容都是xml格式的。 epub文件的目录结构和基本文档1. mimetype文件这个文件十分简单，里面只有 application/epub+zip">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-12-27T00:59:09.277Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Sparky">
+<meta name="twitter:description" content="EPUB什么是EPUB？e-pub的意思是电子出版，是IDPF制定的一个标准，这个标准是基于xml格式的电子书或者其它数字出版物。 .epub文件其实就是一个简单的zip文件可以使用winrar或者linux使用归档管理器打开来看目录结构和基本文档。内容都是xml格式的。 epub文件的目录结构和基本文档1. mimetype文件这个文件十分简单，里面只有 application/epub+zip">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/12/27/EPUB/"/>
+
+
+
+
+
+  <title> | Sparky</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?23f2f984b557cd9c31da9a75b4da08e4";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Sparky</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/27/EPUB/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sparky">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/logo_s.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sparky">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline"></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-27T08:59:09+08:00">
+                2017-12-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="EPUB"><a href="#EPUB" class="headerlink" title="EPUB"></a>EPUB</h1><h2 id="什么是EPUB？"><a href="#什么是EPUB？" class="headerlink" title="什么是EPUB？"></a>什么是EPUB？</h2><p>e-pub的意思是电子出版，是IDPF制定的一个标准，这个标准是基于xml格式的电子书或者其它数字出版物。</p>
+<p>.epub文件其实就是一个简单的zip文件可以使用winrar或者linux使用归档管理器打开来看目录结构和基本文档。内容都是xml格式的。</p>
+<h2 id="epub文件的目录结构和基本文档"><a href="#epub文件的目录结构和基本文档" class="headerlink" title="epub文件的目录结构和基本文档"></a>epub文件的目录结构和基本文档</h2><h4 id="1-mimetype文件"><a href="#1-mimetype文件" class="headerlink" title="1. mimetype文件"></a>1. mimetype文件</h4><p>这个文件十分简单，里面只有</p>
+<pre><code>application/epub+zip
+</code></pre><p> 但是这个文件必须作为zip文件中的第一个文件，并且不能被压缩，必须在根目录下。同时这个文件不能有回车和换行。</p>
+<h4 id="2-META-INFO"><a href="#2-META-INFO" class="headerlink" title="2. META-INFO"></a>2. META-INFO</h4><p>META-INFO文件夹跟mimetype一样，也是必须存在的文件夹，也必须在根目录下，在文件夹下有一个container.xml文件.epub阅读系统会首先查看该文件，他指向文件图书的源数字文件的位置。这个container.xml格式如下</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;container version=&quot;1.0&quot; xmlns=&quot;urn:oasis:names:tc:opendocument:xmlns:container&quot;&gt;
+&lt;rootfiles&gt;
+&lt;rootfile full-path=&quot;OEBPS/content.opf&quot;
+media-type=&quot;application/oebps-package+xml&quot; /&gt;
+&lt;/rootfiles&gt;
+&lt;/container&gt;
+</code></pre><blockquote>
+<p>mimetype 和 container 是 EPUB 档案中仅有的两个需要严格限制位置的文件。建议将其他文件保存到 EPUB 的子目录下（通常被称为OEBPS但不是必须的）。</p>
+</blockquote>
+<h4 id="3-元数据文件-opf-packaging-format"><a href="#3-元数据文件-opf-packaging-format" class="headerlink" title="3. 元数据文件(.opf packaging format)"></a>3. 元数据文件(.opf packaging format)</h4><p>META-INFO文件夹下的container.xml所指定的rootfile的文件。该文件文件名没有特殊要求，扩展名为.opf。他指定了图书中所有内容的位置，如文本和多媒体目录。另外他还会给出一个元数据文件，它是Navigation Center eXtended (NCX) 表，有的称其为逻辑目录，opf内容示例如下所示:</p>
+<pre><code>&lt;?xml version=&apos;1.0&apos; encoding=&apos;utf-8&apos;?&gt;
+&lt;package xmlns=&quot;http://www.idpf.org/2007/opf&quot;
+xmlns:dc=&quot;http://purl.org/dc/elements/1.1/&quot;
+unique-identifier=&quot;bookid&quot; version=&quot;2.0&quot;&gt;
+&lt;metadata&gt;
+&lt;dc:title&gt;Hello World: My First EPUB&lt;/dc:title&gt;
+&lt;dc:creator&gt;My Name&lt;/dc:creator&gt;
+&lt;dc:identifier id=&quot;bookid&quot;&gt;urn:uuid:12345&lt;/dc:identifier&gt;
+&lt;meta name=&quot;cover&quot; content=&quot;cover-image&quot; /&gt;
+&lt;/metadata&gt;
+&lt;manifest&gt;
+&lt;item id=&quot;ncx&quot; href=&quot;toc.ncx&quot; media-type=&quot;text/xml&quot;/&gt;
+&lt;item id=&quot;cover&quot; href=&quot;title.html&quot; media-type=&quot;application/xhtml+xml&quot;/&gt;
+&lt;item id=&quot;content&quot; href=&quot;content.html&quot; media-type=&quot;application/xhtml+xml&quot;/&gt;
+&lt;item id=&quot;cover-image&quot; href=&quot;images/cover.png&quot; media-type=&quot;image/png&quot;/&gt;
+&lt;item id=&quot;css&quot; href=&quot;stylesheet.css&quot; media-type=&quot;text/css&quot;/&gt;
+&lt;/manifest&gt;
+&lt;spine toc=&quot;ncx&quot;&gt;
+&lt;itemref idref=&quot;cover&quot; linear=&quot;no&quot;/&gt;
+&lt;itemref idref=&quot;content&quot;/&gt;
+&lt;/spine&gt;
+&lt;guide&gt;
+&lt;reference href=&quot;cover.html&quot; type=&quot;cover&quot; title=&quot;Cover&quot;/&gt;
+&lt;/guide&gt;
+&lt;/package&gt;
+</code></pre><h5 id="3-1-命名空间"><a href="#3-1-命名空间" class="headerlink" title="3.1 命名空间 "></a>3.1 命名空间 <package></package></h5><p>文档本身必须使用命名空间 xmlns=”<a href="http://www.idpf.org/2007/opf" target="_blank" rel="noopener">http://www.idpf.org/2007/opf</a>“,<br>metadata也可以在这里指定命名空间,元数据一般使用 Dublin Core Metadata Initiative (DCMI)<br>xmlns=”<a href="http://purl.org/dc/elements/1.1/" target="_blank" rel="noopener">http://purl.org/dc/elements/1.1/</a>“</p>
+<h5 id="3-2-源数据"><a href="#3-2-源数据" class="headerlink" title="3.2 源数据 "></a>3.2 源数据 <metadata></metadata></h5><p> Dublin Core Metadata Initiative (DCMI)定义了一组常见的元数据，可以用来描述各种不同的数字资料，下边是元数据摘要：</p>
+<pre><code>...
+&lt;metadata&gt;
+&lt;dc:title&gt;Hello World: My First EPUB&lt;/dc:title&gt;
+&lt;dc:creator&gt;My Name&lt;/dc:creator&gt;
+&lt;dc:identifier id=&quot;bookid&quot;&gt;urn:uuid:12345&lt;/dc:identifier&gt;
+&lt;meta name=&quot;cover&quot; content=&quot;cover-image&quot; /&gt;
+&lt;/metadata&gt;
+...
+</code></pre><p>有两个术语是必须的，分别是title和identifier。这个identifier必须是唯一的，对于图书出版商来说这个字段一般包括ISBN编号，可以使用URL或者很大的随机生成的uuid。</p>
+<blockquote>
+<p>属性unique-identifier的值必须和dc:identifier元素的id属性匹配</p>
+</blockquote>
+<p>epub规范没有要求包含name的属性值为cover的meta元素，但是为了增加封面和图像的可移植性，一般建议加上。meta元素的content属性的值对应在这个opf文件manifest元素的id号，</p>
+<h5 id="3-3-清单数据"><a href="#3-3-清单数据" class="headerlink" title="3.3 清单数据 "></a>3.3 清单数据 <manifest></manifest></h5><p>opf文件中的manifest节点列出了epub的所有资源，通常是组成电子书的一组xhtml文件和相关的媒体文件。epub鼓励使用css设定图书内容的样式，因此manifest中也包含css。进入数字图书的所有内容必须在manifest中列出。<br>下边是manifest示例：</p>
+<pre><code>...
+&lt;manifest&gt;
+&lt;item id=&quot;ncx&quot; href=&quot;toc.ncx&quot; media-type=&quot;text/xml&quot;/&gt;
+&lt;item id=&quot;cover&quot; href=&quot;title.html&quot; media-type=&quot;application/xhtml+xml&quot;/&gt;
+&lt;item id=&quot;content&quot; href=&quot;content.html&quot; media-type=&quot;application/xhtml+xml&quot;/&gt;
+&lt;item id=&quot;cover-image&quot; href=&quot;images/cover.png&quot; media-type=&quot;image/png&quot;/&gt;
+&lt;item id=&quot;css&quot; href=&quot;stylesheet.css&quot; media-type=&quot;text/css&quot;/&gt;
+&lt;/manifest&gt;
+</code></pre><p>所有的想必须有对应的media-type</p>
+<p>epub支持三种核心图像文件类型:JPEG,PNG,GIF和Scalable Vector Graphics(SVG矢量图)</p>
+<h5 id="3-4-spine"><a href="#3-4-spine" class="headerlink" title="3.4 spine"></a>3.4 spine</h5><p>spine的意思是脊柱，作用是线性阅读顺序，可以将OPF spine看做书中的页面的顺序，按照文档顺序从上到下一次读取spine，下边是spine示例：</p>
+<pre><code>... 
+&lt;spine toc=&quot;ncx&quot;&gt; 
+&lt;itemref idref=&quot;cover&quot; linear=&quot;no&quot;/&gt; 
+&lt;itemref idref=&quot;content&quot;/&gt; 
+&lt;/spine&gt; 
+... 
+</code></pre><p>每个itemref元素都需要一个idref属性，并且和manifest中的id想匹配。toc属性也是必须的，他引用manifest中表示ncx表文件名的id。</p>
+<p>spine中的linear属性表明该项作为线性阅读顺序的一部分，还是和先后顺序无关。建议将封面定义为no。符合epub规范的阅读系统将首次打开spine中设置linear=no的第一项。</p>
+<h5 id="3-5-guide"><a href="#3-5-guide" class="headerlink" title="3.5 guide"></a>3.5 guide</h5><p>这个是可选的，最好保留，可以为epub阅读系统提供语义功能。下边是示例:</p>
+<pre><code>...
+&lt;guide&gt;
+&lt;reference href=&quot;cover.html&quot; type=&quot;cover&quot; title=&quot;Cover&quot;/&gt;
+&lt;/guide&gt;
+...
+</code></pre><blockquote>
+<p>上边就是opf文件中的所有内容，manifest文件定义epub所有物理资源，spine定义这些资源的顺序信息，guide负责解释这些部分的含义。</p>
+</blockquote>
+<h4 id="4-NCX-Navigation-Control-file-for-XML-applications"><a href="#4-NCX-Navigation-Control-file-for-XML-applications" class="headerlink" title="4. NCX(Navigation Control file for XML applications)"></a>4. NCX(Navigation Control file for XML applications)</h4><p>ncx定义了数字图书的目录表，在复杂的图书中，目录表通常采用层次结构，包括嵌套的内容，章节等信息。<br>下边是简单的toc.ncx文件内容:</p>
+<pre><code>&lt;?xml version=&apos;1.0&apos; encoding=&apos;utf-8&apos;?&gt;
+&lt;!DOCTYPE ncx PUBLIC &quot;-//NISO//DTD ncx 2005-1//EN&quot;
+&quot;http://www.daisy.org/z3986/2005/ncx-2005-1.dtd&quot;&gt;
+&lt;ncx xmlns=&quot;http://www.daisy.org/z3986/2005/ncx/&quot; version=&quot;2005-1&quot;&gt;
+&lt;head&gt;
+&lt;meta name=&quot;dtb:uid&quot; content=&quot;urn:uuid:12345&quot;/&gt;
+&lt;meta name=&quot;dtb:depth&quot; content=&quot;1&quot;/&gt;
+&lt;meta name=&quot;dtb:totalPageCount&quot; content=&quot;0&quot;/&gt;
+&lt;meta name=&quot;dtb:maxPageNumber&quot; content=&quot;0&quot;/&gt;
+&lt;/head&gt;
+&lt;docTitle&gt;
+&lt;text&gt;Hello World: My First EPUB&lt;/text&gt;
+&lt;/docTitle&gt;
+&lt;navMap&gt;
+&lt;navPoint id=&quot;navpoint-1&quot; playOrder=&quot;1&quot;&gt;
+&lt;navLabel&gt;
+&lt;text&gt;Book cover&lt;/text&gt;
+&lt;/navLabel&gt;
+&lt;content src=&quot;title.html&quot;/&gt;
+&lt;/navPoint&gt;
+&lt;navPoint id=&quot;navpoint-2&quot; playOrder=&quot;2&quot;&gt;
+&lt;navLabel&gt;
+&lt;text&gt;Contents&lt;/text&gt;
+&lt;/navLabel&gt;
+&lt;content src=&quot;content.html&quot;/&gt;
+&lt;/navPoint&gt;
+&lt;/navMap&gt;
+&lt;/ncx&gt;
+</code></pre><p>EPUB使用的DAISY的NCX DTD的命名空间<br>xmlns=”<a href="http://www.daisy.org/z3986/2005/ncx/" target="_blank" rel="noopener">http://www.daisy.org/z3986/2005/ncx/</a>“ </p>
+<h5 id="4-1-head"><a href="#4-1-head" class="headerlink" title="4.1 head"></a>4.1 head</h5><p>DTD要求ncx文件的head元素包括四个meta元素:</p>
+<ul>
+<li>dtd:uid // 数字图书的唯一id，和opf文件中的dc:identifier对应</li>
+<li>dtd:depth // 目录中层次的深度</li>
+<li>dtd:totalPageCount // 仅用于纸质图书，保留0即可</li>
+<li>dtd:maxPageNumber // 仅用于纸质图书，保留0即可</li>
+</ul>
+<h5 id="4-2-docTitle"><a href="#4-2-docTitle" class="headerlink" title="4.2 docTitle"></a>4.2 docTitle</h5><p>是图书的标题，和opf文件中的dc:title对应</p>
+<h5 id="4-3-navMap"><a href="#4-3-navMap" class="headerlink" title="4.3 navMap"></a>4.3 navMap</h5><p>navMap是ncx文件中最重要的部分，定义了电子书的目录。navmap中包括一个或者多个navPoint元素，每个navPoint都要包括下列元素：</p>
+<ul>
+<li>playOrder属性 // 说明文档的阅读顺序，和opf文件中spine中itemref元素的顺序相同</li>
+<li>navLabel/text元素 // 给出章节的标题通常是章的标题或者数字，如”第一章”</li>
+<li>content元素 // 他的src属性指向这些内容的物理资源。</li>
+<li>还可以有一个或者多个navPoint元素 // 表示层次结构</li>
+</ul>
+<h4 id="5-问题"><a href="#5-问题" class="headerlink" title="5. 问题"></a>5. 问题</h4><h5 id="5-1-NCX和OPF文件元数据交叉"><a href="#5-1-NCX和OPF文件元数据交叉" class="headerlink" title="5.1 NCX和OPF文件元数据交叉"></a>5.1 NCX和OPF文件元数据交叉</h5><p>由于 NCX 源自其他标准，使用 NCX 编码的信息和 OPF 内容之间存在重复。如果通过程序生成 EPUB，这算不上什么问题，因为同样的代码可输出到两个文件中。两个位置的信息要一致，不同的 EPUB 读者可能使用不同位置的值。（可如果手工去编写呢？）</p>
+<h5 id="5-2-NCX和OPF-spine有什么不同"><a href="#5-2-NCX和OPF-spine有什么不同" class="headerlink" title="5.2 NCX和OPF spine有什么不同"></a>5.2 NCX和OPF spine有什么不同</h5><p>opf spine主要用来描述电子书章节的顺序，比如第一章后第二章再后第三章 …</p>
+<p>ncx文件描述电子书的目录结构。</p>
+<p>一条法则就是ncx包括的节点比spine多。实际上spine的所有项都会出现在ncx中，但是ncx可能更详细。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/11/29/HenCode学习笔记-1.3/" rel="next" title="">
+                <i class="fa fa-chevron-left"></i> 
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/01/02/adb/" rel="prev" title="">
+                 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/logo_s.jpg"
+                alt="Sparky" />
+            
+              <p class="site-author-name" itemprop="name">Sparky</p>
+              <p class="site-description motion-element" itemprop="description">我是谁？我在做什么？我为什么要这么做？我想做什么？我要怎么做？</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">24</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#EPUB"><span class="nav-number">1.</span> <span class="nav-text">EPUB</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是EPUB？"><span class="nav-number">1.1.</span> <span class="nav-text">什么是EPUB？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#epub文件的目录结构和基本文档"><span class="nav-number">1.2.</span> <span class="nav-text">epub文件的目录结构和基本文档</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-mimetype文件"><span class="nav-number">1.2.0.1.</span> <span class="nav-text">1. mimetype文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-META-INFO"><span class="nav-number">1.2.0.2.</span> <span class="nav-text">2. META-INFO</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-元数据文件-opf-packaging-format"><span class="nav-number">1.2.0.3.</span> <span class="nav-text">3. 元数据文件(.opf packaging format)</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#3-1-命名空间"><span class="nav-number">1.2.0.3.1.</span> <span class="nav-text">3.1 命名空间 </span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-2-源数据"><span class="nav-number">1.2.0.3.2.</span> <span class="nav-text">3.2 源数据 </span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-3-清单数据"><span class="nav-number">1.2.0.3.3.</span> <span class="nav-text">3.3 清单数据 </span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-4-spine"><span class="nav-number">1.2.0.3.4.</span> <span class="nav-text">3.4 spine</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-5-guide"><span class="nav-number">1.2.0.3.5.</span> <span class="nav-text">3.5 guide</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-NCX-Navigation-Control-file-for-XML-applications"><span class="nav-number">1.2.0.4.</span> <span class="nav-text">4. NCX(Navigation Control file for XML applications)</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#4-1-head"><span class="nav-number">1.2.0.4.1.</span> <span class="nav-text">4.1 head</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4-2-docTitle"><span class="nav-number">1.2.0.4.2.</span> <span class="nav-text">4.2 docTitle</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4-3-navMap"><span class="nav-number">1.2.0.4.3.</span> <span class="nav-text">4.3 navMap</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-问题"><span class="nav-number">1.2.0.5.</span> <span class="nav-text">5. 问题</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#5-1-NCX和OPF文件元数据交叉"><span class="nav-number">1.2.0.5.1.</span> <span class="nav-text">5.1 NCX和OPF文件元数据交叉</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#5-2-NCX和OPF-spine有什么不同"><span class="nav-number">1.2.0.5.2.</span> <span class="nav-text">5.2 NCX和OPF spine有什么不同</span></a></li></ol></li></ol></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Sparky</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
