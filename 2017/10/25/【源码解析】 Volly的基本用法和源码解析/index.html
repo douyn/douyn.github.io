@@ -79,20 +79,20 @@
 
 
 
-<meta name="description" content="【源码解析】 Volley的用法及源码解析 前言Volley是谷歌在2013年I/O大会上推出的新的网络请求框架，如今已经被废弃，取而代之使用okhttp进行网络请求。虽然现在使用场景不多了，但是技术总有光辉的一面，而且也是面试所遇到的最常见的源码问题之一，所以此篇就作为认识源码的入门之作。 Volley简介Volley是谷歌退出的Android异步网络请求和图片加载库，特别适合网络请求量不大但是">
+<meta name="description" content="前言Volley是谷歌在2013年I/O大会上推出的新的网络请求框架，如今已经被废弃，取而代之使用okhttp进行网络请求。虽然现在使用场景不多了，但是技术总有光辉的一面，而且也是面试所遇到的最常见的源码问题之一，所以此篇就作为认识源码的入门之作。 Volley简介Volley是谷歌退出的Android异步网络请求和图片加载库，特别适合网络请求量不大但是请求频繁的场景。 Volley的优点：  非">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Sparky">
+<meta property="og:title" content="【源码解析】 Volley的用法及源码解析">
 <meta property="og:url" content="http://yoursite.com/2017/10/25/【源码解析】 Volly的基本用法和源码解析/index.html">
 <meta property="og:site_name" content="Sparky">
-<meta property="og:description" content="【源码解析】 Volley的用法及源码解析 前言Volley是谷歌在2013年I/O大会上推出的新的网络请求框架，如今已经被废弃，取而代之使用okhttp进行网络请求。虽然现在使用场景不多了，但是技术总有光辉的一面，而且也是面试所遇到的最常见的源码问题之一，所以此篇就作为认识源码的入门之作。 Volley简介Volley是谷歌退出的Android异步网络请求和图片加载库，特别适合网络请求量不大但是">
+<meta property="og:description" content="前言Volley是谷歌在2013年I/O大会上推出的新的网络请求框架，如今已经被废弃，取而代之使用okhttp进行网络请求。虽然现在使用场景不多了，但是技术总有光辉的一面，而且也是面试所遇到的最常见的源码问题之一，所以此篇就作为认识源码的入门之作。 Volley简介Volley是谷歌退出的Android异步网络请求和图片加载库，特别适合网络请求量不大但是请求频繁的场景。 Volley的优点：  非">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://raw.githubusercontent.com/android-cn/android-open-project-analysis/master/tool-lib/network/volley/image/CacheDispatcher-run-flow-chart.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/android-cn/android-open-project-analysis/master/tool-lib/network/volley/image/NetworkDispatcher-run-flow-chart.png">
 <meta property="og:image" content="https://developer.android.com/images/training/volley-request.png">
-<meta property="og:updated_time" content="2017-10-25T00:12:46.343Z">
+<meta property="og:updated_time" content="2018-01-12T03:52:19.418Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Sparky">
-<meta name="twitter:description" content="【源码解析】 Volley的用法及源码解析 前言Volley是谷歌在2013年I/O大会上推出的新的网络请求框架，如今已经被废弃，取而代之使用okhttp进行网络请求。虽然现在使用场景不多了，但是技术总有光辉的一面，而且也是面试所遇到的最常见的源码问题之一，所以此篇就作为认识源码的入门之作。 Volley简介Volley是谷歌退出的Android异步网络请求和图片加载库，特别适合网络请求量不大但是">
+<meta name="twitter:title" content="【源码解析】 Volley的用法及源码解析">
+<meta name="twitter:description" content="前言Volley是谷歌在2013年I/O大会上推出的新的网络请求框架，如今已经被废弃，取而代之使用okhttp进行网络请求。虽然现在使用场景不多了，但是技术总有光辉的一面，而且也是面试所遇到的最常见的源码问题之一，所以此篇就作为认识源码的入门之作。 Volley简介Volley是谷歌退出的Android异步网络请求和图片加载库，特别适合网络请求量不大但是请求频繁的场景。 Volley的优点：  非">
 <meta name="twitter:image" content="https://raw.githubusercontent.com/android-cn/android-open-project-analysis/master/tool-lib/network/volley/image/CacheDispatcher-run-flow-chart.png">
 
 
@@ -129,7 +129,7 @@
 
 
 
-  <title> | Sparky</title>
+  <title>【源码解析】 Volley的用法及源码解析 | Sparky</title>
   
 
 
@@ -263,7 +263,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline"></h1>
+          <h1 class="post-title" itemprop="name headline">【源码解析】 Volley的用法及源码解析</h1>
         
 
         <div class="post-meta">
@@ -313,8 +313,7 @@
       
 
       
-        <p>【源码解析】 Volley的用法及源码解析</p>
-<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Volley是谷歌在2013年I/O大会上推出的新的网络请求框架，如今已经被废弃，取而代之使用okhttp进行网络请求。虽然现在使用场景不多了，但是技术总有光辉的一面，而且也是面试所遇到的最常见的源码问题之一，所以此篇就作为认识源码的入门之作。</p>
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Volley是谷歌在2013年I/O大会上推出的新的网络请求框架，如今已经被废弃，取而代之使用okhttp进行网络请求。虽然现在使用场景不多了，但是技术总有光辉的一面，而且也是面试所遇到的最常见的源码问题之一，所以此篇就作为认识源码的入门之作。</p>
 <h2 id="Volley简介"><a href="#Volley简介" class="headerlink" title="Volley简介"></a>Volley简介</h2><p>Volley是谷歌退出的Android异步网络请求和图片加载库，特别适合网络请求量不大但是请求频繁的场景。</p>
 <p>Volley的优点：</p>
 <ul>
