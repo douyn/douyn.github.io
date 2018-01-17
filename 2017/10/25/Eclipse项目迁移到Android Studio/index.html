@@ -79,17 +79,17 @@
 
 
 
-<meta name="description" content="Eclipse项目导入Android Studio注意事项:  如果以前把项目从eclipse导入Android Studio失败过,最好要先删除掉gradle文件(包括build.gradle, gradle文件夹,以及gradlew, gradlew.bat文件) 如果项目中使用了butterknife,需要删除某些文件,不然会报错:error: duplicate class: class_">
+<meta name="description" content="Eclipse项目导入Android Studio注意事项: 如果以前把项目从eclipse导入Android Studio失败过,最好要先删除掉gradle文件(包括build.gradle, gradle文件夹,以及gradlew, gradlew.bat文件) 如果项目中使用了butterknife,需要删除某些文件,不然会报错:error: duplicate class: class_n">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Sparky">
+<meta property="og:title" content="Eclipse项目导入Android Studio注意事项">
 <meta property="og:url" content="http://yoursite.com/2017/10/25/Eclipse项目迁移到Android Studio/index.html">
 <meta property="og:site_name" content="Sparky">
-<meta property="og:description" content="Eclipse项目导入Android Studio注意事项:  如果以前把项目从eclipse导入Android Studio失败过,最好要先删除掉gradle文件(包括build.gradle, gradle文件夹,以及gradlew, gradlew.bat文件) 如果项目中使用了butterknife,需要删除某些文件,不然会报错:error: duplicate class: class_">
+<meta property="og:description" content="Eclipse项目导入Android Studio注意事项: 如果以前把项目从eclipse导入Android Studio失败过,最好要先删除掉gradle文件(包括build.gradle, gradle文件夹,以及gradlew, gradlew.bat文件) 如果项目中使用了butterknife,需要删除某些文件,不然会报错:error: duplicate class: class_n">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-10-25T00:12:46.345Z">
+<meta property="og:updated_time" content="2018-01-17T07:26:45.503Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Sparky">
-<meta name="twitter:description" content="Eclipse项目导入Android Studio注意事项:  如果以前把项目从eclipse导入Android Studio失败过,最好要先删除掉gradle文件(包括build.gradle, gradle文件夹,以及gradlew, gradlew.bat文件) 如果项目中使用了butterknife,需要删除某些文件,不然会报错:error: duplicate class: class_">
+<meta name="twitter:title" content="Eclipse项目导入Android Studio注意事项">
+<meta name="twitter:description" content="Eclipse项目导入Android Studio注意事项: 如果以前把项目从eclipse导入Android Studio失败过,最好要先删除掉gradle文件(包括build.gradle, gradle文件夹,以及gradlew, gradlew.bat文件) 如果项目中使用了butterknife,需要删除某些文件,不然会报错:error: duplicate class: class_n">
 
 
 
@@ -125,7 +125,7 @@
 
 
 
-  <title> | Sparky</title>
+  <title>Eclipse项目导入Android Studio注意事项 | Sparky</title>
   
 
 
@@ -259,7 +259,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline"></h1>
+          <h1 class="post-title" itemprop="name headline">Eclipse项目导入Android Studio注意事项</h1>
         
 
         <div class="post-meta">
@@ -309,8 +309,7 @@
       
 
       
-        <p>Eclipse项目导入Android Studio注意事项:</p>
-<ol>
+        <h2 id="Eclipse项目导入Android-Studio注意事项"><a href="#Eclipse项目导入Android-Studio注意事项" class="headerlink" title="Eclipse项目导入Android Studio注意事项:"></a>Eclipse项目导入Android Studio注意事项:</h2><ol>
 <li>如果以前把项目从eclipse导入Android Studio失败过,最好要先删除掉gradle文件(包括build.gradle, gradle文件夹,以及gradlew, gradlew.bat文件)</li>
 <li>如果项目中使用了butterknife,需要删除某些文件,不然会报错:error: duplicate class: class_name$$ViewInjector$$.处理步骤如下:    1：删除eclipse项目中的.apt_generated文件夹和.factorypath文件 2：删除.classpath文件中的节点 3：重新导入到android studio中</li>
 <li>android studio右下角的Gradle Console很重要,如果有gradle编译报错什么的,分析里边的日志基本上都可以得到答案.比如有的文件非法,你扔了一个.key文件到drawable文件夹中,在新版Android Studio中是会报错的,但是Messenges中的log可能是很片面的说检测到文件非法,但是在gradle console中可以看到具体哪一个文件出错,去修改.</li>
@@ -347,8 +346,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/10/25/Android面试题及答案/" rel="next" title="">
-                <i class="fa fa-chevron-left"></i> 
+              <a href="/2017/10/25/Android面试题及答案/" rel="next" title="Android面试题及答案">
+                <i class="fa fa-chevron-left"></i> Android面试题及答案
               </a>
             
           </div>
@@ -357,8 +356,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/10/25/Java 多线程/" rel="prev" title="">
-                 <i class="fa fa-chevron-right"></i>
+              <a href="/2017/10/25/Java 多线程/" rel="prev" title="Java 多线程">
+                Java 多线程 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -411,8 +410,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -431,7 +439,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">26</span>
+                  <span class="site-state-item-count">18</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -458,6 +466,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Eclipse项目导入Android-Studio注意事项"><span class="nav-number">1.</span> <span class="nav-text">Eclipse项目导入Android Studio注意事项:</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
