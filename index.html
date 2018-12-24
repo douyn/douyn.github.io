@@ -242,6 +242,137 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/02/01/增量更新/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sparky">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/logo_s.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sparky">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/02/01/增量更新/" itemprop="url">未命名</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-01T10:00:58+08:00">
+                2018-02-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="apk更新的技术："><a href="#apk更新的技术：" class="headerlink" title="apk更新的技术："></a>apk更新的技术：</h3><ul>
+<li>增量更新：</li>
+<li>热更新</li>
+<li>插件化</li>
+<li>rn的js脚本修复apk</li>
+<li>静默安装</li>
+</ul>
+<h4 id="增量更新的流程"><a href="#增量更新的流程" class="headerlink" title="增量更新的流程"></a>增量更新的流程</h4><ol>
+<li>APP检测最新版本，把版本号告诉服务器，服务器进行版本校验</li>
+<li>如果有新版本，服务器需要对当前版本和新版本apk进行一次差分，产生patch差分文件，或者在新版本上传到服务器的时候已经差分好</li>
+<li>app在后台下载好差分文件，进行md5校验，在本地进行合并（跟/data目录下的apk文件进行合并），合并成新的apk后，提示用户安装。</li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/12/Retrofit配置HTTPS请求踩坑记/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2421,134 +2552,6 @@ public static WifiConfiguration getWifiConfig (Context context, String ssid) {
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/25/如何阅读开源项目/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sparky">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/logo_s.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Sparky">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/10/25/如何阅读开源项目/" itemprop="url">Android如何阅读开源项目源代码</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-25T08:12:46+08:00">
-                2017-10-25
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="Android如何阅读开源项目源代码"><a href="#Android如何阅读开源项目源代码" class="headerlink" title="Android如何阅读开源项目源代码"></a>Android如何阅读开源项目源代码</h1><p>开源项目一般分为完整项目和第三方类库，对于完整项目主要分析项目架构，引用第三方类库，总体代码风格等，分析第三方类库主要集中在功能和实现思路，设计思想等。</p>
-<p>// 了解功能，考虑实现方式</p>
-<h4 id="1-总-—-功能了解"><a href="#1-总-—-功能了解" class="headerlink" title="1 总 —- 功能了解"></a>1 总 —- 功能了解</h4><p>了解项目功能(Sample 和文档)以及主要分为几个大块。另外明白你的需求，比如 PullToRefresh 的下拉实现。<br>PS：<br>（1）大家可以自己先想想如果是自己会怎么去实现这个项目，或许看源码过程中会发现思想碰撞。<br>（2）如果时间比较紧，可以先 Google 一些该项目相关的文档结合代码看看，帮助快速掌握，不过网上分析文章参差不齐，需谨慎。</p>
-<p>// 分析项目代码目录结构 –&gt; 核心类 –&gt; 核心方法 –&gt; 找到分析重心</p>
-<h4 id="2-分-—-详细设计"><a href="#2-分-—-详细设计" class="headerlink" title="2 分 —- 详细设计"></a>2 分 —- 详细设计</h4><p>这里正式开始代码分析，分析过程中如果脑子记不住，多动手记下主要类、函数等作用<br>(1) 入口对完整 App 来说就是 Manifest 找到入口 Activity，对于工具库从调用接口中判断入口类。然后在 IDE 中一步步深入即可。PS：一般不错的开源项目规范都比较好，类、函数、变量从名字上就可以了解作用，所以如果需要快速掌握原理的话看觉得是重点的函数即可。<br>(2) 核心类在上面的一步步深入过程中已经接触了不少类，大致了解各个类的主要作用</p>
-<p>// 分析重心，分析流程</p>
-<h4 id="3-总-—-总体设计"><a href="#3-总-—-总体设计" class="headerlink" title="3 总 —- 总体设计"></a>3 总 —- 总体设计</h4><p>(1) 功能流程图上面 2-(1) 的过程完成后已经大致了解项目的流程，不费事的话可以简单画下流程及相关类、函数。如 Retrofit、Volley 的请求处理流程，Android-Universal-Image-Loader 的图片处理流程图。<br>(2) 总体设计整个库分为哪些模块及模块之间的调用关系。如大多数图片缓存会分为 Loader 和 Processer 等模块。</p>
-<p>// 顺序分析</p>
-<h4 id="4-回顾"><a href="#4-回顾" class="headerlink" title="4 回顾"></a>4 回顾</h4><p>这时候从 3-2-1（总体设计-&gt;流程图-&gt;详细设计-&gt;功能介绍）<br>反序看，大致就能了解作者最初是怎么设计的了对于快速分析可以走 1-2(1)-2(2)-3(1) 的步骤。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2603,7 +2606,7 @@ public static WifiConfiguration getWifiConfig (Context context, String ssid) {
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-count">19</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
