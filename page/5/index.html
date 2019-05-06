@@ -242,1223 +242,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/06/Camera应用开发/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sparky">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/logo_s.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Sparky">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/05/06/Camera应用开发/" itemprop="url">未命名</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-06T20:10:43+08:00">
-                2019-05-06
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="Camera2应用开发"><a href="#Camera2应用开发" class="headerlink" title="Camera2应用开发"></a>Camera2应用开发</h2><h4 id="1-打开相机，开启预览"><a href="#1-打开相机，开启预览" class="headerlink" title="1. 打开相机，开启预览"></a>1. 打开相机，开启预览</h4><p>在布局文件中加入TextureView,然后对其进行监听</p>
-<pre><code>textureview = (TextureView) findViewById(R.id.textureView);
-
-textureview.setSurfaceTextureListener(surfaceTextureListener);
-</code></pre><p>当Textureview准备好，会回调surfacetexturelistener的onSurfaceAvailabale()，我们在预览之前给相机设置参数，然后打开相机</p>
-<pre><code>TextureView.SurfaceTextureListener textureListener = new TextureView.SurfaceTextureListener() {
-@Override
-public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
-    //当SurefaceTexture可用的时候，设置相机参数并打开相机
-    setupCamera(width, height);
-    openCamera();
-}
-};
-</code></pre><p>设置相机参数，主要是根据textureview的尺寸设置预览尺寸。</p>
-<pre><code>private void setupCamera(int width, int height) {
-    //获取摄像头的管理者CameraManager
-CameraManager manager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
-try {
-    //遍历所有摄像头
-    for (String cameraId: manager.getCameraIdList()) {
-        CameraCharacteristics characteristics = manager.getCameraCharacteristics(cameraId);
-        //默认打开后置摄像头
-        if (characteristics.get(CameraCharacteristics.LENS_FACING) == CameraCharacteristics.LENS_FACING_FRONT)
-            continue;
-        //获取StreamConfigurationMap，它是管理摄像头支持的所有输出格式和尺寸
-        StreamConfigurationMap map = characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
-        //根据TextureView的尺寸设置预览尺寸
-        mPreviewSize = getOptimalSize(map.getOutputSizes(SurfaceTexture.class), width, height);
-        mCameraId = cameraId;
-        break;
-    }
-} catch (CameraAccessException e) {
-    e.printStackTrace();
-}
-}
-</code></pre><p>打开相机，通过cameramanager打开相机，在状态回调中打开相机预览。</p>
-<pre><code>private void openCamera() {
-//获取摄像头的管理者CameraManager
-CameraManager manager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
-//检查权限
-try {
-    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-        return;
-    }
-    //打开相机，第一个参数指示打开哪个摄像头，第二个参数stateCallback为相机的状态回调接口，第三个参数用来确定Callback在哪个线程执行，为null的话就在当前线程执行
-    manager.openCamera(mCameraId, stateCallback, null);
-} catch (CameraAccessException e) {
-    e.printStackTrace();
-}
-}
-
-private final CameraDevice.StateCallback stateCallback = new CameraDevice.StateCallback() {
-@Override
-public void onOpened(CameraDevice camera) {
-    mCameraDevice = camera;
-    //开启预览
-    startPreview();
-}
-}
-</code></pre><p>通过textureview显示相机预览数据，camera2的拍照数据和预览数据都是通过cameracapturesession实现的。</p>
-<pre><code>private void startPreview() {
-SurfaceTexture mSurfaceTexture = mTextureView.getSurfaceTexture();
-//设置TextureView的缓冲区大小
-mSurfaceTexture.setDefaultBufferSize(mPreviewSize.getWidth(), mPreviewSize.getHeight());
-//获取Surface显示预览数据
-Surface mSurface = new Surface(mSurfaceTexture);
-try {
-    //创建CaptureRequestBuilder，TEMPLATE_PREVIEW比表示预览请求
-    mCaptureRequestBuilder = mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW);
-    //设置Surface作为预览数据的显示界面
-    mCaptureRequestBuilder.addTarget(mSurface);
-    //创建相机捕获会话，第一个参数是捕获数据的输出Surface列表，第二个参数是CameraCaptureSession的状态回调接口，当它创建好后会回调onConfigured方法，第三个参数用来确定Callback在哪个线程执行，为null的话就在当前线程执行
-    mCameraDevice.createCaptureSession(Arrays.asList(mSurface), new CameraCaptureSession.StateCallback() {
-        @Override
-        public void onConfigured(CameraCaptureSession session) {
-            try {
-                    //创建捕获请求
-                    mCaptureRequest = mCaptureRequestBuilder.build();
-                    mPreviewSession = session;
-                    //设置反复捕获数据的请求，这样预览界面就会一直有数据显示
-                    mPreviewSession.setRepeatingRequest(mCaptureRequest, mSessionCaptureCallback, null);
-                } catch (CameraAccessException e) {
-                    e.printStackTrace();
-                }
-            }
-
-        @Override
-        public void onConfigureFailed(CameraCaptureSession session) {
-
-        }
-    }, null);
-} catch (CameraAccessException e) {
-    e.printStackTrace();
-}
-}
-</code></pre><h4 id="Camera1-流程"><a href="#Camera1-流程" class="headerlink" title="Camera1 流程"></a>Camera1 流程</h4><ul>
-<li>添加相机相关权限</li>
-<li>通过Camera.open(int)获得一个相机实例</li>
-<li>利用camera.getParameters()得到相机实例的默认设置Camera.Parameters</li>
-<li>如果需要的话，修改Camera.Parameters并调用camera.setParameters(Camera.Parameters)来修改相机设置</li>
-<li>调用camera.setDisplayOrientation(int)来设置正确的预览方向</li>
-<li>调用camera.setPreviewDisplay(SurfaceHolder)来设置预览，如果没有这一步，相机是无法开始预览的</li>
-<li>调用camera.startPreview()来开启预览，对于拍照，这一步是必须的</li>
-<li>在需要的时候调用camera.takePicture(Camera.ShutterCallback, Camera.PictureCallback, Camera.PictureCallback, Camera.PictureCallback)来拍摄照片</li>
-<li>拍摄照片后，相机会停止预览，如果需要再次拍摄多张照片，需要再次调用camera.startPreview()来重新开始预览</li>
-<li>调用camera.stopPreview()来停止预览</li>
-<li>一定要在onPause()的时候调用camera.release()来释放camera，在onResume中重新开始camera</li>
-</ul>
-<h4 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h4><p><img src="http://img.blog.csdn.net/20150524141843503" alt="camera2流程示意图"></p>
-<p><img src="http://img.blog.csdn.net/20150524142911722" alt="camera2中主要类"></p>
-<p><img src="http://img.blog.csdn.net/20150524143457419" alt="拍照流程图"></p>
-<h4 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h4><p><a href="http://blog.csdn.net/lincyang/article/details/45951225" target="_blank" rel="noopener">android.hardware.camera2使用指南</a></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/06/AsyncTask/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sparky">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/logo_s.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Sparky">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/05/06/AsyncTask/" itemprop="url">未命名</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-06T20:10:43+08:00">
-                2019-05-06
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>Android AsyncTask</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/06/电源管理(1)-基本概念/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sparky">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/logo_s.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Sparky">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/05/06/电源管理(1)-基本概念/" itemprop="url">未命名</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-06T20:10:33+08:00">
-                2019-05-06
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="电源管理-1-基本概念"><a href="#电源管理-1-基本概念" class="headerlink" title="电源管理(1)-基本概念"></a>电源管理(1)-基本概念</h2><h4 id="1-linux的电源状态"><a href="#1-linux的电源状态" class="headerlink" title="1. linux的电源状态"></a>1. linux的电源状态</h4><ul>
-<li>on  &gt;&gt;&gt; S0 - working</li>
-<li>standby &gt;&gt;&gt; S1 - cpu and ram are powered but not executed</li>
-<li>suspend to ram &gt;&gt;&gt; S3 - ram is powerd and the running content is saved to ram</li>
-<li>suspend to disk &gt;&gt;&gt; S4 - all content is saved to disk and power down</li>
-</ul>
-<p>S3 挂起到内存，就是常说的待机。计算机将目前的运行状态等数据存放在内存，关闭硬盘、外设等设备，进入等待状态。此时内存仍然需要电力维持其数据，但整机耗电很少。恢复时计算机从内存读出数据，回到挂起前的状态，恢复速度较快。对DDR的耗电情况进行优化是S3性能的关键，大多数手持设备都是用S3待机。</p>
-<p>S4 挂起到硬盘，就是常说的休眠。把运行状态等数据存放在硬盘上某个文件或者某个特定的区域，关闭硬盘、外设等设备，进入关机状态。此时计算机完全关闭，不耗电。恢复时计算机从休眠文件/分区中读出数据，回到休眠前的状态，恢复速度较慢。电子书项目中，见过一款索尼的电子书，没有定义关机状态，只定义了S4,从而提高开机速度。</p>
-<h4 id="2-电源管理接口"><a href="#2-电源管理接口" class="headerlink" title="2. 电源管理接口"></a>2. 电源管理接口</h4><p>linux把电源接口框架都纳入了设备模型中，通过power_kobj对象的属性文件提供操作电源策略的接口。</p>
-<h4 id="3-电源状态的切换"><a href="#3-电源状态的切换" class="headerlink" title="3. 电源状态的切换"></a>3. 电源状态的切换</h4><p>linux的世界里，一切皆文件。通过state文件写入不同的值来让系统进入不同的电源状态，接收状态值的函数是state_store.</p>
-<p>autosleep是Android内核为了跟主线内核兼容引入的，切换电源状态的入口函数是pm_suspend。针对嵌入式系统，s3是一种常见的节电状态，俗称待机。待机可以粗略分为5个阶段。</p>
-<ol>
-<li>冻结用户态进程</li>
-<li>设备挂起</li>
-<li>针对soc相应的节电操作和为唤醒做准备</li>
-<li>smp中非启动cpu的挂起</li>
-<li>cpu core的挂起</li>
-</ol>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/06/PMS分析(1)/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sparky">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/logo_s.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Sparky">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/05/06/PMS分析(1)/" itemprop="url">未命名</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-06T20:10:33+08:00">
-                2019-05-06
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="Android-PowerManagerService分析"><a href="#Android-PowerManagerService分析" class="headerlink" title="Android PowerManagerService分析"></a>Android PowerManagerService分析</h2><p><img src="http://img.blog.csdn.net/20170113141432259?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvZnVfa2V2aW4wNjA2/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center" alt=""></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/06/组件化Application方案/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sparky">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/logo_s.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Sparky">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/05/06/组件化Application方案/" itemprop="url">未命名</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-06T20:09:44+08:00">
-                2019-05-06
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="组件化Application方案"><a href="#组件化Application方案" class="headerlink" title="组件化Application方案"></a>组件化Application方案</h1><h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>本人也是刚接触组件化不久，原项目是由几个分开的系统应用组成，目前做的只是将几个应用合并到同一项目下，将这几个应用拆分为几个模块并将其中通用的地方抽出来新建了几个基础组件和lib组件。</p>
-<p>在这个过程中也踩了很多坑。总结下来主要是：</p>
-<ol>
-<li>全局gradle配置</li>
-<li>对于集成状态和组件状态的区别处理</li>
-<li>arouter的使用</li>
-<li>一些第三方的特殊处理。我遇到的主要是butterknife。主要包括不使用apt改用anotationprocess，使用butterknife-gradle-plugin-8.4.0,全局修改R为R2，注意在R2下项目也可以作为application运行。</li>
-<li>应用application</li>
-</ol>
-<h3 id="Application方案"><a href="#Application方案" class="headerlink" title="Application方案"></a>Application方案</h3><ol>
-<li>创建base module。该module提供基础类库。</li>
-<li><p>创建BaseApplication类，ModuleConfig类以及BaseApplicationImpl类。BaseApplication类的onCreate()方法中初始化一些全局配置并且初始化模块配置。BaseApplicationImpl类是一个接口类，需要各模块自己去实现各个模块的配置。这些配置的类是定义在ModuleConfig中，在初始化的时候会通过反射创建这些类。</p>
-<pre><code>// ------------BaseApplication------------
-public class BaseApplication extends MultiDexApplication {
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-
-        // 初始化全局配置
-        initGlobalConfig();
-
-        // 初始化模块配置
-        initModuleConfit();
-    }
-
-    private void initGlobalConfig() {
-        // 初始化ARouter
-        initARouter();
-    }
-
-    private void initModuleConfit() {
-        for (String modules : ModuleConfig.MODULELIST){
-            try {
-                Class clz = Class.forName(modules);
-                Object obj = clz.newInstance();
-                if (obj instanceof BaseApplicationImp){
-                    ((BaseApplicationImp) obj).onCreate(this);
-                }
-
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (InstantiationException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private void initARouter() {
-        ARouter.openLog();
-        ARouter.openDebug();
-        ARouter.init(this);
-    }
-}
-
-// ------------BaseApplicationImp------------
-public interface BaseApplicationImp{
-    void onCreate(Application application);
-}
-
-// ------------ModuleConfig-------------
-public interface ModuleConfig {
-
-    static final String MODULE_PDFREADER = &quot;com.dou.sample.mupdf_demo.BaseApplication&quot;;
-    static final String MODULE_LAUNCHER = &quot;com.guowen.luncher.guowenreaderapp.app.AppContext&quot;;
-
-    public static final String[] MODULELIST = {
-            MODULE_LAUNCHER,
-            MODULE_PDFREADER
-    };
-}
-</code></pre></li>
-<li><p>在各个子module中实现BaseApplicationImpl，这个类可以提供模块化的配置以及application context对象。清单文件都设置为BaseApplication即可。</p>
-</li>
-</ol>
-<h3 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h3><p>原来的项目是每个应用都有一个application和baseapplication，现在baseapplication抽出来了，但是集成状态下只能用同一个application，组件状态下application也不同。</p>
-<p>所以这里做了统一处理。不管是集成状态还是组件状态都设置application为baseapplication。baseapplication的oncreate方法主要有两个方法，加载全局配置和加载组件配置。加载全局配置比较简单，加载组件配置就是将组件的配置类在moduleconfig类中声明，然后通过遍历这些配置列表，通过反射加载baseapplicationimpl的实现类。如果是组件状态下直接会报找不到类异常也就不会加载别的module的配置。</p>
-<p>因为之前项目的application类(单例模式)不仅会初始化配置还会提供一些静态成员和全局context，如果改动，项目代码也要修改很多。所以这里直接用这个类实现BaseApplicationImpl，将这个类的单例context设置baseapplication传递的对象。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/06/简历/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sparky">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/logo_s.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Sparky">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/05/06/简历/" itemprop="url">未命名</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-06T20:09:10+08:00">
-                2019-05-06
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="简历"><a href="#简历" class="headerlink" title="简历"></a>简历</h1><font size="4"><br>&gt; 联系方式<br><br><em> 手机： 18236886950
-</em> Email： douyingnan@gmail.com<br><em> QQ： 42588451<br><br>&gt; 个人信息
-
-</em> 豆应楠/男<br><em> 本科/河南理工大学/计算机科学与技术专业
-</em> 工作年限: 3年<br><em> 博客: <a href="http://www.jianshu.com/u/9b0d48b8fb94" target="_blank" rel="noopener">http://www.jianshu.com/u/9b0d48b8fb94</a> 
-</em> GitHub: <a href="https://github.com/douyn" target="_blank" rel="noopener">https://github.com/douyn</a><br><em> 应聘职位: Android开发工程师
-</em> 英语：四级<br><em> 期望薪资: 12k-15k<br><br>&gt; 职业技能<br><br>1. 熟练掌握android常用的系统控件，具备自定义控件的开发能力，能够利用系统控件及自定义控件完成常见UI界面的绘制<br>2. 熟悉Android的数据存储方式（File,SharedPrefrence,Sqlite,ContentProvider,Net），使用GreenDao或者SQLite进行数据库操作<br>3. 熟悉利用JSON方式进行数据交换，能利用Gson完成JSON数据的解析,配合retrofit对网络请求结果进行解析<br>4. 熟悉android中常用动画和组合动画的使用<br>5. 熟练使用Git版本控制工具对项目进行配置管理<br>6. 熟悉使用android最新控件，ConstraintLayout/CordinatorLayout等<br>7. 熟悉Material Design依赖库。TabLayout/NagevitionView/SnackBar/FloatingActionBar等。<br>8. 使用EventBus进行跨UI数据传递，使用JSON和GSON进行数据解析<br>9. 使用ImageLoader/Glide进行图片加载，使用LUBAN进行图片压缩<br>10. RxJava/Retrofit/greenDao/Butter Knife等最常用第三方类库<br>11. 使用高德地图和谷歌地图进行地图开发，使用个推和GCM/FCM推送服务<br>12. 熟练使用Eclipse和Android Studio双开发工具<br><br>&gt; 工作经历<br><br>### 深圳国文阅读科技有限公司 (2017/09-至今)<br>主要职责：独立开发<br><br>负责根据现有其他平台阅读器，做Android端的软件的开发，以及阅读器模块的研发。<br><br>### 深圳奇沃智联科技股份有限公司 (2015/11-2017/09)<br>主要职责：独立开发<br><br>参与产品需求调研、需求分析、页面及项目设计、开发，参与项目技术文件的整理，形成自己项目的功能设计文档。<br><br>### 红鸟网络有限公司 (2014/09-2015/11)<br>主要职责：团队开发<br><br>和同事进行沟通，完成负责模块的任务，及后续产品的维护和优化工作，经常进行技术交流<br>&gt; 项目经历<br><br><strong>1. 国文阅读器Launcher以及阅读软件</strong> (2017/09-至今)<br><br>##### </em> 项目介绍<br>该项目是要根据现有Linux平台的产品，将ui和功能移植到Android平台。<br><br>项目是一个类似Kindle的电纸书设备，主要功能是电子书阅读，包括了书架，书城，个人中心，设置等模块。<br>##### <em> 主要技术
-
-</em> 适配(1072<em>1440与普通手机)(因为是e-ink屏幕所以减少刷新频率，使用一些少刷新的控件)
-</em> 自定义view实现阅读器(pageview)及部分ui(搜索view，亮度调节view，开机动画等)<br><em> 封装网络接口显示ui数据(没有给出接口的时候，事先封装好databean)
-</em> NDK的调用(编译mupdf/koreader等开源项目so，修改部分c代码)<br><em> 使用greendao实现本地数据库接口(launcher的书架数据库和阅读器的书签，笔记，书摘数据库)
-</em> 其它(仿京东购买详情页，本地图书管理，第三方登录，第三方支付)<br><br><strong>2. 智能儿童手表项目中文版及海外版APP</strong> (2015/12-2016/03)<br><br>##### <em> 项目介绍<br>该项目是智能儿童手表的专用APP，必须要搭配智能儿童手表使用，家长通过儿童守护APP与佩戴在孩子手腕上的智能儿童手表连接，即可随时查看孩子所在的位置以及打电话给孩子，并实现丰富多彩的亲子互动功能。<br>特征:<br>1、实时定位 2、高清通话3、SOS一键报警4、运动计步。<br><br>##### </em> 主要技术<br><br><em> 自定义view实现身高体重选择，自定义view实现设置和展示运动目标情况
-</em> 应用主页面框架是主页面中包括四个tab页面，是通过fragmenttabhost+viewpager+fragment实现的。fragmenttabhost中控制四个tab标签，viewpager+fragment实现tab标签对应的页面展示。<br><em> 使用高德地图进行深度开发，添加历史轨迹点，添加历史轨迹路线，播放历史轨迹动画，实现地图扩散动画，熟悉其他高德地图api
-</em> 查看通知消息时，对列表进行了数据库缓存，并且对列表使用分页加载，做了侧滑删除处理，优化了用户体验<br><em> 封装图片选择，自定义popupwindow显示底部弹窗
-</em> 使用google map/google paly service/google cloud message/google billing/google zxing等多种google包<br><br><strong>3. 智能手表三合一项目APP</strong> (2016/07-2016/11)<br><br>##### <em> 项目介绍<br>该项目是公司由于手表项目过多，各自用各自的app，不方便项目管理和后期迭代，所以就有了多款手表app集成到一个app上的需求，包括儿童手表，老人手表和宠物定位手表。<br>特征:<br>1、实时定位 2、高清通话 3、SOS一键报警 4、运动计步。<br><br>##### </em> 主要技术<br><br><em> 使用retrofit+okhttp+rxjava框架进行网络请求处理，使用gson对结果进行转换
-</em> ListView优化。对ListView进行优化，使用ViewHolder避免重复加载xml文件，使用convertView复用组件，使用ViewHolder标签类，减少查找控件时资源使用率，大大提高ListView性能，使其滑动流畅；<br><em> 全局处理并收集异常。在Application设置全局异常处理类UncaughtExceptionHandler，保证在出现未知异常时，不会给用户弹出异常信息，Kill自身进程，写crash日志文件到本地同时提交异常信息给服务器；
-</em> 使用toolbar+negavitionview实现侧滑菜单，使用fragmenttabhost+viewpager+tablayout实现双层标签嵌套<br><em> 使用swipemenulistviw实现侧滑，swipelayout实现下拉刷新，cordinatorlayout+nestedscrollview实现标题栏下拉放大<br><br><strong>4. 智能门铃项目APP</strong> (2016/12-1017/5)<br><br>##### </em> 项目介绍<br>该项目是与硬件门铃使用远程链接保持实时通信的app，当游客前来，应用程序将收到实时推送。当没有游人，用户也可以主动观看视频门铃。<br><br>特征：<br>1.实时视频 2.邀请家庭圈 3.查看录像 4.访客通话<br><br>##### <em> 使用的技术
-
-</em> 使用Toolbar+negavitionview实现侧滑菜单，显示账号信息和设置菜单<br><em> 使用recyclerview加载列表数据，并且设置viewtype对数据进行分组显示
-</em> 由于应用中有许多后台耗时操作比如搜索蓝牙，p2p数据处理等，我创建了一个service并且通过与eventbus结合使用，来统一处理这些耗时操作。<br><em> 使用ijkplayer播放视频，因为视频文件是.avi文件，因为很多手机不支持.avi格式的硬解码，最终决定使用第三方的ijkplayer实现视频播放<br><br><strong>5. 红鸟电商</strong> (2014/11-2015/3)<br><br>##### </em> 项目介绍<br>公司自己的电商项目。项目分为首页、分类、购物车、我四个模块。<br><br>项目职责：团队开发<br><br>##### <em> 主要技术
-
-</em> 因为项目中大量用到与服务器刷新的界面，为了提高用户的体验，在与服务器交互的子线程未完成之前，先显示加载进度条，当成功获取服务器数据以后再显示数据。<br><em> 查询商品时通过ListView的分批加载数据，优化了用户的体验。
-</em> 从服务器下载的图片缓存到本地，在listview的适配器中服务convertview，建立一个静态类ViewHolder，在其类内声明各个View对象，以减少这些View的创建次数大大优化了listview性能。<br><em> 轮播图的封装，可用于首页的轮播图进行自动轮播，也可用于商品详情 的商品展示部分；<br><br>&gt; 开源项目和作品<br><br>#### 开源项目
-</em> <a href="https://github.com/douyn/enumlistDemo" target="_blank" rel="noopener">enumlistDemos</a>: 在项目中用到的很多东西都是在这里先demo出来再使用，以及很多业余时间写的小demo。例如： 仿探探的卡片布局swipe card view，标签选择flowlayout，android风格setting页面，视频播放使用ijkplayer和 jcvideoplayer，使用scheme进行应用内和应用外跳转等等<br><em> <a href="https://github.com/douyn/TT-News" target="_blank" rel="noopener">TTNews</a> 一个流行的新闻客户端框架，基于MVP,Materail Design,Retrofit,Glide等，基本上涵盖当前流行的app框架。<br>#### 技术文章
-</em> Retrofit Https踩坑记录(<a href="http://www.jianshu.com/p/41bb549317ff" target="_blank" rel="noopener">http://www.jianshu.com/p/41bb549317ff</a>)<br>* 【踩坑记录】Eclipse项目导入Android Studio注意事项(<a href="http://www.jianshu.com/p/d49bee8b6308" target="_blank" rel="noopener">http://www.jianshu.com/p/d49bee8b6308</a>)<br>&gt; 致谢<br><br>感谢您花时间阅读我的简历，期待有机会和您共事。<br></font>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/06/集成测试/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sparky">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/logo_s.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Sparky">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/05/06/集成测试/" itemprop="url">未命名</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-06T20:09:10+08:00">
-                2019-05-06
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="集成测试"><a href="#集成测试" class="headerlink" title="集成测试"></a>集成测试</h2><p>集成测试主要针对不直接用用户交互的组件，比如service和contentprovider。</p>
-<h3 id="测试-service"><a href="#测试-service" class="headerlink" title="测试 service"></a>测试 service</h3><ol>
-<li>RunWith(AndroidJUnit4.class)并且指定AndroidJUnitRunner</li>
-<li>创建ServiceTestRule通过@Rule注释</li>
-<li><p>编写测试方法</p>
-<pre><code>@Test
-public void testWithBoundService() throws TimeoutException {
-    // Create the service Intent.
-    Intent serviceIntent =
-            new Intent(InstrumentationRegistry.getTargetContext(),
-                LocalService.class);
-
-    // Data can be passed to the service via the Intent.
-    serviceIntent.putExtra(LocalService.SEED_KEY, 42L);
-
-    // Bind the service and grab a reference to the binder.
-    IBinder binder = mServiceRule.bindService(serviceIntent);
-
-    // Get the reference to the service, or you can call
-    // public methods on the binder directly.
-    LocalService service =
-            ((LocalService.LocalBinder) binder).getService();
-
-    // Verify that the service is working correctly.
-    assertThat(service.getRandomInt(), is(any(Integer.class)));
-}
-</code></pre><h3 id="测试-contentprovider"><a href="#测试-contentprovider" class="headerlink" title="测试 contentprovider"></a>测试 contentprovider</h3></li>
-</ol>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/06/极简生活法则/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sparky">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/logo_s.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Sparky">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/05/06/极简生活法则/" itemprop="url">未命名</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-06T20:09:10+08:00">
-                2019-05-06
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="极简生活法则"><a href="#极简生活法则" class="headerlink" title="极简生活法则"></a>极简生活法则</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><h2 id="个人法则"><a href="#个人法则" class="headerlink" title="个人法则"></a>个人法则</h2><h2 id="爱情法则"><a href="#爱情法则" class="headerlink" title="爱情法则"></a>爱情法则</h2><h2 id="亲友法则"><a href="#亲友法则" class="headerlink" title="亲友法则"></a>亲友法则</h2><h2 id="社会法则"><a href="#社会法则" class="headerlink" title="社会法则"></a>社会法则</h2><h2 id="快乐法则"><a href="#快乐法则" class="headerlink" title="快乐法则"></a>快乐法则</h2><h2 id="更多法则"><a href="#更多法则" class="headerlink" title="更多法则"></a>更多法则</h2>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/06/测试相关杂记/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1748,11 +531,1179 @@ SLIB_INSTALL_LINKS=&apos;$(SLIBNAME)&apos;
 
 
     
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/06/virturebox/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sparky">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/logo_s.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sparky">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/05/06/virturebox/" itemprop="url">未命名</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-06T20:09:10+08:00">
+                2019-05-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="virturebox无法与宿主机相互复制粘贴"><a href="#virturebox无法与宿主机相互复制粘贴" class="headerlink" title="virturebox无法与宿主机相互复制粘贴"></a>virturebox无法与宿主机相互复制粘贴</h2><ol>
+<li>虚拟机-&gt;设备-&gt;共享粘贴板-&gt;双向</li>
+<li>虚拟机-&gt;设备-&gt;拖动-&gt;双向</li>
+<li>虚拟机-&gt;设备-&gt;程序增强功能,打开我的电脑，安装增强功能</li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/06/xml sax解析和pull解析的主要方式/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sparky">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/logo_s.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sparky">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/05/06/xml sax解析和pull解析的主要方式/" itemprop="url">未命名</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-06T20:09:10+08:00">
+                2019-05-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="xml-parser"><a href="#xml-parser" class="headerlink" title="xml parser"></a>xml parser</h2><p>xml pull解析和sax解析的主要区别</p>
+<p>sax解析的工作方式是自动将事件推入注册的是事件处理器进行处理，不能控制事件的主动结束。</p>
+<p>pull解析的主要工作方式允许你的应用程序主动从解析器获取事件。</p>
+<p>android.util.Xml提供了这两种解析方式。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/06/virtualbox小坑/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sparky">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/logo_s.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sparky">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/05/06/virtualbox小坑/" itemprop="url">未命名</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-06T20:09:10+08:00">
+                2019-05-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="virtualbox没有可用设备-不能识别usb"><a href="#virtualbox没有可用设备-不能识别usb" class="headerlink" title="virtualbox没有可用设备(不能识别usb)"></a>virtualbox没有可用设备(不能识别usb)</h2><blockquote>
+<p>记一次小坑，修改东西的时候要多想想有什么后果，不然以后遇到坑的时候根本无从下手。</p>
+</blockquote>
+<p>在学linux用户管理的时候手贱改了一下主用户的用户组，当时也没想那么多，也忘记安装virtualbox及设置vm usb设备时添加用户组的操作，这次也是过了很久才又来刷系统，导致出现这个问题的时候一脸懵逼。</p>
+<pre><code>1 sudo usermod -a -G vboxusers $(USER_NAME)
+2 shutdown -r now
+</code></pre>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/06/sed和awk/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sparky">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/logo_s.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sparky">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/05/06/sed和awk/" itemprop="url">未命名</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-06T20:09:10+08:00">
+                2019-05-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="sed和awk"><a href="#sed和awk" class="headerlink" title="sed和awk"></a>sed和awk</h2><ol>
+<li>sed是什么？sed是一个非交互文本编辑器。可以对文本文件和标准输入进行编辑。 stream editor</li>
+<li><p>sed的使用方式。</p>
+<pre><code>1. 命令行方式
+    格式为：
+    sed [选项] [sed命令] [输入文件]
+2. 将sed命令插入脚本文件后，通过sed命令调用
+    sed [选项] -f [sed脚本文件] [输入文件]
+3. 将sed命令插入脚本文件后，设置为可执行文件，直接执行
+    ./[脚本文件] [输入文件]
+
+&gt; 如果没有输入文件，将从标准输入中接受输入
+</code></pre></li>
+<li><p>常见的选项</p>
+<pre><code>-n 不打印所有行到标准输出
+-e 表示下一个字符串将被解析为sed命令，如果只有一个，-e可以省略
+-f 表示正在调用sed脚本文件
+</code></pre></li>
+<li><p>sed命令</p>
+<pre><code>sed命令通常由定位文本行和sed编辑命令两部分组成。
+
+sed定位文本的方法：
+x x为指定行号
+x,y 指定从x到y的行号范围
+/pattern/ 查询包括模式的行
+/pattern1/pattern2/ 查询包括两个模式的行
+/pattern/,x 从与pattern的匹配行到x行之间的行 
+x,/pattern/ 从x到与pattern的匹配行之间的行
+x,y! 查询不包括x，y行号的行
+
+sed编辑命令:
+p 打印匹配行
+= 打印匹配行号
+a\ 在定位行号之后添加文本信息
+i\ 在定位行号之前加入文本信息
+d 删除定位行号
+c\ 用新文本替换定位文本
+s 使用替换模式替换相应模式
+r 
+</code></pre></li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/06/UI Automator测试框架/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sparky">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/logo_s.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sparky">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/05/06/UI Automator测试框架/" itemprop="url">未命名</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-06T20:09:10+08:00">
+                2019-05-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="UI-Automator"><a href="#UI-Automator" class="headerlink" title="UI Automator"></a>UI Automator</h2><p>根据google的文档，Espresso主要用于单个应用的ui测试。UI Automator主要用于多个应用的ui测试。</p>
+<p>允许让您在用户流跨越其他应用程序或者系统UI时验证您的应用程序是否正常运行。比如，一个即时通信的app，它允许用户打开联系人并选择要发送消息的人，然后返回app，并发送消息。</p>
+<p>UI Automator允许您与设备上的可见元素进行交互，无论哪个Activity的位于前台，它都可以使用方便的描述符来查找UI组件。</p>
+<h3 id="使用UI-Automator"><a href="#使用UI-Automator" class="headerlink" title="使用UI Automator"></a>使用UI Automator</h3><h4 id="设置依赖"><a href="#设置依赖" class="headerlink" title="设置依赖"></a>设置依赖</h4><p>需要在build.gradle中配置依赖</p>
+<pre><code>dependencies {
+    ...
+    androidTestImplementation &apos;com.android.support.test.uiautomator:uiautomator-v18:2.1.3&apos;
+}
+</code></pre><h4 id="检测应用程序的UI组件"><a href="#检测应用程序的UI组件" class="headerlink" title="检测应用程序的UI组件"></a>检测应用程序的UI组件</h4><p>Android sdk自带的uiautomatorview工具提供了方便的可视界面，用于检查布局层次并查看当前可见的ui属性。这些信息允许您使用UI Automator创建更细微的测试。</p>
+<p>启动uiautomatorview工具：</p>
+<ol>
+<li>打开目标应用程序</li>
+<li>将设备连接到计算机</li>
+<li>打开终端窗口并进入<android-sdk>/tools/目录</android-sdk></li>
+<li><p>执行以下命令</p>
+<pre><code>$ uiautomatorviewer
+</code></pre></li>
+</ol>
+<p>查看ui属性：</p>
+<ol>
+<li>在uiautomatorviewer界面，点击”Device Screenshot”按钮</li>
+<li>将鼠标悬停在左侧面板的快照上即可查看该uiautomatorviewer工具识别的UI组件。属性位于右下方面板，布局层次结构位于右上方面板。</li>
+<li>在右上方布局层次结构上方，点击”Toogle NAF nodes”按钮可以查看UI AutomatorViewer无法识别的ui组件。</li>
+</ol>
+<h4 id="确保Activity可以访问"><a href="#确保Activity可以访问" class="headerlink" title="确保Activity可以访问"></a>确保Activity可以访问</h4><p>UI Automator测试在已经实现了Android辅助功能的应用程序上表现更好。</p>
+<p>当使用sdk中包含的view类或这view的子类的时候不用再添加辅助功能，因为这些类已经包含了这些工作。</p>
+<p>但是如果要使用自定义的view的时候，这些元素不会提供可访问性支持，所以你要通过以下的步骤添加Android辅助功能。</p>
+<ol>
+<li>创建一个类extends ExploreByTouchHelper.</li>
+<li>通过调用将新类的实例与自定义view关联。</li>
+</ol>
+<h4 id="创建UI-Automator测试类"><a href="#创建UI-Automator测试类" class="headerlink" title="创建UI Automator测试类"></a>创建UI Automator测试类</h4><p>UI Automator测试类和junit 4的测试类的方法一样。</p>
+<p>主要是需要在@Test中实现一下编程模型：</p>
+<ol>
+<li>获取到UiDevice对象，通过调用getInstance()并且需要传递Instrumentation对象作为参数</li>
+<li>通过findObject()方法获取当前设备显示的UiObject对象去访问ui组件</li>
+<li>通过调用UIObject的方法来执行交互，例如模拟多点触控手势，以及编辑文本字段。</li>
+<li>查看是否达到了预期的状态和行为</li>
+</ol>
+<h4 id="指定选择器"><a href="#指定选择器" class="headerlink" title="指定选择器"></a>指定选择器</h4><p>如果要访问应用程序中特定的UI组件，请使用UiSelector类。</p>
+<p>如果找到了多个匹配元素，则返回匹配元素的第一个元素作为UiObject。构建是可以使用链式编程以优化搜索。如果没有找到匹配元素会抛出异常。</p>
+<p>可以使用childSelector去匹配子view</p>
+<h4 id="执行UI操作"><a href="#执行UI操作" class="headerlink" title="执行UI操作"></a>执行UI操作</h4><p>一旦你获取到UiObject对象，你就可以对该对象执行UI操作。</p>
+<ul>
+<li>click()</li>
+<li>dragTo()</li>
+<li>setText()</li>
+<li>swipeUp()</li>
+<li>swipeRight()</li>
+</ul>
+<pre><code>Context context = getInstrumentation().getTargetContext();
+      Intent intent = context.getPackageManager().getLaunchIntentForPackage(&quot;com.xxx&quot;);
+      intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+      context.startActivity(intent);
+
+      device.wait(Until.hasObject(By.pkg(&quot;com.xxx&quot;).depth(0)), 2000);
+</code></pre><h4 id="对viewgroup进行操作"><a href="#对viewgroup进行操作" class="headerlink" title="对viewgroup进行操作"></a>对viewgroup进行操作</h4><p>可以使用UiCollection去获取viewgroup。</p>
+<h4 id="对可滑动view进行操作"><a href="#对可滑动view进行操作" class="headerlink" title="对可滑动view进行操作"></a>对可滑动view进行操作</h4><p>可以使用UiScrollable类去获取可滑动views</p>
+<h4 id="验证结果"><a href="#验证结果" class="headerlink" title="验证结果"></a>验证结果</h4><p>你可以使用JUnit的Assert方法测试ui组件的结果是否是预期的结果。</p>
+<h4 id="run"><a href="#run" class="headerlink" title="run"></a>run</h4><p>与JUnit测试运行方法相同</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/06/RxJava教程/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sparky">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/logo_s.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sparky">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/05/06/RxJava教程/" itemprop="url">未命名</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-06T20:09:10+08:00">
+                2019-05-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="1-入门"><a href="#1-入门" class="headerlink" title="1. 入门"></a>1. 入门</h2><p>RxJava是一个在JVM上使用可观测序列来组成异步的，基于事件的程序的库。</p>
+<p>我们可以把它和Handler、AyncTask归为一类，都是用来处理异步事件的库。</p>
+<p>它的特点是：</p>
+<ol>
+<li>逻辑简洁</li>
+<li>使用简单</li>
+<li>实现优雅</li>
+</ol>
+<h2 id="2-原理解析"><a href="#2-原理解析" class="headerlink" title="2. 原理解析"></a>2. 原理解析</h2><p>被观察者通过订阅产生一系列事件，观察者按顺序接收事件并按顺序做出反应。</p>
+<h2 id="3-基础使用"><a href="#3-基础使用" class="headerlink" title="3. 基础使用"></a>3. 基础使用</h2><p>步骤：</p>
+<ol>
+<li>创建被观察者(Observerable)</li>
+<li>创建观察者(Observer)</li>
+<li>通过订阅(subscribe)链接观察者和被观察者</li>
+</ol>
+<h3 id="创建观察者"><a href="#创建观察者" class="headerlink" title="创建观察者"></a>创建观察者</h3><pre><code>// create 最基础的创建被观察者的方法
+Observable&lt;Integer&gt; observable = Observable.create(new ObservableOnSubscribe&lt;Integer&gt;() {
+    @Override
+    public void subscribe(ObservableEmitter&lt;Integer&gt; emitter) throws Exception {
+
+    }
+});
+
+// just
+Observable&lt;String&gt; observable_just = Observable.just(&quot;a&quot;, &quot;b&quot;, &quot;c&quot;);
+
+// from
+Observable observable1 = Observable.fromArray(new String[]{&quot;1&quot;, &quot;2&quot;, &quot;3&quot;});
+</code></pre><h4 id="创建被观察者"><a href="#创建被观察者" class="headerlink" title="创建被观察者"></a>创建被观察者</h4><pre><code>// observer
+Observer&lt;String&gt; observer = new Observer&lt;String&gt;() {
+    @Override
+    public void onSubscribe(Disposable d) {
+
+    }
+
+    @Override
+    public void onNext(String s) {
+
+    }
+
+    @Override
+    public void onError(Throwable e) {
+
+    }
+
+    @Override
+    public void onComplete() {
+
+    }
+};
+
+// subscriber implement observer
+Subscriber&lt;String&gt; subscriber = new Subscriber&lt;String&gt;() {
+    @Override
+    public void onSubscribe(Subscription s) {
+
+    }
+
+    @Override
+    public void onNext(String s) {
+
+    }
+
+    @Override
+    public void onError(Throwable t) {
+
+    }
+
+    @Override
+    public void onComplete() {
+
+    }
+}
+</code></pre><h4 id="订阅"><a href="#订阅" class="headerlink" title="订阅"></a>订阅</h4><pre><code>observerable.subscribe(observer);
+// 或者
+observerable.subscribe(subscriber);
+</code></pre><h2 id="4-操作符，英文好的话建议直接阅读官方文档，-文档中有实例动画，参考便于理解"><a href="#4-操作符，英文好的话建议直接阅读官方文档，-文档中有实例动画，参考便于理解" class="headerlink" title="4. 操作符，英文好的话建议直接阅读官方文档， 文档中有实例动画，参考便于理解"></a>4. 操作符，英文好的话建议直接阅读<a href="http://reactivex.io/documentation/operators.html#filtering" target="_blank" rel="noopener">官方文档</a>， 文档中有实例动画，参考便于理解</h2><h4 id="创建observables"><a href="#创建observables" class="headerlink" title="创建observables"></a>创建observables</h4><h6 id="create"><a href="#create" class="headerlink" title="create"></a>create</h6><h6 id="just"><a href="#just" class="headerlink" title="just"></a>just</h6><h6 id="from"><a href="#from" class="headerlink" title="from"></a>from</h6><p><img src="http://reactivex.io/documentation/operators/images/from.c.png" alt=""></p>
+<h6 id="defer，每次被订阅的时候才会去创建observable，不订阅不创建"><a href="#defer，每次被订阅的时候才会去创建observable，不订阅不创建" class="headerlink" title="defer，每次被订阅的时候才会去创建observable，不订阅不创建"></a>defer，每次被订阅的时候才会去创建observable，不订阅不创建</h6><p><img src="http://reactivex.io/documentation/operators/images/defer.c.png" alt=""></p>
+<h6 id="range"><a href="#range" class="headerlink" title="range"></a>range</h6><h6 id="empty-never-error"><a href="#empty-never-error" class="headerlink" title="empty/never/error"></a>empty/never/error</h6><h6 id="interval-创建一个observable-按指定的周期发送一串整形数字"><a href="#interval-创建一个observable-按指定的周期发送一串整形数字" class="headerlink" title="interval,创建一个observable,按指定的周期发送一串整形数字"></a>interval,创建一个observable,按指定的周期发送一串整形数字</h6><h6 id="timer，类似interval，但是只有两个参数，不能指定周期"><a href="#timer，类似interval，但是只有两个参数，不能指定周期" class="headerlink" title="timer，类似interval，但是只有两个参数，不能指定周期"></a>timer，类似interval，但是只有两个参数，不能指定周期</h6><h6 id="repeat-复制另一个observable对象-obserable-repeat"><a href="#repeat-复制另一个observable对象-obserable-repeat" class="headerlink" title="repeat 复制另一个observable对象,obserable.repeat();"></a>repeat 复制另一个observable对象,obserable.repeat();</h6><h6 id="start-创建一个observable，发射一个方法的返回值"><a href="#start-创建一个observable，发射一个方法的返回值" class="headerlink" title="start,创建一个observable，发射一个方法的返回值"></a>start,创建一个observable，发射一个方法的返回值</h6><h4 id="转换observable"><a href="#转换observable" class="headerlink" title="转换observable"></a>转换observable</h4><h6 id="map，将一个函数应用到observable的每一项，并把结果发送出去"><a href="#map，将一个函数应用到observable的每一项，并把结果发送出去" class="headerlink" title="map，将一个函数应用到observable的每一项，并把结果发送出去"></a>map，将一个函数应用到observable的每一项，并把结果发送出去</h6><h6 id="flatmap，使用传递过来的事件对象创建了一个observable对象，并不发送这个observable而是将他激活，于是它开始发送事件，每一个创建出来的observable发送的事件都被汇入同一个observable"><a href="#flatmap，使用传递过来的事件对象创建了一个observable对象，并不发送这个observable而是将他激活，于是它开始发送事件，每一个创建出来的observable发送的事件都被汇入同一个observable" class="headerlink" title="flatmap，使用传递过来的事件对象创建了一个observable对象，并不发送这个observable而是将他激活，于是它开始发送事件，每一个创建出来的observable发送的事件都被汇入同一个observable"></a>flatmap，使用传递过来的事件对象创建了一个observable对象，并不发送这个observable而是将他激活，于是它开始发送事件，每一个创建出来的observable发送的事件都被汇入同一个observable</h6><h6 id="buffer-count-skip-，用buffer集合收集数据，并把这些buffer集合发送出去"><a href="#buffer-count-skip-，用buffer集合收集数据，并把这些buffer集合发送出去" class="headerlink" title="buffer(count,skip)，用buffer集合收集数据，并把这些buffer集合发送出去"></a>buffer(count,skip)，用buffer集合收集数据，并把这些buffer集合发送出去</h6><h6 id="scan-将一个方法应用到每个项，并发射每个结果-1-2-3-gt-sub-a-b-gt-1-3-6-，与reduce类似，但reduce只发射最后一项的结果"><a href="#scan-将一个方法应用到每个项，并发射每个结果-1-2-3-gt-sub-a-b-gt-1-3-6-，与reduce类似，但reduce只发射最后一项的结果" class="headerlink" title="scan,将一个方法应用到每个项，并发射每个结果({1,2,3} -&gt; sub(a+b) -&gt; {1,3,6})，与reduce类似，但reduce只发射最后一项的结果"></a>scan,将一个方法应用到每个项，并发射每个结果({1,2,3} -&gt; sub(a+b) -&gt; {1,3,6})，与reduce类似，但reduce只发射最后一项的结果</h6><h6 id="window，用observable收集数据，最后将这些observable收集起来发送出去"><a href="#window，用observable收集数据，最后将这些observable收集起来发送出去" class="headerlink" title="window，用observable收集数据，最后将这些observable收集起来发送出去"></a>window，用observable收集数据，最后将这些observable收集起来发送出去</h6><h6 id="groupby，用于分类"><a href="#groupby，用于分类" class="headerlink" title="groupby，用于分类"></a>groupby，用于分类</h6><h4 id="过滤-Observeables"><a href="#过滤-Observeables" class="headerlink" title="过滤 Observeables"></a>过滤 Observeables</h4><h6 id="debounce-当时间跨度内没有再发出项目，则发送该项目，否则不发送"><a href="#debounce-当时间跨度内没有再发出项目，则发送该项目，否则不发送" class="headerlink" title="debounce(当时间跨度内没有再发出项目，则发送该项目，否则不发送)"></a>debounce(当时间跨度内没有再发出项目，则发送该项目，否则不发送)</h6><h6 id="distinct-去重"><a href="#distinct-去重" class="headerlink" title="distinct(去重)"></a>distinct(去重)</h6><h6 id="elementAt-只发出第n项"><a href="#elementAt-只发出第n项" class="headerlink" title="elementAt(只发出第n项)"></a>elementAt(只发出第n项)</h6><h6 id="filter-只发送通过测试的哪些项"><a href="#filter-只发送通过测试的哪些项" class="headerlink" title="filter(只发送通过测试的哪些项)"></a>filter(只发送通过测试的哪些项)</h6><h6 id="first-只发出第一项或者满足条件的第一项"><a href="#first-只发出第一项或者满足条件的第一项" class="headerlink" title="first(只发出第一项或者满足条件的第一项)"></a>first(只发出第一项或者满足条件的第一项)</h6><h6 id="ignoreelements-不发出任何项目"><a href="#ignoreelements-不发出任何项目" class="headerlink" title="ignoreelements(不发出任何项目)"></a>ignoreelements(不发出任何项目)</h6><h6 id="last-只发出最后一项或者满足条件的最后一项"><a href="#last-只发出最后一项或者满足条件的最后一项" class="headerlink" title="last(只发出最后一项或者满足条件的最后一项)"></a>last(只发出最后一项或者满足条件的最后一项)</h6><h6 id="take-只发出observable发出的前n项"><a href="#take-只发出observable发出的前n项" class="headerlink" title="take(只发出observable发出的前n项)"></a>take(只发出observable发出的前n项)</h6><h6 id="takelast-只发出observable发出的最后几项"><a href="#takelast-只发出observable发出的最后几项" class="headerlink" title="takelast(只发出observable发出的最后几项)"></a>takelast(只发出observable发出的最后几项)</h6><h6 id="sample-在周期性的间隔中发出observable发出的最新项目"><a href="#sample-在周期性的间隔中发出observable发出的最新项目" class="headerlink" title="sample (在周期性的间隔中发出observable发出的最新项目)"></a>sample (在周期性的间隔中发出observable发出的最新项目)</h6><h6 id="skip-抑制observable发出项目的前几项"><a href="#skip-抑制observable发出项目的前几项" class="headerlink" title="skip(抑制observable发出项目的前几项)"></a>skip(抑制observable发出项目的前几项)</h6><h6 id="skiplast-抑制observable发出项目的后几项"><a href="#skiplast-抑制observable发出项目的后几项" class="headerlink" title="skiplast(抑制observable发出项目的后几项)"></a>skiplast(抑制observable发出项目的后几项)</h6><h4 id="组合-observable"><a href="#组合-observable" class="headerlink" title="组合 observable"></a>组合 observable</h4><h6 id="and-then-when-unknown-通过Pattern和Plan中间人组合两个或多个Observable发出的项目集"><a href="#and-then-when-unknown-通过Pattern和Plan中间人组合两个或多个Observable发出的项目集" class="headerlink" title="and/then/when ([unknown]通过Pattern和Plan中间人组合两个或多个Observable发出的项目集)"></a>and/then/when ([unknown]通过Pattern和Plan中间人组合两个或多个Observable发出的项目集)</h6><h6 id="combinelatest-（当两个Observable中的任何一个发出一个项目时，通过指定的函数组合每个Observable发出的最新项目，并根据此函数的结果发出项目）"><a href="#combinelatest-（当两个Observable中的任何一个发出一个项目时，通过指定的函数组合每个Observable发出的最新项目，并根据此函数的结果发出项目）" class="headerlink" title="combinelatest （当两个Observable中的任何一个发出一个项目时，通过指定的函数组合每个Observable发出的最新项目，并根据此函数的结果发出项目）"></a>combinelatest （当两个Observable中的任何一个发出一个项目时，通过指定的函数组合每个Observable发出的最新项目，并根据此函数的结果发出项目）</h6><h6 id="join-在根据另一个Observable发出的项目定义的时间窗口期间发出一个Observable中的项目时，组合两个Observable发出的项目"><a href="#join-在根据另一个Observable发出的项目定义的时间窗口期间发出一个Observable中的项目时，组合两个Observable发出的项目" class="headerlink" title="join (在根据另一个Observable发出的项目定义的时间窗口期间发出一个Observable中的项目时，组合两个Observable发出的项目)"></a>join (在根据另一个Observable发出的项目定义的时间窗口期间发出一个Observable中的项目时，组合两个Observable发出的项目)</h6><h6 id="merge-通过合并排放，将多个observable合并为1个"><a href="#merge-通过合并排放，将多个observable合并为1个" class="headerlink" title="merge (通过合并排放，将多个observable合并为1个)"></a>merge (通过合并排放，将多个observable合并为1个)</h6><h6 id="startwith-将另外一个observable加到一个observable的开头"><a href="#startwith-将另外一个observable加到一个observable的开头" class="headerlink" title="startwith (将另外一个observable加到一个observable的开头)"></a>startwith (将另外一个observable加到一个observable的开头)</h6><h6 id="switch"><a href="#switch" class="headerlink" title="switch"></a>switch</h6><h6 id="zip-通过指定的功能将多个observable的排列组合在一起，并根据此功能的结果为每个组合发送单个项目"><a href="#zip-通过指定的功能将多个observable的排列组合在一起，并根据此功能的结果为每个组合发送单个项目" class="headerlink" title="zip (通过指定的功能将多个observable的排列组合在一起，并根据此功能的结果为每个组合发送单个项目)"></a>zip (通过指定的功能将多个observable的排列组合在一起，并根据此功能的结果为每个组合发送单个项目)</h6><h2 id="5-线程调度"><a href="#5-线程调度" class="headerlink" title="5. 线程调度"></a>5. 线程调度</h2><h2 id="6-应用实践"><a href="#6-应用实践" class="headerlink" title="6. 应用实践"></a>6. 应用实践</h2><h2 id="7-与第三方库的混用"><a href="#7-与第三方库的混用" class="headerlink" title="7. 与第三方库的混用"></a>7. 与第三方库的混用</h2>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/06/MuPDF编译/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sparky">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/logo_s.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sparky">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/05/06/MuPDF编译/" itemprop="url">Mupdf编译</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-06T20:09:10+08:00">
+                2019-05-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="MuPDF编译"><a href="#MuPDF编译" class="headerlink" title="MuPDF编译"></a>MuPDF编译</h2><p>以mupdf-android-viewer-old为例</p>
+<ol>
+<li>git clone</li>
+<li>git submodule update –init</li>
+<li>make generate</li>
+<li>assemble installDebug</li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/06/linux下使用apktool/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sparky">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/logo_s.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sparky">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/05/06/linux下使用apktool/" itemprop="url">linux下使用apktool</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-06T20:09:10+08:00">
+                2019-05-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="linux使用apktool"><a href="#linux使用apktool" class="headerlink" title="linux使用apktool"></a>linux使用apktool</h2><ol>
+<li>下载apktool脚本文件。<a href="https://raw.githubusercontent.com/iBotPeaches/Apktool/master/scripts/windows/apktool.bat" target="_blank" rel="noopener">apktool脚本下载地址</a>，下载完最好直接改名为apktool</li>
+<li>下载apktool.jar文件,<a href="https://bitbucket.org/iBotPeaches/apktool/downloads/" target="_blank" rel="noopener">apktool.jar下载任意release版本</a>，下载完最好直接改名为apktool.jar</li>
+<li>将apktool脚本文件和apktool.jar文件移动到/usr/local/bin/目录下(此步骤需要root用户下操作)</li>
+<li>确保脚本文件名为apktool,jar包文件名为apktool.jar，如果不对请修改</li>
+<li>给这两个文件设置可执行权限，这里直接给所有权限了,chmod 777 apktool/chmod 777 apktool.jar </li>
+<li>在终端使用apktool命令，验证是否成功</li>
+</ol>
+<blockquote>
+<p>注意：</p>
+<ol>
+<li>注意最好在root下进行操作</li>
+<li>如果有如下报错:java.lang.UnsupportedClassVersionError: brut/apktool/Main，原因是java版本过低，请修改你的jdk版本。</li>
+</ol>
+</blockquote>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/6/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="extend next" rel="next" href="/page/6/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1802,7 +1753,7 @@ SLIB_INSTALL_LINKS=&apos;$(SLIBNAME)&apos;
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">109</span>
+                  <span class="site-state-item-count">99</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

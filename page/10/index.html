@@ -242,7 +242,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/02/01/增量更新/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/25/如何阅读开源项目/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Sparky">
@@ -261,7 +261,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/02/01/增量更新/" itemprop="url">未命名</a></h1>
+                <a class="post-title-link" href="/2017/10/25/如何阅读开源项目/" itemprop="url">Android如何阅读开源项目源代码</a></h1>
         
 
         <div class="post-meta">
@@ -273,8 +273,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-01T10:00:58+08:00">
-                2018-02-01
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-25T08:12:46+08:00">
+                2017-10-25
               </time>
             
 
@@ -313,17 +313,398 @@
       
         
           
-            <h3 id="apk更新的技术："><a href="#apk更新的技术：" class="headerlink" title="apk更新的技术："></a>apk更新的技术：</h3><ul>
-<li>增量更新：</li>
-<li>热更新</li>
-<li>插件化</li>
-<li>rn的js脚本修复apk</li>
-<li>静默安装</li>
-</ul>
-<h4 id="增量更新的流程"><a href="#增量更新的流程" class="headerlink" title="增量更新的流程"></a>增量更新的流程</h4><ol>
-<li>APP检测最新版本，把版本号告诉服务器，服务器进行版本校验</li>
-<li>如果有新版本，服务器需要对当前版本和新版本apk进行一次差分，产生patch差分文件，或者在新版本上传到服务器的时候已经差分好</li>
-<li>app在后台下载好差分文件，进行md5校验，在本地进行合并（跟/data目录下的apk文件进行合并），合并成新的apk后，提示用户安装。</li>
+            <h1 id="Android如何阅读开源项目源代码"><a href="#Android如何阅读开源项目源代码" class="headerlink" title="Android如何阅读开源项目源代码"></a>Android如何阅读开源项目源代码</h1><p>开源项目一般分为完整项目和第三方类库，对于完整项目主要分析项目架构，引用第三方类库，总体代码风格等，分析第三方类库主要集中在功能和实现思路，设计思想等。</p>
+<p>// 了解功能，考虑实现方式</p>
+<h4 id="1-总-—-功能了解"><a href="#1-总-—-功能了解" class="headerlink" title="1 总 —- 功能了解"></a>1 总 —- 功能了解</h4><p>了解项目功能(Sample 和文档)以及主要分为几个大块。另外明白你的需求，比如 PullToRefresh 的下拉实现。<br>PS：<br>（1）大家可以自己先想想如果是自己会怎么去实现这个项目，或许看源码过程中会发现思想碰撞。<br>（2）如果时间比较紧，可以先 Google 一些该项目相关的文档结合代码看看，帮助快速掌握，不过网上分析文章参差不齐，需谨慎。</p>
+<p>// 分析项目代码目录结构 –&gt; 核心类 –&gt; 核心方法 –&gt; 找到分析重心</p>
+<h4 id="2-分-—-详细设计"><a href="#2-分-—-详细设计" class="headerlink" title="2 分 —- 详细设计"></a>2 分 —- 详细设计</h4><p>这里正式开始代码分析，分析过程中如果脑子记不住，多动手记下主要类、函数等作用<br>(1) 入口对完整 App 来说就是 Manifest 找到入口 Activity，对于工具库从调用接口中判断入口类。然后在 IDE 中一步步深入即可。PS：一般不错的开源项目规范都比较好，类、函数、变量从名字上就可以了解作用，所以如果需要快速掌握原理的话看觉得是重点的函数即可。<br>(2) 核心类在上面的一步步深入过程中已经接触了不少类，大致了解各个类的主要作用</p>
+<p>// 分析重心，分析流程</p>
+<h4 id="3-总-—-总体设计"><a href="#3-总-—-总体设计" class="headerlink" title="3 总 —- 总体设计"></a>3 总 —- 总体设计</h4><p>(1) 功能流程图上面 2-(1) 的过程完成后已经大致了解项目的流程，不费事的话可以简单画下流程及相关类、函数。如 Retrofit、Volley 的请求处理流程，Android-Universal-Image-Loader 的图片处理流程图。<br>(2) 总体设计整个库分为哪些模块及模块之间的调用关系。如大多数图片缓存会分为 Loader 和 Processer 等模块。</p>
+<p>// 顺序分析</p>
+<h4 id="4-回顾"><a href="#4-回顾" class="headerlink" title="4 回顾"></a>4 回顾</h4><p>这时候从 3-2-1（总体设计-&gt;流程图-&gt;详细设计-&gt;功能介绍）<br>反序看，大致就能了解作者最初是怎么设计的了对于快速分析可以走 1-2(1)-2(2)-3(1) 的步骤。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/25/View 事件传递/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sparky">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/logo_s.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sparky">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/10/25/View 事件传递/" itemprop="url">View事件传递</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-25T08:12:46+08:00">
+                2017-10-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="View事件传递机制"><a href="#View事件传递机制" class="headerlink" title="View事件传递机制"></a>View事件传递机制</h1><h4 id="基础概念"><a href="#基础概念" class="headerlink" title="基础概念"></a>基础概念</h4><ol>
+<li>Android中的touch事件都被封装到TouchEvent对象中，包括触摸的时间，位置，动作等</li>
+<li>Touch事件的类型有ACTION_DOWN,ACTION_MOVE,ACTION_UP,ACTION_CANCEL等。每个事件都是以ACTION_DOWN开始，以ACTION_UP结束。</li>
+<li>对事件的处理有三种，传递，拦截，消费，分别是dispatchTouchEvent(), onInterceptTouchEvent(),onTouchEvent()和onTouchListener</li>
+</ol>
+<h4 id="传递流程"><a href="#传递流程" class="headerlink" title="传递流程"></a>传递流程</h4><ol>
+<li>事件都是从activity.dispatchTouchEvent()开始的，如果没有被拦截就会一直走view的diapathTouchEvent(),从最上层的ViewGroup一直向下传递到最下层的子View,最后子View可以通过onTouch()消费掉事件。如果子View没有消费掉事件，那么事件就会向上传递，这时ViewGroup可以消费事件，如果也没有消费的话，最后会走activity.onTouchEvent();</li>
+<li>事件可以被拦截。ViewGroup可以通过onInterceptTouchEvent()阻止其向下传递。</li>
+<li>如果view没有对ACTION_DOWN进行消费，则其他事件不会传递过来。</li>
+<li>onTouchListener优先与onTouchEvent进行消费.</li>
+</ol>
+<p><img src="https://raw.githubusercontent.com/android-cn/android-open-project-analysis/master/tech/touch-event/image/ignorant-view-example.jpg" alt="View不处理事件流程"></p>
+<p><img src="https://raw.githubusercontent.com/android-cn/android-open-project-analysis/master/tech/touch-event/image/interested-view-example.jpg" alt="View处理事件流程"></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/25/Java_多线程/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sparky">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/logo_s.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sparky">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/10/25/Java_多线程/" itemprop="url">Java 多线程</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-25T08:12:46+08:00">
+                2017-10-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="Java-多线程"><a href="#Java-多线程" class="headerlink" title="Java 多线程"></a>Java 多线程</h1><p>线程状态<br><img src="http://upload-images.jianshu.io/upload_images/1689841-383f7101e6588094.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240&amp;_=5479442" alt=""></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/25/Eclipse项目迁移到Android Studio/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sparky">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/logo_s.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sparky">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/10/25/Eclipse项目迁移到Android Studio/" itemprop="url">Eclipse项目导入Android Studio注意事项</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-25T08:12:46+08:00">
+                2017-10-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="Eclipse项目导入Android-Studio注意事项"><a href="#Eclipse项目导入Android-Studio注意事项" class="headerlink" title="Eclipse项目导入Android Studio注意事项:"></a>Eclipse项目导入Android Studio注意事项:</h2><ol>
+<li>如果以前把项目从eclipse导入Android Studio失败过,最好要先删除掉gradle文件(包括build.gradle, gradle文件夹,以及gradlew, gradlew.bat文件)</li>
+<li>如果项目中使用了butterknife,需要删除某些文件,不然会报错:error: duplicate class: class_name$$ViewInjector$$.处理步骤如下:    1：删除eclipse项目中的.apt_generated文件夹和.factorypath文件 2：删除.classpath文件中的节点 3：重新导入到android studio中</li>
+<li>android studio右下角的Gradle Console很重要,如果有gradle编译报错什么的,分析里边的日志基本上都可以得到答案.比如有的文件非法,你扔了一个.key文件到drawable文件夹中,在新版Android Studio中是会报错的,但是Messenges中的log可能是很片面的说检测到文件非法,但是在gradle console中可以看到具体哪一个文件出错,去修改.</li>
+<li>如果有.9图片,最好在这个项目级别的build.gradle文件的android{}中添加节点, 因为有很多时候在eclipse上能用的.9图片在as上不能用,如果不能用,是可以在gradle console中显示log的.Error:Execution failed for task ‘:app:mergeDebugResources’. &gt; Some file crunching failed, see logs for details build gradle issues    <pre><code>aaptOptions {
+    cruncherEnabled false
+    useNewCruncher false
+}
+</code></pre></li>
+<li>如果用到google-play-service,导入到Android Studio后会自动添加远程依赖compile ‘com.google.android.gms:play-services:+’,但是最新的google-play-sercice使用到了appcompat-v7中的属性,可能与项目中的某些value值冲突,报值非法的错误,建议改为compile ‘com.google.android.gms:play-services:7.0.0’</li>
+<li>去掉project.property中的项目依赖,单独去添加module依赖</li>
+<li>文件格式转换,可能运行时报非法字符的错误,只需要在右下角点击UTF-8,选择一个其他格式,弹出窗选择convert,完毕后再次点击XX(编码格式),选择utf-8,弹出窗选择convert,保存,重新编译.</li>
 </ol>
 
           
@@ -373,7 +754,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/12/Retrofit配置HTTPS请求踩坑记/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/25/Android面试题及答案/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Sparky">
@@ -392,7 +773,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/01/12/Retrofit配置HTTPS请求踩坑记/" itemprop="url">Retrofit Https踩坑记录</a></h1>
+                <a class="post-title-link" href="/2017/10/25/Android面试题及答案/" itemprop="url">Android面试题及答案</a></h1>
         
 
         <div class="post-meta">
@@ -404,8 +785,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-12T10:01:23+08:00">
-                2018-01-12
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-25T08:12:46+08:00">
+                2017-10-25
               </time>
             
 
@@ -444,875 +825,488 @@
       
         
           
-            <h1 id="Retrofit-Https踩坑记录"><a href="#Retrofit-Https踩坑记录" class="headerlink" title="Retrofit Https踩坑记录"></a>Retrofit Https踩坑记录</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>新司机上路，坑多,本文重点是踩坑，不详细讲retrofit用法，本文不推荐使用信任所有证书的做法。</p>
-<h2 id="证书"><a href="#证书" class="headerlink" title="证书"></a>证书</h2><p>分为多种格式, bks cer jks等，这里使用的是bks格式证书。</p>
-<h2 id="BKS-做法"><a href="#BKS-做法" class="headerlink" title="BKS 做法"></a>BKS 做法</h2><h3 id="1-获取BKS证书，将证书放到项目raw目录下"><a href="#1-获取BKS证书，将证书放到项目raw目录下" class="headerlink" title="1.获取BKS证书，将证书放到项目raw目录下"></a>1.获取BKS证书，将证书放到项目raw目录下</h3><h4 id="准备-cer文件"><a href="#准备-cer文件" class="headerlink" title="准备.cer文件"></a>准备.cer文件</h4><p>点击网站网址栏前的小锁按钮，选择详细信息，选择view certificate。<br>显示证书之后，点击详细信息，然后一直下一步，直到导出.cer文件。<br><img src="https://github.com/douyn/Photos/blob/master/res/20170301100223.png?raw=true" alt="1"><br><img src="https://github.com/douyn/Photos/blob/master/res/20170301101115.png?raw=true" alt="2"><br><img src="https://github.com/douyn/Photos/blob/master/res/20170301101333.png?raw=true" alt="3"><br><img src="https://github.com/douyn/Photos/blob/master/res/20170301101625.png?raw=true" alt="4"><br><img src="https://github.com/douyn/Photos/blob/master/res/20170301101705.png?raw=true" alt="5"><br><img src="https://github.com/douyn/Photos/blob/master/res/20170301101806.png?raw=true" alt="6"><br><img src="https://github.com/douyn/Photos/blob/master/res/20170301101638.png?raw=true" alt="7"></p>
-<h4 id="将-cer转换为-bks"><a href="#将-cer转换为-bks" class="headerlink" title="将.cer转换为.bks"></a>将.cer转换为.bks</h4><p><a href="http://blog.csdn.net/u010314594/article/details/50765534" target="_blank" rel="noopener">在Android应用中使用自定义证书,CER转BKS</a></p>
-<p>做法：1，下载特定版本的JCE Provider包</p>
-<p><a href="http://pan.baidu.com/s/1c1ur13y" target="_blank" rel="noopener">http://pan.baidu.com/s/1c1ur13y</a> </p>
-<p>or </p>
-<p><a href="http://www.bouncycastle.org/download/bcprov-jdk15on-146.jar" target="_blank" rel="noopener">http://www.bouncycastle.org/download/bcprov-jdk15on-146.jar</a> (<em>现在连接失效</em>)</p>
-<p>2，命令行输入以下命令</p>
-<pre><code>keytool -importcert -v -trustcacerts -alias 位置1 \
--file 位置2 \
--keystore 位置3 -storetype BKS \
--providerclass org.bouncycastle.jce.provider.BouncyCastleProvider \
--providerpath 位置4 -storepass 位置5
-</code></pre><p>位置1:是个随便取的别名<br>位置2:cer或crt证书的全地址<br>位置3:生成后bks文件的位置,建议写全地址<br>位置4:上面下载JCE Provider包的位置<br>位置5:生成后证书的密码。下边获取sslsocketfactory中会用到密码</p>
-<p>以下例子:</p>
-<pre><code>keytool -importcert -v -trustcacerts -alias xx -file E:\bks\xx.cer -keystore E:\bks\xx.bks -storetype BKS -providerclass org.bouncycastle.jce.provider.BouncyCastleProvider -providerpath E:\bks\bcprov-jdk15on-146.jar -storepass xxxxxx
-</code></pre><p>成功之后会在你指定的位置生成bks文件.然后将文件放到项目raw目录下。</p>
-<h3 id="2-获取SSLSocketFactory"><a href="#2-获取SSLSocketFactory" class="headerlink" title="2.获取SSLSocketFactory"></a>2.获取SSLSocketFactory</h3><p>这里是https证书认证最关键的代码，一定要仔细查看。password和设置keystore的bks类型一定不要搞错。</p>
-<pre><code>/**
- * 获取bks文件的sslsocketfactory
- * @param context
- * @return
- */
-public static SSLSocketFactory getSSLSocketFactory(Context context) {
-    final String CLIENT_TRUST_PASSWORD = &quot;123456&quot;;//信任证书密码，该证书默认密码是123456
-    final String CLIENT_AGREEMENT = &quot;TLS&quot;;//使用协议
-    final String CLIENT_TRUST_KEYSTORE = &quot;BKS&quot;;
-    SSLContext sslContext = null;
-    try {
-        //取得SSL的SSLContext实例
-        sslContext = SSLContext.getInstance(CLIENT_AGREEMENT);
-        //取得TrustManagerFactory的X509密钥管理器实例
-        TrustManagerFactory trustManager = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-        //取得BKS密库实例
-        KeyStore tks = KeyStore.getInstance(CLIENT_TRUST_KEYSTORE);
-        InputStream is = context.getResources().openRawResource(R.raw.traint);
-        try {
-            tks.load(is, CLIENT_TRUST_PASSWORD.toCharArray());
-        } finally {
-            is.close();
-        }
-        //初始化密钥管理器
-        trustManager.init(tks);
-        //初始化SSLContext
-        sslContext.init(null, trustManager.getTrustManagers(), null);
-    } catch (Exception e) {
-        e.printStackTrace();
-        Log.e(&quot;SslContextFactory&quot;, e.getMessage());
-    }
-    return sslContext.getSocketFactory();
-}
-</code></pre><h3 id="3-配置retrofit"><a href="#3-配置retrofit" class="headerlink" title="3.配置retrofit"></a>3.配置retrofit</h3><pre><code>String baseUrl = &quot;https://skyish-test.yunext.com&quot;;
-int[] certificates = {R.raw.traint};
-    String[] hostUrls = {baseUrl};
-    OkHttpClient client = new okhttp3.OkHttpClient.Builder()
-            .addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
-            .sslSocketFactory(HTTPSUtils.getSSLSocketFactory(context))
-            //.hostnameVerifier(HTTPSUtils.getHostNameVerifier(hostUrls)) 
-            .readTimeout(10, TimeUnit.SECONDS)
-            .connectTimeout(10, TimeUnit.SECONDS)
-            .build();
-
-    Retrofit retrofit = new Retrofit.Builder().baseUrl(baseUrl)
-            .addConverterFactory(GsonConverterFactory.create())
-            .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-            .client(client)
-            .build();
-</code></pre><p>配置好retrofit之后就可以使用了。</p>
-<h2 id="坑1：SSLContext-is-not-initialized"><a href="#坑1：SSLContext-is-not-initialized" class="headerlink" title="坑1：SSLContext is not initialized"></a>坑1：SSLContext is not initialized</h2><pre><code>03-08 15:17:26.804 21672-21672/com.qiwo.enumlistdemo E/AndroidRuntime: FATAL EXCEPTION: main
-                                                                       Process: com.qiwo.enumlistdemo, PID: 21672
-                                                                       java.lang.RuntimeException: Unable to start activity ComponentInfo{com.qiwo.enumlistdemo/com.qiwo.enumlistdemo.RetrofitHttpsDemoActivity}: java.lang.IllegalStateException: SSLContext is not initialized.
-                                                                           at android.app.ActivityThread.performLaunchActivity(ActivityThread.java:2650)
-                                                                           at android.app.ActivityThread.handleLaunchActivity(ActivityThread.java:2720)
-                                                                           at android.app.ActivityThread.-wrap12(ActivityThread.java)
-                                                                           at android.app.ActivityThread$H.handleMessage(ActivityThread.java:1567)
-                                                                           at android.os.Handler.dispatchMessage(Handler.java:111)
-                                                                           at android.os.Looper.loop(Looper.java:207)
-                                                                           at android.app.ActivityThread.main(ActivityThread.java:5917)
-                                                                           at java.lang.reflect.Method.invoke(Native Method)
-                                                                           at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:789)
-                                                                           at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:679)
-                                                                        Caused by: java.lang.IllegalStateException: SSLContext is not initialized.
-                                                                           at com.android.org.conscrypt.OpenSSLContextImpl.engineGetSocketFactory(OpenSSLContextImpl.java:107)
-                                                                           at javax.net.ssl.SSLContext.getSocketFactory(SSLContext.java:358)
-                                                                           at com.qiwo.api.HTTPSUtils.getSSLSocketFactory(HTTPSUtils.java:158)
-                                                                           at com.qiwo.api.DemoHttpsApi.&lt;init&gt;(DemoHttpsApi.java:40)
-                                                                           at com.qiwo.enumlistdemo.RetrofitHttpsDemoActivity.initViewAndListener(RetrofitHttpsDemoActivity.java:37)
-                                                                           at com.doudou.common.base.BaseSwipeBackAppcompatActivity.onCreate(BaseSwipeBackAppcompatActivity.java:68)
-                                                                           at android.app.Activity.performCreate(Activity.java:6307)
-                                                                           at android.app.Instrumentation.callActivityOnCreate(Instrumentation.java:1113)
-                                                                           at android.app.ActivityThread.performLaunchActivity(ActivityThread.java:2603)
-                                                                           at android.app.ActivityThread.handleLaunchActivity(ActivityThread.java:2720) 
-                                                                           at android.app.ActivityThread.-wrap12(ActivityThread.java) 
-                                                                           at android.app.ActivityThread$H.handleMessage(ActivityThread.java:1567) 
-                                                                           at android.os.Handler.dispatchMessage(Handler.java:111) 
-                                                                           at android.os.Looper.loop(Looper.java:207) 
-                                                                           at android.app.ActivityThread.main(ActivityThread.java:5917) 
-                                                                           at java.lang.reflect.Method.invoke(Native Method) 
-                                                                           at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:789) 
-                                                                           at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:679) 
-</code></pre><h3 id="原因："><a href="#原因：" class="headerlink" title="原因："></a>原因：</h3><ol>
-<li>证书和证书密码不匹配。</li>
-<li>使用了错误的证书。证书类型不对。应该使用bks类型证书加载的确实cer类型的</li>
+            <h1 id="Android面试题及答案"><a href="#Android面试题及答案" class="headerlink" title="Android面试题及答案"></a>Android面试题及答案</h1><h6 id="1-Android中的ANR"><a href="#1-Android中的ANR" class="headerlink" title="1. Android中的ANR"></a>1. Android中的ANR</h6><p>概念:<br>Android中的ANR全称是application not responding。应用程序无响应。应用程序在指定时间内没有响应用户操作,系统就会抛出ANR.在activity中的响应时间是５秒，在broadcase中的响应时间是１０秒，在service中的响应时间是２０s。注意:anr是系统抛出的异常，程序是捕捉不到的。</p>
+<p>解决方法:</p>
+<ol>
+<li>运行在主线程的任何方法都应尽量做更少的事情。特别是，Activity应该在他的关键生命周期方法里尽量少的去做创建操作。</li>
+<li>应用程序应该避免在广播接受者里做耗时或者计算操作。但不再是子线程里做这些任务，如果要做耗时操作，应该启动一个service。</li>
 </ol>
-<h3 id="解决方法："><a href="#解决方法：" class="headerlink" title="解决方法："></a>解决方法：</h3><p>CLIENT_TRUST_PASSWORD是证书的密码，必须与生成证书步骤里的设置的证书密码一致。如下：</p>
-<pre><code>public static SSLSocketFactory getSSLSocketFactory(Context context) {
-    final String CLIENT_TRUST_PASSWORD = &quot;123456&quot;;//信任证书密码，该证书默认密码是changeit
-    final String CLIENT_AGREEMENT = &quot;TLS&quot;;//使用协议
-    final String CLIENT_TRUST_KEYSTORE = &quot;BKS&quot;;
-    SSLContext sslContext = null;
-    // ...
-}
-</code></pre><p>如果是cer类型证书，需要使用生成bks方法重新生成bsk类型证书。</p>
-<h2 id="坑2：java-io-IOException-Hostname-‘xx-com’-was-not-verified"><a href="#坑2：java-io-IOException-Hostname-‘xx-com’-was-not-verified" class="headerlink" title="坑2：java.io.IOException: Hostname ‘xx.com’ was not verified"></a>坑2：java.io.IOException: Hostname ‘xx.com’ was not verified</h2><h3 id="原因：-1"><a href="#原因：-1" class="headerlink" title="原因："></a>原因：</h3><p>服务器主机名认证失败</p>
-<h3 id="解决方法：-1"><a href="#解决方法：-1" class="headerlink" title="解决方法："></a>解决方法：</h3><h4 id="1-如果okhttpclient中有hostnameverify的配置，加上一个自定义的HostNameVerify-如下"><a href="#1-如果okhttpclient中有hostnameverify的配置，加上一个自定义的HostNameVerify-如下" class="headerlink" title="1. 如果okhttpclient中有hostnameverify的配置，加上一个自定义的HostNameVerify,如下"></a>1. 如果okhttpclient中有hostnameverify的配置，加上一个自定义的HostNameVerify,如下</h4><pre><code>((HttpsURLConnection) urlConnection).setHostnameVerifier(new HostnameVerifier() {
-  @Override
-  public boolean verify(String hostname, SSLSession session) {
-    return true;
-  }
+<h6 id="2-Fragment的生命周期"><a href="#2-Fragment的生命周期" class="headerlink" title="2. Fragment的生命周期"></a>2. Fragment的生命周期</h6><p>完整的生命周期依次是:<br>onAttach() –&gt; onCreate() –&gt; onCreateView() –&gt; onActivityCreated() –&gt; onStart() –&gt; onResume() –&gt; onPaulse() –&gt; onStop() –&gt; onDestroyView() –&gt; onDestroy() –&gt; onDetach()</p>
+<p>切换到这个Fragment分别执行:<br>onAttch() –&gt; onCreate() –&gt; onCreateVIew() –&gt; onActivityCreated() –&gt; onStart() –&gt; onResume()</p>
+<p>切换到其他Fragment:<br>onPause() –&gt; onStop() –&gt; onDestroyView()</p>
+<p>从其他Fragment切换回来:<br>onCreateView() –&gt; onActivityCreated() –&gt; onStart() –&gt; onResume()</p>
+<h6 id="3-Service的生命周期"><a href="#3-Service的生命周期" class="headerlink" title="3. Service的生命周期"></a>3. Service的生命周期</h6><p>service中的４个手动调用的方法:</p>
+<pre><code>startService(); 
+stopService();
+bindService();
+unbindService();
+</code></pre><p>service中5个生命周期方法:</p>
+<pre><code>onCreate();
+onStartCommand();
+onBind();
+onUnbind();
+onDestroy();
+</code></pre><p>startService();　会执行生命周期中的onCreate() –&gt; onStartCommand();如果一个服务已经启动，不会再执行onCreate(),只会执行onStartCommand()；</p>
+<p>stopService(): 会执行onDestroy()方法，如果一个服务已经被绑定,必须先解绑才能销毁。</p>
+<p>bindService(): 会执行onCreate() –&gt; onBind()方法。</p>
+<p>unBindService(): 会执行onUnbindService() –&gt; onDestroy()方法。</p>
+<p>startService方式启动的服务，在调用者退出之后仍然存在，bindService启动的服务，如果调用者退出，服务也退出。</p>
+<h6 id="4-Android动画"><a href="#4-Android动画" class="headerlink" title="4. Android动画"></a>4. Android动画</h6><p>Android中有３中动画 帧动画，补间动画，属性动画</p>
+<p>帧动画</p>
+<p>就是一张张图片一次播放.在Android中的定义方式是在xml文件中定义<animation-list></animation-list>标签。</p>
+<p>启动可以定义oneshot属性，true表示执行一次,false表示执行多次</p>
+<p>补间动画</p>
+<p>补件动画分为４种,scale/translate/alpha/rotate<br>常用用法</p>
+<pre><code>AlphaAnimation alphaAnimation = new AlphaAnimation(1f, 0.5f);
+alphaAnimation.setDuration(100);
+alphaAnimation.setRepeatCount(11);
+alphaAnimation.start();
+ImageView imageView = null;
+imageView.startAnimation(alphaAnimation);
+</code></pre><p>属性动画<br>对于对象属性的动画。就是通过不断的对值的操作来实现动画效果。</p>
+<pre><code>ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(targetView, propertyName, valueFrom, valueTo);
+objectAnimator.setDuration(1000);
+objectAnimator.setInterceptor(interceptor);
+objectAnimator.start();
+
+
+ValueAnimator animator = ValueAnimator.ofFloat(0f, 300f);
+animator.addUpdateListener();
+animator.addListener();
+animator.start();
+</code></pre><h6 id="5-Activity的启动方式"><a href="#5-Activity的启动方式" class="headerlink" title="5. Activity的启动方式"></a>5. Activity的启动方式</h6><p>standard: 标准模式。是acitvity默认的启动模式，假如a启动了b，那么b就会运行在a所在的任务栈里，而且每次启动一个新的activity，不管栈里是否存在，都会创建新的实例。而且在非activity类型的context中启动标准模式的activity会报错，因为context没有任务栈，想要启动就必须制定待启动的activity的标志位为Intent.FLAG_ACTIVITY_NEW_TASK,这个时候activity会以singleTask方式启动。</p>
+<p>singleTask:　栈内复用模式。<br>如果任务栈中存在这个activity的实例，就不会重新创建，而是去复用这个实例，并将这个实例上的所有activity移除栈。假如activity_a启动了activity_b,又从activity_b跳转回activity_a，此时会先判断activity_a的taskAffinity属性对应的栈中是否存在activity_a,如果没有设置taskAffinity对应的任务栈，就默认是启动他的栈。如果存在taskAffinity对应的任务栈并且，activity指定的栈中存在activity_a，就不会重新创建，而是复用这个activity_a，并将上边所有的activity销毁，如果不存在这个activity_a，就会创建activity_a，如果不存在taskAffinity对应的任务栈，就会创建任务栈，并且创建实例</p>
+<p>singleTop:　栈顶复用模式。<br>如果这个Activity处于栈顶，那么将复用这个栈顶的activity,不会产生新的activity实例。例如activity_a启动activity_b，就会去先判断activity_a所在的栈的栈顶元素是否存在activity_b的实例，如果是，则不会重新去创建activity_b，而是直接引用栈顶实例，如果不是，则要去创建。</p>
+<p>singleInstantce:　单实例模式。<br>只有一个实例，并且单独位于一个任务栈中，这个任务栈中只有一个activity。一旦这个activity被激活，就会复用这个实例。</p>
+<h6 id="6-Java引用方式"><a href="#6-Java引用方式" class="headerlink" title="6. Java引用方式"></a>6. Java引用方式</h6><p>强引用: 强引用是在程序代码中最普遍存在的,使用方式为Object obj = new Object();或者String str = “strong reference”;<br>即使程序现在内存不足,也不会被回收,只是系统会抛出OOM异常</p>
+<p>软引用:<br>用来描述一些有用但是不是必需的对象.只有在内存不足的时候JVM才会去回收该对象.</p>
+<p>弱引用:<br>也是用来描述非必需的对象.但是只要垃圾回收器扫描到他,他就会被回收.</p>
+<p>虚引用:<br>在任何时候都有可能被垃圾回收.</p>
+<h6 id="7-自定义view的基本流程"><a href="#7-自定义view的基本流程" class="headerlink" title="7. 自定义view的基本流程"></a>7. 自定义view的基本流程</h6><ol>
+<li>编写attr.xml文件定义view的属性</li>
+<li>编写layout文件</li>
+<li>在布局文件中获取自定义属性</li>
+<li>重写onMesure</li>
+<li>重写onDraw</li>
+</ol>
+<h6 id="8-view的绘制流程"><a href="#8-view的绘制流程" class="headerlink" title="8. view的绘制流程"></a>8. view的绘制流程</h6><h6 id="9-view的事件传递机制"><a href="#9-view的事件传递机制" class="headerlink" title="9. view的事件传递机制"></a>9. view的事件传递机制</h6><p>基础知识</p>
+<ul>
+<li>所有的touch事件都被封装称MotionEvent对象,包括触摸的事件位置动作等</li>
+<li>事件类型分为ACTION_DOWN, ACTION_MOVE, ACTION_UP, ACTION_CANCEL,每个动作都是以ACTION_DOWN开始,以ACTION_UP结束</li>
+<li>对事件的处理分为3类,包括传递dispatchTouchEvent,拦截onInterceptTouchEvent,消费onTouchEvent/onTouch</li>
+</ul>
+<p>传递流程</p>
+<ul>
+<li>事件都是从dispatchTouchEvent(),只要没有拦截就会向下传递,子view可以通过onTouchEvent对事件进行消费</li>
+<li>父view可以通过onInterceptTouchEvent对事件进行拦截,阻止其向下传递</li>
+<li>如果事件从上到下的传递过程中一直没有停止,而且最底层的view没有对事件进行消费,则事件会从下向上传递,父view可以对事件进行消费,如果也没有消费,就会传递到activity的onTouch中进行消费</li>
+<li>如果子view没有消费ACTION_DOWN,之后的事件不会传递过来</li>
+<li>onTouchListener优先于onTouchEvent对事件进行消费</li>
+</ul>
+<h6 id="10-Android-IPC机制"><a href="#10-Android-IPC机制" class="headerlink" title="10. Android IPC机制"></a>10. Android IPC机制</h6><p>Android IPC机制是指Android中多进程环境下出现的进程间通信的处理机制.</p>
+<p>多进程会出现的问题</p>
+<ul>
+<li>静态变量失效.</li>
+<li>线程同步机制失效</li>
+<li>Application可能被创建多次</li>
+<li>sharepreference的可靠性降低</li>
+</ul>
+<p>解决IPC的方法</p>
+<ul>
+<li>通过intent传递bundle数据</li>
+<li>通过共享文件</li>
+<li>使用Messenger</li>
+<li>使用AIDL</li>
+<li>使用Socket</li>
+<li>使用ContentProvider</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/25/【源码解析】 Volly的基本用法和源码解析/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sparky">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/logo_s.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sparky">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/10/25/【源码解析】 Volly的基本用法和源码解析/" itemprop="url">【源码解析】 Volley的用法及源码解析</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-25T08:12:46+08:00">
+                2017-10-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Volley是谷歌在2013年I/O大会上推出的新的网络请求框架，如今已经被废弃，取而代之使用okhttp进行网络请求。虽然现在使用场景不多了，但是技术总有光辉的一面，而且也是面试所遇到的最常见的源码问题之一，所以此篇就作为认识源码的入门之作。</p>
+<h2 id="Volley简介"><a href="#Volley简介" class="headerlink" title="Volley简介"></a>Volley简介</h2><p>Volley是谷歌退出的Android异步网络请求和图片加载库，特别适合网络请求量不大但是请求频繁的场景。</p>
+<p>Volley的优点：</p>
+<ul>
+<li>非常适合进行数据量不大但是通信频发的网络操作(比如加载大量小图片)</li>
+<li>对请求进行了处理，包括服务器ResponseCode(2xx,3xx,…)的处理,请求头的处理，支持重试和取消请求，加入缓存机制，支持自定义请求优先级。</li>
+<li>在api-9以上使用httpURLconnection，在api-9一下使用httpclient。</li>
+<li>提供简便的图片加载工具ImageLoader。</li>
+</ul>
+<p>Volley的缺点:</p>
+<ul>
+<li>使用的是httpurlconnection和httpclient，现在主流使用okhttp。</li>
+<li>只支持http。</li>
+<li>加载图片性能一般。</li>
+<li>对大文件下载表现糟糕。</li>
+</ul>
+<h2 id="Volley的基本用法"><a href="#Volley的基本用法" class="headerlink" title="Volley的基本用法"></a>Volley的基本用法</h2><h4 id="请求结果为JSON字符串-String-xml与此类似"><a href="#请求结果为JSON字符串-String-xml与此类似" class="headerlink" title="请求结果为JSON字符串(String/xml与此类似)"></a>请求结果为JSON字符串(String/xml与此类似)</h4><pre><code>RequestQueue mQueue = Volley.newRequestQueue(this);
+
+String url = null;
+
+JsonObjectRequest jsonRequest = new JsonObjectRequest(url, null, new Response.Listener&lt;JSONObject&gt;() {
+    @Override
+    public void onResponse(JSONObject response) {
+        // TODO
+    }
+}, new Response.ErrorListener() {
+    @Override
+    public void onErrorResponse(VolleyError error) {
+        // TODO
+    }
 });
-</code></pre><h4 id="2-如果不需要HostNameVerify直接不设置就可以。"><a href="#2-如果不需要HostNameVerify直接不设置就可以。" class="headerlink" title="2. 如果不需要HostNameVerify直接不设置就可以。"></a>2. 如果不需要HostNameVerify直接不设置就可以。</h4><pre><code>//.hostnameVerifier(HTTPSUtils.getHostNameVerifier(hostUrls)) 注释掉这句代码
-</code></pre><h2 id="坑3：javax-net-ssl-SSLPeerUnverifiedException"><a href="#坑3：javax-net-ssl-SSLPeerUnverifiedException" class="headerlink" title="坑3：javax.net.ssl.SSLPeerUnverifiedException"></a>坑3：javax.net.ssl.SSLPeerUnverifiedException</h2><h3 id="原因：-2"><a href="#原因：-2" class="headerlink" title="原因："></a>原因：</h3><p>SSL链接时主机名验证失败</p>
-<h3 id="解决方法：-2"><a href="#解决方法：-2" class="headerlink" title="解决方法："></a>解决方法：</h3><pre><code>//.hostnameVerifier(HTTPSUtils.getHostNameVerifier(hostUrls)) 注释掉这句代码
-</code></pre><h2 id="坑4：javax-net-ssl-SSLHandshakeException-java-security-cert-CertPathValidatorException-Trust-anchor-for-cert"><a href="#坑4：javax-net-ssl-SSLHandshakeException-java-security-cert-CertPathValidatorException-Trust-anchor-for-cert" class="headerlink" title="坑4：javax.net.ssl.SSLHandshakeException: java.security.cert.CertPathValidatorException: Trust anchor for cert"></a>坑4：javax.net.ssl.SSLHandshakeException: java.security.cert.CertPathValidatorException: Trust anchor for cert</h2><pre><code>javax.net.ssl.SSLHandshakeException: java.security.cert.CertPathValidatorException: Trust anchor for cert
-at com.android.org.conscrypt.OpenSSLSocketImpl.startHandshake(OpenSSLSocketImpl.java:333)
-at okhttp3.internal.io.RealConnection.connectTls(RealConnection.java:239)
-at okhttp3.internal.io.RealConnection.establishProtocol(RealConnection.java:196)
-at okhttp3.internal.io.RealConnection.buildConnection(RealConnection.java:171)
-at okhttp3.internal.io.RealConnection.connect(RealConnection.java:111)
-at okhttp3.internal.http.StreamAllocation.findConnection(StreamAllocation.java:187)
-at okhttp3.internal.http.StreamAllocation.findHealthyConnection(StreamAllocation.java:123)
-at okhttp3.internal.http.StreamAllocation.newStream(StreamAllocation.java:93)
-at okhttp3.internal.http.HttpEngine.connect(HttpEngine.java:296)
-at okhttp3.internal.http.HttpEngine.sendRequest(HttpEngine.java:248)
-at okhttp3.RealCall.getResponse(RealCall.java:243)
-at okhttp3.RealCall$ApplicationInterceptorChain.proceed(RealCall.java:201)
-at okhttp3.logging.HttpLoggingInterceptor.intercept(HttpLoggingInterceptor.java:212)
-at okhttp3.RealCall$ApplicationInterceptorChain.proceed(RealCall.java:190)
-at okhttp3.RealCall.getResponseWithInterceptorChain(RealCall.java:163)
-at okhttp3.RealCall.execute(RealCall.java:57)
-at retrofit2.OkHttpCall.execute(OkHttpCall.java:174)
-at retrofit2.adapter.rxjava.RxJavaCallAdapterFactory$RequestArbiter.request(RxJavaCallAdapterFactory.
-at rx.internal.operators.OperatorSubscribeOn$1$1$1.request(OperatorSubscribeOn.java:80)
-at rx.Subscriber.setProducer(Subscriber.java:211)
-at rx.internal.operators.OperatorSubscribeOn$1$1.setProducer(OperatorSubscribeOn.java:76)
-at rx.Subscriber.setProducer(Subscriber.java:205)
-at retrofit2.adapter.rxjava.RxJavaCallAdapterFactory$CallOnSubscribe.call(RxJavaCallAdapterFactory.ja
-at retrofit2.adapter.rxjava.RxJavaCallAdapterFactory$CallOnSubscribe.call(RxJavaCallAdapterFactory.ja
-at rx.internal.operators.OnSubscribeLift.call(OnSubscribeLift.java:50)
-at rx.internal.operators.OnSubscribeLift.call(OnSubscribeLift.java:30)
-at rx.Observable.unsafeSubscribe(Observable.java:8666)
-at rx.internal.operators.OperatorSubscribeOn$1.call(OperatorSubscribeOn.java:94)
-at rx.internal.schedulers.CachedThreadScheduler$EventLoopWorker$1.call(CachedThreadScheduler.java:220
-at rx.internal.schedulers.ScheduledAction.run(ScheduledAction.java:55)
-at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:423)
-at java.util.concurrent.FutureTask.run(FutureTask.java:237)
-at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecut
-at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1113)
-at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:588)
-at java.lang.Thread.run(Thread.java:818)
-Caused by: java.security.cert.CertificateException: java.security.cert.CertPathValidatorException: Trust 
-at com.android.org.conscrypt.TrustManagerImpl.checkTrusted(TrustManagerImpl.java:324)
-at com.android.org.conscrypt.TrustManagerImpl.checkServerTrusted(TrustManagerImpl.java:225)
-at com.android.org.conscrypt.Platform.checkServerTrusted(Platform.java:115)
-at com.android.org.conscrypt.OpenSSLSocketImpl.verifyCertificateChain(OpenSSLSocketImpl.java:571)
-at com.android.org.conscrypt.NativeCrypto.SSL_do_handshake(Native Method)
-at com.android.org.conscrypt.OpenSSLSocketImpl.startHandshake(OpenSSLSocketImpl.java:329)
-... 35 more
-Caused by: java.security.cert.CertPathValidatorException: Trust anchor for certification path not found.
-</code></pre><h3 id="原因：-3"><a href="#原因：-3" class="headerlink" title="原因："></a>原因：</h3><p>使用了错误的证书。证书验证失败。</p>
-<h3 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h3><p>重新生成证书</p>
-<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>之前我是看的Tamic的做法，不能走通，不推荐使用它的那种做法。如果是使用它的那种做法，出现错误，请按照本文的做法，使用HTTPS。</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="http://www.cnblogs.com/lancer-ryn/p/5869696.html" target="_blank" rel="noopener">http://www.cnblogs.com/lancer-ryn/p/5869696.html</a></p>
-<p><a href="http://www.jianshu.com/p/9a6c204616d2" target="_blank" rel="noopener">http://www.jianshu.com/p/9a6c204616d2</a></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/12/WebView和H5交互/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sparky">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/logo_s.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Sparky">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/01/12/WebView和H5交互/" itemprop="url">Android webview和H5交互</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-12T09:59:19+08:00">
-                2018-01-12
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="Android-webview和H5交互"><a href="#Android-webview和H5交互" class="headerlink" title="Android webview和H5交互"></a>Android webview和H5交互</h1><h2 id="1-WebView加载页面"><a href="#1-WebView加载页面" class="headerlink" title="1. WebView加载页面"></a>1. WebView加载页面</h2><p>webview可以加载本地和网络页面,根据html的文件位置,有不同的写法.</p>
-<pre><code>mWebView.loadUrl(&quot;www.baidu.com&quot;);
-mWebView.loadUrl(&quot;file:///android_res/test.html&quot;);
-</code></pre><p>通常情况下,webview会重新设置webchromeclient,以便在本应用内实现页面跳转.</p>
-<pre><code>mWebView.setWebViewClient(new WebViewClient() {
-        @Override
-        public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            mWebView.loadUrl(url);
-            return true;
-        }
-    });
-</code></pre><p>另外,要实现本文的与h5交互必须允许使用js接口,在实际开发中,一般都要加上这一句.</p>
-<pre><code>WebSettings settings = mWebView.getSettings();
-settings.setJavaScriptEnabled(true);
-</code></pre><h2 id="2-WebView调用js方法"><a href="#2-WebView调用js方法" class="headerlink" title="2. WebView调用js方法"></a>2. WebView调用js方法</h2><p>调用js方法有两种情况: 如果调用js的无返回值方法, 可以直接使用load方法</p>
-<pre><code>mWebView.loadUrl(&quot;javascript:do()&quot;);
-</code></pre><p>如果要调用有返回值方法,需要调用evaluatjavascript方法</p>
-<pre><code>mWebView.evaluateJavascript(&quot;sum(1,2)&quot;, new ValueCallback&lt;String&gt;() {
-        @Override
-        public void onReceiveValue(String value) {
-            Toast.makeText(ViewPagerGalleryDemoActivity.this, &quot;value = &quot; + value, Toast.LENGTH_SHORT).show();
-        }
-    });
-</code></pre><p> js代码如下:</p>
-<pre><code> &lt;script type=&quot;text/javascript&quot;&gt;
-    function sum(a,b){
-    return a+b;
+mQueue.add(jsonRequest);
+</code></pre><h4 id="图片加载"><a href="#图片加载" class="headerlink" title="图片加载"></a>图片加载</h4><p>1 使用ImageRequest与jsonrequest类似<br>2 使用Volley ImageLoader</p>
+<pre><code>RequestQueue mQueue = Volley.newRequestQueue(this);
+ImageLoader.ImageCache imageCahce = new ImageLoader.ImageCache() {
+    @Override
+    public Bitmap getBitmap(String url) {
+        return null;
     }
-    function do(){
-    document.getElementById(&quot;p&quot;).innerHTML=&quot;hello world&quot;;
+
+    @Override
+    public void putBitmap(String url, Bitmap bitmap) {
+        // TODO
     }
-&lt;/script&gt;
-</code></pre><h2 id="3-js调用Android方法"><a href="#3-js调用Android方法" class="headerlink" title="3. js调用Android方法"></a>3. js调用Android方法</h2><p>需要在Android中定义javascriptinterface接口和声明</p>
-<ol>
-<li><p>首先要添加一个类和方法,并且用javascriptinterface</p>
-<p> public class TestJavaScriptInterface {</p>
-<pre><code>@JavascriptInterface
-private String testJavaScriptInterface () {
-    return &quot;hello javascript&quot;
+};
+ImageLoader imageLoader = new ImageLoader(mQueue, imageCahce);
+
+String url;
+
+ImageView imageView;
+imageLoader.get(url, ImageLoader.getImageListener(imageView, R.id.defalt_img, R.id.error_img));
+</code></pre><h2 id="Volley源码解析"><a href="#Volley源码解析" class="headerlink" title="Volley源码解析"></a>Volley源码解析</h2><p>分析上边的Volley的基本用法我们可以知道,发送请求，我们会先去创建一个RequestQueue，然后创建一个Request对象，最后把这个Request对象添加到队列里。<br>具体到代码里，分别是：</p>
+<p>创建请求队列:</p>
+<pre><code>RequestQueue mQueue = Volley.newRequestQueue(this);
+</code></pre><p>newRequestQueue()方法如下:</p>
+<pre><code>/**
+ * Creates a default instance of the worker pool and calls {@link RequestQueue#start()} on it.
+ *
+ * @param context A {@link Context} to use for creating the cache dir.
+ * @param stack An {@link HttpStack} to use for the network, or null for default.
+ * @return A started {@link RequestQueue} instance.
+ */
+public static RequestQueue newRequestQueue(Context context, HttpStack stack) {
+
+    // DiskBasedCache的参数
+    // 创建缓存目录
+    File cacheDir = new File(context.getCacheDir(), DEFAULT_CACHE_DIR);
+
+    // Stack的参数
+    // 设置userAgent，userAgent是创建AndroidHttpClient的参数
+    String userAgent = &quot;volley/0&quot;;
+    try {
+        String packageName = context.getPackageName();
+        PackageInfo info = context.getPackageManager().getPackageInfo(packageName, 0);
+        userAgent = packageName + &quot;/&quot; + info.versionCode;
+    } catch (NameNotFoundException e) {
+    }
+
+    // NetWork对象的参数
+    // 判断api等级
+    // 如果sdk &gt;= 9，使用httpurlconnection进行网络请求
+    // 如果sdk &lt; 9，使用httpclient进行网络请求
+    if (stack == null) {
+        if (Build.VERSION.SDK_INT &gt;= 9) {
+            stack = new HurlStack();
+        } else {
+            // Prior to Gingerbread, HttpUrlConnection was unreliable.
+            // See: http://android-developers.blogspot.com/2011/09/androids-http-clients.html
+            stack = new HttpClientStack(AndroidHttpClient.newInstance(userAgent));
+        }
+    }
+
+    // RequestQueue的参数
+    Network network = new BasicNetwork(stack);
+
+    // 创建RequestQueue对象
+    RequestQueue queue = new RequestQueue(new DiskBasedCache(cacheDir), network);
+
+    queue.start();
+
+    return queue;
 }
-</code></pre><p> }</p>
-</li>
-<li><p>打开javascriptinterface给h5的开关</p>
-<pre><code>mWebView.addJavascriptInterface(new TestJavaScriptInterface(), &quot;android&quot;);
-</code></pre></li>
-<li><p>js代码如下:</p>
-</li>
-</ol>
-<pre><code>&lt;script type=&quot;text/javascript&quot;&gt;
-function s(){
-    //调用Java的back()方法
-    var result =window.android.testJavaScriptInterface();
-    document.getElementById(&quot;p&quot;).innerHTML=result;
+</code></pre><p>ReuestQueue方法：</p>
+<pre><code>/**
+ * Creates the worker pool. Processing will not begin until {@link #start()} is called.
+ *
+ * @param cache A Cache to use for persisting responses to disk
+ * @param network A Network interface for performing HTTP requests
+ * @param threadPoolSize Number of network dispatcher threads to create
+ * @param delivery A ResponseDelivery interface for posting responses and errors
+ */
+public RequestQueue(Cache cache, Network network, int threadPoolSize,
+        ResponseDelivery delivery) {
+    mCache = cache;
+    mNetwork = network;
+    mDispatchers = new NetworkDispatcher[threadPoolSize];
+    mDelivery = delivery;
 }
-&lt;/script&gt;
-</code></pre>
-          
-        
-      
-    </div>
-    
-    
-    
+</code></pre><p>start()方法:</p>
+<pre><code>/**
+ * Starts the dispatchers in this queue.
+ */
+public void start() {
+    // 停止现有的网络请求
+    // 在stop()方法中,中断mCacheDispatcher线程和NetworkDispatcher线程
+    // 下边会分析到这两个线程，缓存线程和网络线程
+    stop();  // Make sure any currently running dispatchers are stopped.
+    // Create the cache dispatcher and start it.
+    // 创建并启动一个缓存线程
+    mCacheDispatcher = new CacheDispatcher(mCacheQueue, mNetworkQueue, mCache, mDelivery);
+    mCacheDispatcher.start();
 
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/02/adb/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sparky">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/logo_s.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Sparky">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/01/02/adb/" itemprop="url">ADB总结</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-02T14:17:15+08:00">
-                2018-01-02
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="adb总结"><a href="#adb总结" class="headerlink" title="adb总结"></a>adb总结</h2><blockquote>
-<p>什么是adb，c/s架构，adb命令分为3种</p>
-</blockquote>
-<p>adb命令是程序自带的一些命令，adb shell是调用Android系统中的命令，这些系统是放在system/bin目录下</p>
-<h4 id="adb命令"><a href="#adb命令" class="headerlink" title="adb命令"></a>adb命令</h4><h6 id="adb-devices"><a href="#adb-devices" class="headerlink" title="adb devices"></a>adb devices</h6><h6 id="adb-get-state-device-offline-unknown"><a href="#adb-get-state-device-offline-unknown" class="headerlink" title="adb get-state:device,offline,unknown"></a><em>adb get-state:device,offline,unknown</em></h6><h6 id="adb-kill-server-adb-start-srevre"><a href="#adb-kill-server-adb-start-srevre" class="headerlink" title="adb kill-server,adb start-srevre"></a>adb kill-server,adb start-srevre</h6><h6 id="adb-bugreport-打印dumpsys-dumpstate-logcat的输出，分析错误-可以和logcat一样重定向到文件中"><a href="#adb-bugreport-打印dumpsys-dumpstate-logcat的输出，分析错误-可以和logcat一样重定向到文件中" class="headerlink" title="adb bugreport 打印dumpsys,dumpstate,logcat的输出，分析错误,可以和logcat一样重定向到文件中"></a><em>adb bugreport 打印dumpsys,dumpstate,logcat的输出，分析错误,可以和logcat一样重定向到文件中</em></h6><h6 id="adb-pull-adb-push"><a href="#adb-pull-adb-push" class="headerlink" title="adb pull,adb push"></a>adb pull,adb push</h6><h6 id="adb-install-adb-uninstall"><a href="#adb-install-adb-uninstall" class="headerlink" title="adb install, adb uninstall"></a>adb install, adb uninstall</h6><h6 id="adb-root-adb-remount-获取-root-权限，并挂载系统文件系统为可读写状态"><a href="#adb-root-adb-remount-获取-root-权限，并挂载系统文件系统为可读写状态" class="headerlink" title="adb root, adb remount 获取 root 权限，并挂载系统文件系统为可读写状态"></a><em>adb root, adb remount</em> 获取 root 权限，并挂载系统文件系统为可读写状态</h6><h6 id="adb-reboot-bootloader-重启设备，进入-fastboot-模式，同-adb-reboot-bootloader-命令"><a href="#adb-reboot-bootloader-重启设备，进入-fastboot-模式，同-adb-reboot-bootloader-命令" class="headerlink" title="adb reboot bootloader , 重启设备，进入 fastboot 模式，同 adb reboot-bootloader 命令"></a><em>adb reboot</em> bootloader , 重启设备，进入 fastboot 模式，同 adb reboot-bootloader 命令</h6><h6 id="recovery-重启设备，进入-recovery-模式，经常刷机的同学比较熟悉这个模式"><a href="#recovery-重启设备，进入-recovery-模式，经常刷机的同学比较熟悉这个模式" class="headerlink" title="recovery , 重启设备，进入 recovery 模式，经常刷机的同学比较熟悉这个模式"></a>recovery , 重启设备，进入 recovery 模式，经常刷机的同学比较熟悉这个模式</h6><h6 id="adb-forward-将-宿主机上的某个端口重定向到设备的某个端口"><a href="#adb-forward-将-宿主机上的某个端口重定向到设备的某个端口" class="headerlink" title="adb forward 将 宿主机上的某个端口重定向到设备的某个端口"></a><em>adb forward</em> 将 宿主机上的某个端口重定向到设备的某个端口</h6><h6 id="adb-connect-连接远程Android设备"><a href="#adb-connect-连接远程Android设备" class="headerlink" title="adb connect 连接远程Android设备"></a><em>adb connect</em> 连接远程Android设备</h6><p>// 根据TAG和级别过滤日志输出</p>
-<h6 id="adb-logcat"><a href="#adb-logcat" class="headerlink" title="adb logcat"></a><em>adb logcat</em></h6><p>adb logcat [-s] [ClassName:[PREVISOUS]] [*:[PREVIOUS]]</p>
-<pre><code>adb logcat // 直接输出的终端
-adb logcat &gt; c:/log.txt // 保存到文件
-adb logcat ActivityManager:I PowerManager:D *:S
-adb logcat *:W // 显示所有优先级大于等于“warning”的日志
- adb logcat -s ActivityManager
-</code></pre><p>logcat命令列表:</p>
-<pre><code>-d 将日志显示到控制台后退出
--c 清理已经存在的目录
--f &lt;filename&gt; 将日志输出到文件
--v &lt;format&gt; 设置日志输出格式控制输出字段，格式如下，默认是brief格式
-    brief--显示优先级/标记和原始进程PID
-    process--仅显示进程PID
-    tag--仅显示优先级/标记
-    thread--仅显示进程：线程和优先级/标记
-    raw--显示原始的日志信息，调用时间，优先级/标记，PID
-    time--显示日期，调用时间，优先级标记/pid
-    long--显示所有的元数据并用空行分割消息内容
--b &lt;buffer&gt; 加载一个可使用的日志缓冲区供查看，默认是main
-    radio--查看包含在无线/电话相关的缓冲区信息
-    events--查看事件相关的消息
-    main--查看主缓冲区
-
-adb logcat -f c:/log.txt
-adb logcat -v thread // 使用thread输出格式
-adblogcat -b radio
-</code></pre><h4 id="adb-shell命令"><a href="#adb-shell命令" class="headerlink" title="adb shell命令"></a>adb shell命令</h4><p>/system/bin下或者sdk sources/android-20/com/android/commands</p>
-<h5 id="pm"><a href="#pm" class="headerlink" title="[pm]"></a>[pm]</h5><h6 id="adb-shell-pm-list-package-s-3-f-i-FILTER"><a href="#adb-shell-pm-list-package-s-3-f-i-FILTER" class="headerlink" title="adb shell pm list package [-s|-3|-f|-i] FILTER"></a>adb shell pm list package [-s|-3|-f|-i] FILTER</h6><pre><code>adb shell pm list package -i
-</code></pre><h6 id="adb-shell-pm-path-PATH"><a href="#adb-shell-pm-path-PATH" class="headerlink" title="adb shell pm path PATH"></a>adb shell pm path PATH</h6><pre><code>adb shell pm path com.tencent.mobileqq
-</code></pre><h6 id="adb-shell-pm-list-instrumentation"><a href="#adb-shell-pm-list-instrumentation" class="headerlink" title="adb shell pm list instrumentation"></a>adb shell pm list instrumentation</h6><h6 id="adb-shell-pm-dump"><a href="#adb-shell-pm-dump" class="headerlink" title="adb shell pm dump"></a>adb shell pm dump</h6><pre><code>adb shell pm dump com.tencent.mobileqq
-</code></pre><h6 id="adb-shell-pm-install-uninstall"><a href="#adb-shell-pm-install-uninstall" class="headerlink" title="adb shell pm install/uninstall"></a>adb shell pm install/uninstall</h6><h6 id="adb-shell-pm-clear"><a href="#adb-shell-pm-clear" class="headerlink" title="adb shell pm clear"></a>adb shell pm clear</h6><h6 id="adb-shell-pm-set-install-location-get-install-location"><a href="#adb-shell-pm-set-install-location-get-install-location" class="headerlink" title="adb shell pm set-install-location/get-install-location"></a>adb shell pm set-install-location/get-install-location</h6><h5 id="am"><a href="#am" class="headerlink" title="[am]"></a>[am]</h5><h6 id="adb-shell-am-start-n-S-W-a-PACKAGENAME"><a href="#adb-shell-am-start-n-S-W-a-PACKAGENAME" class="headerlink" title="adb shell am start [-n|-S|-W|-a] PACKAGENAME"></a>adb shell am start [-n|-S|-W|-a] PACKAGENAME</h6><pre><code>adb shell am start -n com.android.camera/.Camera
-</code></pre><h6 id="adb-shell-am-force-stop-PACKAGENAME"><a href="#adb-shell-am-force-stop-PACKAGENAME" class="headerlink" title="adb shell am force-stop [PACKAGENAME]"></a>adb shell am force-stop [PACKAGENAME]</h6><h6 id="adb-shell-am-startservice-CLASSNAME"><a href="#adb-shell-am-startservice-CLASSNAME" class="headerlink" title="adb shell am startservice [CLASSNAME]"></a>adb shell am startservice [CLASSNAME]</h6><h6 id="adb-shell-am-broadcast-CLASSNAME"><a href="#adb-shell-am-broadcast-CLASSNAME" class="headerlink" title="adb shell am broadcast [CLASSNAME]"></a>adb shell am broadcast [CLASSNAME]</h6><h6 id="adb-shell-am-monitor"><a href="#adb-shell-am-monitor" class="headerlink" title="adb shell am monitor"></a>adb shell am monitor</h6><h6 id="adb-shell-am-instrument"><a href="#adb-shell-am-instrument" class="headerlink" title="adb shell am instrument"></a>adb shell am instrument</h6><h5 id="input"><a href="#input" class="headerlink" title="[input]"></a>[input]</h5><h6 id="adb-shell-input-text-TEXT"><a href="#adb-shell-input-text-TEXT" class="headerlink" title="adb shell input text [TEXT]"></a>adb shell input text [TEXT]</h6><h6 id="adb-shell-input-keyevent-KEYCODE"><a href="#adb-shell-input-keyevent-KEYCODE" class="headerlink" title="adb shell input keyevent [KEYCODE]"></a>adb shell input keyevent [KEYCODE]</h6><h6 id="adb-shell-input-tap-X-Y"><a href="#adb-shell-input-tap-X-Y" class="headerlink" title="adb shell input tap [X Y]"></a>adb shell input tap [X Y]</h6><h6 id="adb-shell-input-swipe-X0-Y0-X1-Y1"><a href="#adb-shell-input-swipe-X0-Y0-X1-Y1" class="headerlink" title="adb shell input swipe [X0 Y0 X1 Y1]"></a>adb shell input swipe [X0 Y0 X1 Y1]</h6><h5 id="screencap-screenrecord"><a href="#screencap-screenrecord" class="headerlink" title="[screencap|screenrecord]"></a>[screencap|screenrecord]</h5><h6 id="adb-shell-screencap-p-PATH"><a href="#adb-shell-screencap-p-PATH" class="headerlink" title="adb shell screencap -p [PATH]"></a>adb shell screencap -p [PATH]</h6><h6 id="adb-shell-screenrecord-PATH"><a href="#adb-shell-screenrecord-PATH" class="headerlink" title="adb shell screenrecord [PATH]"></a>adb shell screenrecord [PATH]</h6><h5 id="UI-automator"><a href="#UI-automator" class="headerlink" title="[UI automator]"></a>[UI automator]</h5><h6 id="adb-shell-uiautomator-runtest-dump"><a href="#adb-shell-uiautomator-runtest-dump" class="headerlink" title="adb shell uiautomator [runtest|dump]"></a>adb shell uiautomator [runtest|dump]</h6><h5 id="ime"><a href="#ime" class="headerlink" title="[ime]"></a>[ime]</h5><h6 id="adb-shell-ime-list-s"><a href="#adb-shell-ime-list-s" class="headerlink" title="adb shell ime list -s"></a>adb shell ime list -s</h6><h6 id="adb-shell-ime-set-INPUTMETHOD"><a href="#adb-shell-ime-set-INPUTMETHOD" class="headerlink" title="adb shell ime set [INPUTMETHOD]"></a>adb shell ime set [INPUTMETHOD]</h6><h5 id="wm"><a href="#wm" class="headerlink" title="[wm]"></a>[wm]</h5><h6 id="adb-shell-wm-size"><a href="#adb-shell-wm-size" class="headerlink" title="adb shell wm size"></a>adb shell wm size</h6><h5 id="monkey"><a href="#monkey" class="headerlink" title="[monkey]"></a>[monkey]</h5><p><a href="http://xuxu1988.com/2015/05/14/2015-05-02-Monkey/" target="_blank" rel="noopener">Android Monkey的用法</a></p>
-<h5 id="settings"><a href="#settings" class="headerlink" title="[settings]"></a>[settings]</h5><p>修改系统设置<br><a href="http://testerhome.com/topics/1993" target="_blank" rel="noopener">探究下 Android4.2 中新增的 settings 命令</a></p>
-<h5 id="dumpsys"><a href="#dumpsys" class="headerlink" title="[dumpsys]"></a>[dumpsys]</h5><p><a href="http://blog.csdn.net/zhoumushui/article/details/49175097" target="_blank" rel="noopener">参考1</a></p>
-<p><a href="https://www.cnblogs.com/JianXu/p/5376642.html" target="_blank" rel="noopener">参考2</a></p>
-<table>
-<thead>
-<tr>
-<th>命令</th>
-<th>功能</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>package</td>
-<td>包查询</td>
-</tr>
-<tr>
-<td>activity</td>
-<td>所有activity信息</td>
-</tr>
-<tr>
-<td>connectivity</td>
-<td>网络连接</td>
-</tr>
-<tr>
-<td>netpolicy</td>
-<td>网络策略</td>
-</tr>
-<tr>
-<td>netstats</td>
-<td>网络状态</td>
-</tr>
-<tr>
-<td>wifi</td>
-<td>wifi信息</td>
-</tr>
-<tr>
-<td>network_manager</td>
-<td>网络管理</td>
-</tr>
-<tr>
-<td>account</td>
-<td>账号信息</td>
-</tr>
-<tr>
-<td>alarm</td>
-<td>闹钟信息</td>
-</tr>
-<tr>
-<td>meminfo</td>
-<td>内存信息</td>
-</tr>
-<tr>
-<td>cpuinfo</td>
-<td>cpu使用情况</td>
-</tr>
-<tr>
-<td>gfxinfo</td>
-<td>帧率信息</td>
-</tr>
-<tr>
-<td>display</td>
-<td>显示</td>
-</tr>
-<tr>
-<td>power</td>
-<td>电源</td>
-</tr>
-<tr>
-<td>batterystats</td>
-<td>电池状态</td>
-</tr>
-<tr>
-<td>battery</td>
-<td>电池</td>
-</tr>
-<tr>
-<td>batteryinfo $package_name</td>
-<td>电量信息及CPU使用时长</td>
-</tr>
-<tr>
-<td>diskstats</td>
-<td>磁盘相关信息</td>
-</tr>
-<tr>
-<td>usagestats</td>
-<td>每个界面的启动时间</td>
-</tr>
-<tr>
-<td>statusbar</td>
-<td>状态栏</td>
-</tr>
-<tr>
-<td>alarm</td>
-<td>闹钟</td>
-</tr>
-<tr>
-<td>location</td>
-<td>位置</td>
-</tr>
-<tr>
-<td>window</td>
-<td>窗口</td>
-</tr>
-</tbody>
-</table>
-<h5 id="log"><a href="#log" class="headerlink" title="[log]"></a>[log]</h5><pre><code>adb shell log [-p PREVIOUS] [-t TAG] [MESSAGE]
-</code></pre><h5 id="getprop"><a href="#getprop" class="headerlink" title="[getprop]"></a>[getprop]</h5><p>查看Android设备的参数信息</p>
-<pre><code>adb shell getprop [key]
-</code></pre><h4 id="linux命令"><a href="#linux命令" class="headerlink" title="linux命令"></a>linux命令</h4><pre><code>// 常用命令
-cat,cd,chmod,cp,data,df,du,grep,kill,ln,ls,lsof,netstat,ping,ps,rm,rmdir,top,touch,&gt;,&gt;&gt;,|
-</code></pre>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/27/EPUB/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sparky">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/logo_s.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Sparky">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/12/27/EPUB/" itemprop="url">EPUB</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-27T08:59:09+08:00">
-                2017-12-27
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="EPUB"><a href="#EPUB" class="headerlink" title="EPUB"></a>EPUB</h1><h2 id="什么是EPUB？"><a href="#什么是EPUB？" class="headerlink" title="什么是EPUB？"></a>什么是EPUB？</h2><p>e-pub的意思是电子出版，是IDPF制定的一个标准，这个标准是基于xml格式的电子书或者其它数字出版物。</p>
-<p>.epub文件其实就是一个简单的zip文件可以使用winrar或者linux使用归档管理器打开来看目录结构和基本文档。内容都是xml格式的。</p>
-<h2 id="epub文件的目录结构和基本文档"><a href="#epub文件的目录结构和基本文档" class="headerlink" title="epub文件的目录结构和基本文档"></a>epub文件的目录结构和基本文档</h2><h4 id="1-mimetype文件"><a href="#1-mimetype文件" class="headerlink" title="1. mimetype文件"></a>1. mimetype文件</h4><p>这个文件十分简单，里面只有</p>
-<pre><code>application/epub+zip
-</code></pre><p> 但是这个文件必须作为zip文件中的第一个文件，并且不能被压缩，必须在根目录下。同时这个文件不能有回车和换行。</p>
-<h4 id="2-META-INFO"><a href="#2-META-INFO" class="headerlink" title="2. META-INFO"></a>2. META-INFO</h4><p>META-INFO文件夹跟mimetype一样，也是必须存在的文件夹，也必须在根目录下，在文件夹下有一个container.xml文件.epub阅读系统会首先查看该文件，他指向文件图书的源数字文件的位置。这个container.xml格式如下</p>
-<pre><code>&lt;?xml version=&quot;1.0&quot;?&gt;
-&lt;container version=&quot;1.0&quot; xmlns=&quot;urn:oasis:names:tc:opendocument:xmlns:container&quot;&gt;
-&lt;rootfiles&gt;
-&lt;rootfile full-path=&quot;OEBPS/content.opf&quot;
-media-type=&quot;application/oebps-package+xml&quot; /&gt;
-&lt;/rootfiles&gt;
-&lt;/container&gt;
+    // Create network dispatchers (and corresponding threads) up to the pool size.
+    // 创建并启动网络线程，默认是4条
+    for (int i = 0; i &lt; mDispatchers.length; i++) {
+        NetworkDispatcher networkDispatcher = new NetworkDispatcher(mNetworkQueue, mNetwork,
+                mCache, mDelivery);
+        mDispatchers[i] = networkDispatcher;
+        networkDispatcher.start();
+    }
+}
+</code></pre><p>stop()方法源码:</p>
+<pre><code>/**
+ * Stops the cache and network dispatchers.
+ */
+public void stop() {
+    // 中断网络线程和缓存线程
+    if (mCacheDispatcher != null) {
+        mCacheDispatcher.quit();
+    }
+    for (final NetworkDispatcher mDispatcher : mDispatchers) {
+        if (mDispatcher != null) {
+            mDispatcher.quit();
+        }
+    }
+}
 </code></pre><blockquote>
-<p>mimetype 和 container 是 EPUB 档案中仅有的两个需要严格限制位置的文件。建议将其他文件保存到 EPUB 的子目录下（通常被称为OEBPS但不是必须的）。</p>
+<p>在newRequestQueue()方法里只做了两件事:创建了RequestQueue对象，执行了RequestQueue的start方法。</p>
+<ul>
+<li>其中创建RequestQueue对象的两个参数，会被设置为RequestQueue对象的字段，分别对应缓存和网络请求的配置。</li>
+<li>start方法中，先停止网络操作，然后分别创建并启动缓存线程和网络线程。</li>
+</ul>
 </blockquote>
-<h4 id="3-元数据文件-opf-packaging-format"><a href="#3-元数据文件-opf-packaging-format" class="headerlink" title="3. 元数据文件(.opf packaging format)"></a>3. 元数据文件(.opf packaging format)</h4><p>META-INFO文件夹下的container.xml所指定的rootfile的文件。该文件文件名没有特殊要求，扩展名为.opf。他指定了图书中所有内容的位置，如文本和多媒体目录。另外他还会给出一个元数据文件，它是Navigation Center eXtended (NCX) 表，有的称其为逻辑目录，opf内容示例如下所示:</p>
-<pre><code>&lt;?xml version=&apos;1.0&apos; encoding=&apos;utf-8&apos;?&gt;
-&lt;package xmlns=&quot;http://www.idpf.org/2007/opf&quot;
-xmlns:dc=&quot;http://purl.org/dc/elements/1.1/&quot;
-unique-identifier=&quot;bookid&quot; version=&quot;2.0&quot;&gt;
-&lt;metadata&gt;
-&lt;dc:title&gt;Hello World: My First EPUB&lt;/dc:title&gt;
-&lt;dc:creator&gt;My Name&lt;/dc:creator&gt;
-&lt;dc:identifier id=&quot;bookid&quot;&gt;urn:uuid:12345&lt;/dc:identifier&gt;
-&lt;meta name=&quot;cover&quot; content=&quot;cover-image&quot; /&gt;
-&lt;/metadata&gt;
-&lt;manifest&gt;
-&lt;item id=&quot;ncx&quot; href=&quot;toc.ncx&quot; media-type=&quot;text/xml&quot;/&gt;
-&lt;item id=&quot;cover&quot; href=&quot;title.html&quot; media-type=&quot;application/xhtml+xml&quot;/&gt;
-&lt;item id=&quot;content&quot; href=&quot;content.html&quot; media-type=&quot;application/xhtml+xml&quot;/&gt;
-&lt;item id=&quot;cover-image&quot; href=&quot;images/cover.png&quot; media-type=&quot;image/png&quot;/&gt;
-&lt;item id=&quot;css&quot; href=&quot;stylesheet.css&quot; media-type=&quot;text/css&quot;/&gt;
-&lt;/manifest&gt;
-&lt;spine toc=&quot;ncx&quot;&gt;
-&lt;itemref idref=&quot;cover&quot; linear=&quot;no&quot;/&gt;
-&lt;itemref idref=&quot;content&quot;/&gt;
-&lt;/spine&gt;
-&lt;guide&gt;
-&lt;reference href=&quot;cover.html&quot; type=&quot;cover&quot; title=&quot;Cover&quot;/&gt;
-&lt;/guide&gt;
-&lt;/package&gt;
-</code></pre><h5 id="3-1-命名空间"><a href="#3-1-命名空间" class="headerlink" title="3.1 命名空间 "></a>3.1 命名空间 <package></package></h5><p>文档本身必须使用命名空间 xmlns=”<a href="http://www.idpf.org/2007/opf" target="_blank" rel="noopener">http://www.idpf.org/2007/opf</a>“,<br>metadata也可以在这里指定命名空间,元数据一般使用 Dublin Core Metadata Initiative (DCMI)<br>xmlns=”<a href="http://purl.org/dc/elements/1.1/" target="_blank" rel="noopener">http://purl.org/dc/elements/1.1/</a>“</p>
-<h5 id="3-2-源数据"><a href="#3-2-源数据" class="headerlink" title="3.2 源数据 "></a>3.2 源数据 <metadata></metadata></h5><p> Dublin Core Metadata Initiative (DCMI)定义了一组常见的元数据，可以用来描述各种不同的数字资料，下边是元数据摘要：</p>
-<pre><code>...
-&lt;metadata&gt;
-&lt;dc:title&gt;Hello World: My First EPUB&lt;/dc:title&gt;
-&lt;dc:creator&gt;My Name&lt;/dc:creator&gt;
-&lt;dc:identifier id=&quot;bookid&quot;&gt;urn:uuid:12345&lt;/dc:identifier&gt;
-&lt;meta name=&quot;cover&quot; content=&quot;cover-image&quot; /&gt;
-&lt;/metadata&gt;
-...
-</code></pre><p>有两个术语是必须的，分别是title和identifier。这个identifier必须是唯一的，对于图书出版商来说这个字段一般包括ISBN编号，可以使用URL或者很大的随机生成的uuid。</p>
-<blockquote>
-<p>属性unique-identifier的值必须和dc:identifier元素的id属性匹配</p>
-</blockquote>
-<p>epub规范没有要求包含name的属性值为cover的meta元素，但是为了增加封面和图像的可移植性，一般建议加上。meta元素的content属性的值对应在这个opf文件manifest元素的id号，</p>
-<h5 id="3-3-清单数据"><a href="#3-3-清单数据" class="headerlink" title="3.3 清单数据 "></a>3.3 清单数据 <manifest></manifest></h5><p>opf文件中的manifest节点列出了epub的所有资源，通常是组成电子书的一组xhtml文件和相关的媒体文件。epub鼓励使用css设定图书内容的样式，因此manifest中也包含css。进入数字图书的所有内容必须在manifest中列出。<br>下边是manifest示例：</p>
-<pre><code>...
-&lt;manifest&gt;
-&lt;item id=&quot;ncx&quot; href=&quot;toc.ncx&quot; media-type=&quot;text/xml&quot;/&gt;
-&lt;item id=&quot;cover&quot; href=&quot;title.html&quot; media-type=&quot;application/xhtml+xml&quot;/&gt;
-&lt;item id=&quot;content&quot; href=&quot;content.html&quot; media-type=&quot;application/xhtml+xml&quot;/&gt;
-&lt;item id=&quot;cover-image&quot; href=&quot;images/cover.png&quot; media-type=&quot;image/png&quot;/&gt;
-&lt;item id=&quot;css&quot; href=&quot;stylesheet.css&quot; media-type=&quot;text/css&quot;/&gt;
-&lt;/manifest&gt;
-</code></pre><p>所有的想必须有对应的media-type</p>
-<p>epub支持三种核心图像文件类型:JPEG,PNG,GIF和Scalable Vector Graphics(SVG矢量图)</p>
-<h5 id="3-4-spine"><a href="#3-4-spine" class="headerlink" title="3.4 spine"></a>3.4 spine</h5><p>spine的意思是脊柱，作用是线性阅读顺序，可以将OPF spine看做书中的页面的顺序，按照文档顺序从上到下一次读取spine，下边是spine示例：</p>
-<pre><code>... 
-&lt;spine toc=&quot;ncx&quot;&gt; 
-&lt;itemref idref=&quot;cover&quot; linear=&quot;no&quot;/&gt; 
-&lt;itemref idref=&quot;content&quot;/&gt; 
-&lt;/spine&gt; 
-... 
-</code></pre><p>每个itemref元素都需要一个idref属性，并且和manifest中的id想匹配。toc属性也是必须的，他引用manifest中表示ncx表文件名的id。</p>
-<p>spine中的linear属性表明该项作为线性阅读顺序的一部分，还是和先后顺序无关。建议将封面定义为no。符合epub规范的阅读系统将首次打开spine中设置linear=no的第一项。</p>
-<h5 id="3-5-guide"><a href="#3-5-guide" class="headerlink" title="3.5 guide"></a>3.5 guide</h5><p>这个是可选的，最好保留，可以为epub阅读系统提供语义功能。下边是示例:</p>
-<pre><code>...
-&lt;guide&gt;
-&lt;reference href=&quot;cover.html&quot; type=&quot;cover&quot; title=&quot;Cover&quot;/&gt;
-&lt;/guide&gt;
-...
+<p>创建一个请求:</p>
+<pre><code>JsonObjectRequest jsonRequest = new JsonObjectRequest();
 </code></pre><blockquote>
-<p>上边就是opf文件中的所有内容，manifest文件定义epub所有物理资源，spine定义这些资源的顺序信息，guide负责解释这些部分的含义。</p>
+<p>JsonObjectRequest是Request的子子类，包括两个构造方法和一个复写方法parseNetworkResponse()，网络请求时会根据这个方法的返回值判断是否需要使用缓存数据。</p>
 </blockquote>
-<h4 id="4-NCX-Navigation-Control-file-for-XML-applications"><a href="#4-NCX-Navigation-Control-file-for-XML-applications" class="headerlink" title="4. NCX(Navigation Control file for XML applications)"></a>4. NCX(Navigation Control file for XML applications)</h4><p>ncx定义了数字图书的目录表，在复杂的图书中，目录表通常采用层次结构，包括嵌套的内容，章节等信息。<br>下边是简单的toc.ncx文件内容:</p>
-<pre><code>&lt;?xml version=&apos;1.0&apos; encoding=&apos;utf-8&apos;?&gt;
-&lt;!DOCTYPE ncx PUBLIC &quot;-//NISO//DTD ncx 2005-1//EN&quot;
-&quot;http://www.daisy.org/z3986/2005/ncx-2005-1.dtd&quot;&gt;
-&lt;ncx xmlns=&quot;http://www.daisy.org/z3986/2005/ncx/&quot; version=&quot;2005-1&quot;&gt;
-&lt;head&gt;
-&lt;meta name=&quot;dtb:uid&quot; content=&quot;urn:uuid:12345&quot;/&gt;
-&lt;meta name=&quot;dtb:depth&quot; content=&quot;1&quot;/&gt;
-&lt;meta name=&quot;dtb:totalPageCount&quot; content=&quot;0&quot;/&gt;
-&lt;meta name=&quot;dtb:maxPageNumber&quot; content=&quot;0&quot;/&gt;
-&lt;/head&gt;
-&lt;docTitle&gt;
-&lt;text&gt;Hello World: My First EPUB&lt;/text&gt;
-&lt;/docTitle&gt;
-&lt;navMap&gt;
-&lt;navPoint id=&quot;navpoint-1&quot; playOrder=&quot;1&quot;&gt;
-&lt;navLabel&gt;
-&lt;text&gt;Book cover&lt;/text&gt;
-&lt;/navLabel&gt;
-&lt;content src=&quot;title.html&quot;/&gt;
-&lt;/navPoint&gt;
-&lt;navPoint id=&quot;navpoint-2&quot; playOrder=&quot;2&quot;&gt;
-&lt;navLabel&gt;
-&lt;text&gt;Contents&lt;/text&gt;
-&lt;/navLabel&gt;
-&lt;content src=&quot;content.html&quot;/&gt;
-&lt;/navPoint&gt;
-&lt;/navMap&gt;
-&lt;/ncx&gt;
-</code></pre><p>EPUB使用的DAISY的NCX DTD的命名空间<br>xmlns=”<a href="http://www.daisy.org/z3986/2005/ncx/" target="_blank" rel="noopener">http://www.daisy.org/z3986/2005/ncx/</a>“ </p>
-<h5 id="4-1-head"><a href="#4-1-head" class="headerlink" title="4.1 head"></a>4.1 head</h5><p>DTD要求ncx文件的head元素包括四个meta元素:</p>
-<ul>
-<li>dtd:uid // 数字图书的唯一id，和opf文件中的dc:identifier对应</li>
-<li>dtd:depth // 目录中层次的深度</li>
-<li>dtd:totalPageCount // 仅用于纸质图书，保留0即可</li>
-<li>dtd:maxPageNumber // 仅用于纸质图书，保留0即可</li>
-</ul>
-<h5 id="4-2-docTitle"><a href="#4-2-docTitle" class="headerlink" title="4.2 docTitle"></a>4.2 docTitle</h5><p>是图书的标题，和opf文件中的dc:title对应</p>
-<h5 id="4-3-navMap"><a href="#4-3-navMap" class="headerlink" title="4.3 navMap"></a>4.3 navMap</h5><p>navMap是ncx文件中最重要的部分，定义了电子书的目录。navmap中包括一个或者多个navPoint元素，每个navPoint都要包括下列元素：</p>
-<ul>
-<li>playOrder属性 // 说明文档的阅读顺序，和opf文件中spine中itemref元素的顺序相同</li>
-<li>navLabel/text元素 // 给出章节的标题通常是章的标题或者数字，如”第一章”</li>
-<li>content元素 // 他的src属性指向这些内容的物理资源。</li>
-<li>还可以有一个或者多个navPoint元素 // 表示层次结构</li>
-</ul>
-<h4 id="5-问题"><a href="#5-问题" class="headerlink" title="5. 问题"></a>5. 问题</h4><h5 id="5-1-NCX和OPF文件元数据交叉"><a href="#5-1-NCX和OPF文件元数据交叉" class="headerlink" title="5.1 NCX和OPF文件元数据交叉"></a>5.1 NCX和OPF文件元数据交叉</h5><p>由于 NCX 源自其他标准，使用 NCX 编码的信息和 OPF 内容之间存在重复。如果通过程序生成 EPUB，这算不上什么问题，因为同样的代码可输出到两个文件中。两个位置的信息要一致，不同的 EPUB 读者可能使用不同位置的值。（可如果手工去编写呢？）</p>
-<h5 id="5-2-NCX和OPF-spine有什么不同"><a href="#5-2-NCX和OPF-spine有什么不同" class="headerlink" title="5.2 NCX和OPF spine有什么不同"></a>5.2 NCX和OPF spine有什么不同</h5><p>opf spine主要用来描述电子书章节的顺序，比如第一章后第二章再后第三章 …</p>
-<p>ncx文件描述电子书的目录结构。</p>
-<p>一条法则就是ncx包括的节点比spine多。实际上spine的所有项都会出现在ncx中，但是ncx可能更详细。</p>
+<p>将请求添加到队列:</p>
+<pre><code>mQueue.add(jsonRequest);
+</code></pre><p>add()方法的源码:</p>
+<pre><code>/**
+ * Adds a Request to the dispatch queue.
+ * @param request The request to service
+ * @return The passed-in request
+ */
+public &lt;T&gt; Request&lt;T&gt; add(Request&lt;T&gt; request) {
+    // Tag the request as belonging to this queue and add it to the set of current requests.
+    // 给request设置requestqueue
+    request.setRequestQueue(this);
+
+    // 添加request到currentrquests集合中
+    synchronized (mCurrentRequests) {
+        mCurrentRequests.add(request);
+    }
+
+    // Process requests in the order they are added.
+    // 设置request
+    request.setSequence(getSequenceNumber());
+    request.addMarker(&quot;add-to-queue&quot;);
+
+    // If the request is uncacheable, skip the cache queue and go straight to the network.
+    // 如果设置过request不能缓存，直接添加到网络队列返回
+    if (!request.shouldCache()) {
+        mNetworkQueue.add(request);
+        return request;
+    }
+
+    // Insert request into stage if there&apos;s already a request with the same cache key in flight.
+    // 默认是可以缓存的
+    synchronized (mWaitingRequests) {
+        String cacheKey = request.getCacheKey();
+        if (mWaitingRequests.containsKey(cacheKey)) {
+            // There is already a request in flight. Queue up.
+            // 如果已经在缓存队列中，加入到相同的等待队列中
+            Queue&lt;Request&lt;?&gt;&gt; stagedRequests = mWaitingRequests.get(cacheKey);
+            if (stagedRequests == null) {
+                stagedRequests = new LinkedList&lt;&gt;();
+            }
+            stagedRequests.add(request);
+            mWaitingRequests.put(cacheKey, stagedRequests);
+            if (VolleyLog.DEBUG) {
+                VolleyLog.v(&quot;Request for cacheKey=%s is in flight, putting on hold.&quot;, cacheKey);
+            }
+        } else {
+            // Insert &apos;null&apos; queue for this cacheKey, indicating there is now a request in
+            // flight.
+            // 添加到等待队列
+            mWaitingRequests.put(cacheKey, null);
+
+            // 添加到缓存队列
+            mCacheQueue.add(request);
+        }
+        return request;
+    }
+}
+</code></pre><blockquote>
+<p>add()方法中，先给request设置队列信息等，然后判断是否允许缓存，如果不允许缓存直接把请求加入网络队列，如果允许或者默认则会判断是否在等待队列中，如果不在等待队列中则添加到等待队列并添加到缓存队列，如果已经在等待对立中，就更新等待队列中该请求的队列信息。</p>
+</blockquote>
+<p>添加到请求队列的时候，最重要的两步就是添加到缓存队列或者添加到网络队列。在创建RequestQueue的时候，会创建一个CacheDispatcher和4个NetworkDispatcher,他们都继承Thread。其中在CacheDispatcher中还持有NetworkDispatcher对象。<br>下边分别分析这两个线程。</p>
+<h4 id="CacheDispatcher"><a href="#CacheDispatcher" class="headerlink" title="CacheDispatcher"></a>CacheDispatcher</h4><p>构造方法 // 正常的构造方法</p>
+<p>成员变量 </p>
+<pre><code>boolean DEBUG // Log的打印级别
+BlockingQueue&lt;Request&lt;?&gt;&gt; mCacheQueue // 缓存请求队列
+BlockingQueue&lt;Request&lt;?&gt;&gt; mNetworkQueue // 网络请求队列
+Cache mCache // 缓存信息，请求结果的缓存
+ResponseDelivery mDelivery // 请求结果的传递类
+boolean mQuit // 结束请求的标志
+</code></pre><p>成员方法</p>
+<pre><code>quit() // 结束线程
+
+run () // 业务逻辑
+</code></pre><p>业务流程图<br><img src="https://raw.githubusercontent.com/android-cn/android-open-project-analysis/master/tool-lib/network/volley/image/CacheDispatcher-run-flow-chart.png" alt="CacheDispatcher流程"></p>
+<h4 id="NetworkDispatcher"><a href="#NetworkDispatcher" class="headerlink" title="NetworkDispatcher"></a>NetworkDispatcher</h4><p>构造方法 // 正常的构造方法</p>
+<p>成员变量</p>
+<pre><code>BlockingQueue&lt;Request&lt;?&gt;&gt; mQueue // 网络请求队列
+Network mNetwork // 网络类，代表了一个可以执行请求的网络
+Cache mCache // 缓存结果数据
+ResponseDelivery mDelivery // 请求结果传递
+boolean mQuit // 取消请求的状态标志
+</code></pre><p>成员方法</p>
+<pre><code>quit()  // 结束网络请求
+addTrafficStatasTag(Request&lt;E&gt; request) // 给请求设置tag
+ run() // 业务逻辑
+</code></pre><p>业务流程图</p>
+<p><img src="https://raw.githubusercontent.com/android-cn/android-open-project-analysis/master/tool-lib/network/volley/image/NetworkDispatcher-run-flow-chart.png" alt="NetworkDispatcher流程图"></p>
+<p>我们总结一下流程和代码逻辑:</p>
+<p>1 创建RequestQueue</p>
+<p>首先会创建一个RequestQueue对象,在这个过程中会创建一个缓存目录和一个httpstack，这个httpstack是根据api等级选择httpURLconnection或者httpclient，然后会执行这个RequestQueue对象的start方法，在这个start方法中会首先取消当前请求，之后创建两个线程缓存线程和网络线程。</p>
+<p>2 创建request</p>
+<p>创建Request对象</p>
+<p>3 讲request添加到RequestQueue</p>
+<p>这这个过程中会首先设置request队列标志，然后判断是否需要缓存，如果已经设置过不需要缓存，那就直接添加这个request到网络队列并返回，如果要缓存，会去判断是否已经缓存过，如果没有缓存过，就就添加这个Request到缓存队列和缓存集合中，如果缓存过，需要重新设置这个Request的属性，更新到缓存集合中。</p>
+<p>然后在缓存线程和网络线程都存在一个死循环来处理缓存队列和网络队列。</p>
+<p>在缓存线程的run方法中，首先获取这个Request对象，如果请求已经被取消，需要结束这个请求，继续下一次请求，如果这个请求没有被缓存过，需要添加这个请求到网络请求队列，继续洗一次请求，已经被缓存过，需要判断请求的结果是否过期，如果过期了还是需要添加到网络队列，继续下一次请求，如果没有过期，会从缓存中获取结果，传递结果给回调处理。</p>
+<p>在网络线程的run方法中，首先会获取Request对象，如果请求已经被取消，需要结束这个请求，继续下一次请求，如果没有被取消，就让network对象执行performRequest方法，并得到networkresponse，如果结果没有被修改，并且已经有响应传递，请求结束，继续下一次请求，如果有就需要执行parseNetworkResonse方法，最后判断是否需要缓存，如果需要缓存，就讲缓存结果缓存到mCache中。</p>
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p><img src="https://developer.android.com/images/training/volley-request.png" alt="请求的生命周期"></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="http://a.codekk.com/detail/Android/grumoon/Volley%20%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90" target="_blank" rel="noopener">Volley源码解析</a></p>
 
           
         
@@ -1361,7 +1355,7 @@ unique-identifier=&quot;bookid&quot; version=&quot;2.0&quot;&gt;
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/29/HenCode学习笔记-1.3/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/25/Android NDK开发/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Sparky">
@@ -1380,7 +1374,7 @@ unique-identifier=&quot;bookid&quot; version=&quot;2.0&quot;&gt;
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2017/11/29/HenCode学习笔记-1.3/" itemprop="url">Hencode学习笔记-1.3</a></h1>
+                <a class="post-title-link" href="/2017/10/25/Android NDK开发/" itemprop="url">Android NDK开发流程</a></h1>
         
 
         <div class="post-meta">
@@ -1392,8 +1386,8 @@ unique-identifier=&quot;bookid&quot; version=&quot;2.0&quot;&gt;
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-29T10:59:54+08:00">
-                2017-11-29
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-25T08:12:46+08:00">
+                2017-10-25
               </time>
             
 
@@ -1432,310 +1426,210 @@ unique-identifier=&quot;bookid&quot; version=&quot;2.0&quot;&gt;
       
         
           
-            <h1 id="文字的绘制"><a href="#文字的绘制" class="headerlink" title="文字的绘制"></a>文字的绘制</h1><h2 id="1-Canvas绘制文字"><a href="#1-Canvas绘制文字" class="headerlink" title="1. Canvas绘制文字"></a>1. Canvas绘制文字</h2><p>canvas绘制文字有三种方式：1. drawText() 2. drawTextRun() 3. drawTextOnPath()</p>
-<h4 id="1-1-drawText-String-text-float-x-float-y-Paint-paint"><a href="#1-1-drawText-String-text-float-x-float-y-Paint-paint" class="headerlink" title="1.1 drawText(String text, float x,  float y, Paint paint)"></a>1.1 drawText(String text, float x,  float y, Paint paint)</h4><blockquote>
-<p>这个坐标可以认为是在文字左下角。是比较接近的位置，但是如果要精确还是以下边所说的基线为准。</p>
-</blockquote>
-<h4 id="1-2-drawTextRun"><a href="#1-2-drawTextRun" class="headerlink" title="1.2 drawTextRun()"></a>1.2 drawTextRun()</h4><p>API 23新加入的方法，比drawText有两个新的参数上下文和文字方向， 主要用于文字结构比较特殊的文字的绘制。</p>
-<h4 id="1-3-drawTextOnPath"><a href="#1-3-drawTextOnPath" class="headerlink" title="1.3 drawTextOnPath()"></a>1.3 drawTextOnPath()</h4><p>沿着一条线来绘制文字</p>
-<pre><code>mPaint.setStyle(Paint.Style.STROKE);
-mPaint.setStrokeWidth(2);
-mPaint.setColor(Color.BLUE);
-
-Path path = new Path();
-path.moveTo(100, 100);
-path.lineTo(200, 200);
-path.rLineTo(300, 100);
-path.rLineTo(400, 200);
-canvas.drawPath(path, mPaint);
-
-canvas.drawTextOnPath(&quot;Hello HenCode!&quot;, path, 0, 0, mPaint);
-</code></pre><p>方法为drawTextOnPath(String text, Path path, float hOffset, float vOffset, Paint paint), hOffset和vOffset分别是文字相对于path水平方向和垂直方向的偏移量</p>
-<h4 id="1-4-StaticLayout"><a href="#1-4-StaticLayout" class="headerlink" title="1.4 StaticLayout"></a>1.4 StaticLayout</h4><p>canvas.drawText()只能绘制单行的文字，而不能换行。</p>
+            <h2 id="Android-NDK开发流程"><a href="#Android-NDK开发流程" class="headerlink" title="Android NDK开发流程"></a>Android NDK开发流程</h2><p>使用ndk-build方式</p>
 <ul>
-<li>不能在view边缘自动换行</li>
-<li>不能使用\n换行</li>
+<li>配置环境变量</li>
+<li>编写native代码</li>
+<li>生成与native对应的头文件</li>
+<li>利用头文件编写对应的C/C++代码</li>
+<li>生成so库</li>
+<li>使用so库</li>
 </ul>
-<p>如果要绘制多行文字，必须把文字切断后使用drawText或者一一使用StaticLayout。</p>
-<p>他是android.text.Layout的子类，单纯用来绘制文字的。</p>
-<p>它可以设置宽度上限来使文字自动换行，或者使用\n使文字换行。</p>
-<pre><code>String text1 = &quot;Lorem Ipsum is simply dummy text of the printing and typesetting industry.&quot;;  
-StaticLayout staticLayout1 = new StaticLayout(text1, paint, 600,  
-    Layout.Alignment.ALIGN_NORMAL, 1, 0, true);
-String text2 = &quot;a\nbc\ndefghi\njklm\nnopqrst\nuvwx\nyz&quot;;  
-StaticLayout staticLayout2 = new StaticLayout(text2, paint, 600,  
-    Layout.Alignment.ALIGN_NORMAL, 1, 0, true);
+<p>使用cmake方式</p>
+<ul>
+<li>配置环境变量 //下载ndk,cmake,设置NDK_HOME</li>
+<li>创建支持c/c++的项目 // 创建项目时选择c++support</li>
+<li>创建c/c++文件,编写C/C++代码 </li>
+<li>更改cmakelists.txt文件 // add_library/target_link_libraries改为自己的ndk name</li>
+<li>在java代码中调用 </li>
+</ul>
+<p>参考:</p>
+<p><a href="http://www.jianshu.com/p/0261e6cceb3e" target="_blank" rel="noopener">cmake</a></p>
+<p><a href="https://innofang.github.io/2017/04/16/Android-NDK%E5%BC%80%E5%8F%91%E4%BB%8E0%E5%88%B01/" target="_blank" rel="noopener">ndk-build</a></p>
 
-...
+          
+        
+      
+    </div>
+    
+    
+    
 
-canvas.save();  
-canvas.translate(50, 100);  
-staticLayout1.draw(canvas);  
-canvas.translate(0, 200);  
-staticLayout2.draw(canvas);  
-canvas.restore(); 
-</code></pre><h2 id="2-Paint对文字绘制的辅助"><a href="#2-Paint对文字绘制的辅助" class="headerlink" title="2. Paint对文字绘制的辅助"></a>2. Paint对文字绘制的辅助</h2><h4 id="2-1-设置显示效果"><a href="#2-1-设置显示效果" class="headerlink" title="2.1 设置显示效果"></a>2.1 设置显示效果</h4><p>setTextSize() // 设置文字大小</p>
-<p>setTextScaleX() // 设置文字缩放</p>
-<p>setTextAlign() // 设置对齐方式，三种LEFT,RIGHT,CENTER,默认LEFT</p>
-<p>setHinting() // 设置字体微调</p>
-<p>现在的 Android 设备大多数都是是用的矢量字体。矢量字体的原理是对每个字体给出一个字形的矢量描述，然后使用这一个矢量来对所有的尺寸的字体来生成对应的字形。由于不必为所有字号都设计它们的字体形状，所以在字号较大的时候，矢量字体也能够保持字体的圆润，这是矢量字体的优势。不过当文字的尺寸过小（比如高度小于 16 像素），有些文字会由于失去过多细节而变得不太好看。 hinting 技术就是为了解决这种问题的：通过向字体中加入 hinting 信息，让矢量字体在尺寸过小的时候得到针对性的修正，从而提高显示效果。效果图盗一张维基百科的：</p>
-<p><img src="https://ws3.sinaimg.cn/large/52eb2279ly1fig65wwv1yj20ki0bywje.jpg" alt=""></p>
-<p><strong>setTextSkewX() // 设置文字倾斜</strong></p>
-<p>setTextLocation() // 设置语言区域</p>
-<p><strong>setLetterPadding() // 设置字符间距</strong></p>
-<p><strong>setFontFeatureSettings() // 设置字体样式</strong></p>
-<pre><code>paint.setFontFeatureSettings(&quot;scmp&quot;); // 设置为small cap
-canvas.drawText(&quot;Hello Hencode&quot;, 100, 100, paint);
-</code></pre><p>这个东西不懂，以后<a href="https://www.w3.org/TR/css-fonts-3/#font-feature-settings-prop" target="_blank" rel="noopener">补充一下</a></p>
-<p><strong>setTypeFace() // 设置字体</strong></p>
-<pre><code>paint.setTypeface(Typeface.DEFAULT);
+    
 
-paint.setTypeface(Typeface.SERIF);
+    
 
-paint.setTypeface(Typeface.createFromAssert(getContext().getAssert(), &quot;xx.ttf&quot;))
-</code></pre><p>setUnderlineText() // 是否加下划线<br>setFakeBoldText() // 设置伪粗体<br>setStrikeThruText() // 是否加删除线</p>
-<p><strong>setElegantTextHeight(boolean elegant) // 是否开启优雅的高度</strong></p>
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/25/[SDK开发] 发布library项目到github/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sparky">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/logo_s.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sparky">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/10/25/[SDK开发] 发布library项目到github/" itemprop="url">给library module添加远程依赖</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-25T08:12:46+08:00">
+                2017-10-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="给library-module添加远程依赖"><a href="#给library-module添加远程依赖" class="headerlink" title="给library module添加远程依赖"></a>给library module添加远程依赖</h1><ol>
+<li><p>创建library module项目</p>
+<p> File –&gt; NEW –&gt; New Module –&gt; Library Module</p>
+</li>
+<li><p>修改library module下的build.gradle文件</p>
 <ol>
-<li>把「大高个」文字的高度恢复为原始高度；</li>
-<li>增大每行文字的上下边界，来容纳被加高了的文字。</li>
+<li><p>在library module项目根目录下创建xx.gradle文件</p>
+<pre><code> // 1.maven-插件
+apply plugin: &apos;maven&apos;
+
+// 2.maven-信息
+ext {// ext is a gradle closure allowing the declaration of global properties
+    PUBLISH_GROUP_ID = &apos;com.flame&apos;
+    PUBLISH_ARTIFACT_ID = &apos;mySDK&apos;
+    PUBLISH_VERSION = android.defaultConfig.versionName
+}
+
+// 3.maven-输出路径
+uploadArchives {
+    repositories.mavenDeployer {
+        //这里就是最后输出地址，在自己电脑上新建个文件夹，把文件夹路径粘贴在此
+        //注意”file://“ + 路径，有三个斜杠，别漏了
+        repository(url: &quot;file:///Users/flame/Documents/sourceTree/mysdk&quot;)
+
+        pom.project {
+            groupId project.PUBLISH_GROUP_ID
+            artifactId project.PUBLISH_ARTIFACT_ID
+            version project.PUBLISH_VERSION
+        }
+    }
+}
+
+//以下代码会生成jar包源文件，如果是不开源码，请不要输入这段
+//aar包内包含注释
+task androidSourcesJar(type: Jar) {
+    classifier = &apos;sources&apos;
+    from android.sourceSets.main.java.sourceFiles
+}
+
+artifacts {
+    archives androidSourcesJar
+}
+</code></pre></li>
+<li><p>在build.gradle中apply这个gradle配置</p>
+<pre><code>apply from xx.gradle    
+</code></pre></li>
+<li><p>在gradle菜单中执行xx.gradle中的编译方法</p>
+</li>
 </ol>
-<p><strong>setSubpixelText() // 是否开启次像素级抗锯齿，就是增强抗锯齿效果。</strong></p>
-<p><strong>setLinearText() // 设置liear text</strong></p>
-<h4 id="2-2-测量文字尺寸"><a href="#2-2-测量文字尺寸" class="headerlink" title="2.2 测量文字尺寸"></a>2.2 测量文字尺寸</h4><h5 id="2-2-1-getFontSpacing-获得推荐的行距-即是相邻的baseline之间的距离，如下图所示"><a href="#2-2-1-getFontSpacing-获得推荐的行距-即是相邻的baseline之间的距离，如下图所示" class="headerlink" title="2.2.1 getFontSpacing() // 获得推荐的行距,即是相邻的baseline之间的距离，如下图所示"></a>2.2.1 getFontSpacing() // 获得推荐的行距,即是相邻的baseline之间的距离，如下图所示</h5><pre><code>canvas.drawText(texts[0], 100, 150, paint);  
-canvas.drawText(texts[1], 100, 150 + paint.getFontSpacing, paint);  
-canvas.drawText(texts[2], 100, 150 + paint.getFontSpacing * 2, paint);  
-</code></pre><p><img src="https://ws3.sinaimg.cn/large/52eb2279ly1fig66d27efj20ev06j401.jpg" alt=""></p>
-<h5 id="2-2-2-getFontMatrics-获得FontMatrix，-FontMatrix是一个相对专业的工具类，提供了几个文字排印方面的数值：ascent-descent-top-bottom-leading"><a href="#2-2-2-getFontMatrics-获得FontMatrix，-FontMatrix是一个相对专业的工具类，提供了几个文字排印方面的数值：ascent-descent-top-bottom-leading" class="headerlink" title="2.2.2 getFontMatrics() // 获得FontMatrix， FontMatrix是一个相对专业的工具类，提供了几个文字排印方面的数值：ascent, descent, top,bottom, leading;"></a>2.2.2 getFontMatrics() // 获得FontMatrix， FontMatrix是一个相对专业的工具类，提供了几个文字排印方面的数值：ascent, descent, top,bottom, leading;</h5><p><img src="https://ws3.sinaimg.cn/large/52eb2279ly1fig66iud3gj20ik0bn41l.jpg" alt=""></p>
-<p>这个不知道什么时候用到</p>
-<h5 id="2-2-3-getTextBounds-String-text-int-start-int-end-Rect-bounds-获得文字的显示范围"><a href="#2-2-3-getTextBounds-String-text-int-start-int-end-Rect-bounds-获得文字的显示范围" class="headerlink" title="2.2.3 getTextBounds(String text, int start, int end, Rect bounds) // 获得文字的显示范围"></a>2.2.3 getTextBounds(String text, int start, int end, Rect bounds) // 获得文字的显示范围</h5><p>text是文字，start,end是指待测的文本的开始位置和结束位置，rect是测量完要赋值的矩形。</p>
-<pre><code>paint.setStyle(Paint.Style.FILL);  
-canvas.drawText(text, offsetX, offsetY, paint);
-
-paint.getTextBounds(text, 0, text.length(), bounds);  
-bounds.left += offsetX;  
-bounds.top += offsetY;  
-bounds.right += offsetX;  
-bounds.bottom += offsetY;  
-paint.setStyle(Paint.Style.STROKE);  
-canvas.drawRect(bounds, paint);  
-</code></pre><p><img src="https://ws3.sinaimg.cn/large/52eb2279ly1fig66pdyg4j20ct02tmxf.jpg" alt=""></p>
-<h4 id="2-2-4-measureText-String-text-测量文字宽度"><a href="#2-2-4-measureText-String-text-测量文字宽度" class="headerlink" title="2.2.4 measureText(String text) //  测量文字宽度"></a>2.2.4 measureText(String text) //  测量文字宽度</h4><pre><code>canvas.drawText(text, offsetX, offsetY, paint);  
-float textWidth = paint.measureText(text);  
-canvas.drawLine(offsetX, offsetY, offsetX + textWidth, offsetY, paint);  
-</code></pre><p><img src="https://ws3.sinaimg.cn/large/52eb2279ly1fig671on56j20or04a0te.jpg" alt=""></p>
-<blockquote>
-<p>注意： getTextBounds()和measureText()的区别：</p>
-<p>如果你用代码分别使用 getTextBounds() 和 measureText() 来测量文字的宽度，你会发现 measureText() 测出来的宽度总是比 getTextBounds() 大一点点。这是因为这两个方法其实测量的是两个不一样的东西。</p>
-<ul>
-<li>getTextBounds()测量的是文字的显示范围，这个矩形恰好能够包裹住文字</li>
-<li>measureText()测量的是文字绘制时所占的宽度，包括了字符间距等</li>
-</ul>
-</blockquote>
-<h4 id="2-2-5-getTextWidths-String-text-float-widths-获取每个字符的宽度，并传入width数组中"><a href="#2-2-5-getTextWidths-String-text-float-widths-获取每个字符的宽度，并传入width数组中" class="headerlink" title="2.2.5 getTextWidths(String text, float[] widths) // 获取每个字符的宽度，并传入width数组中"></a>2.2.5 getTextWidths(String text, float[] widths) // 获取每个字符的宽度，并传入width数组中</h4><h4 id="2-2-6-breakText-截取某长度的字符串"><a href="#2-2-6-breakText-截取某长度的字符串" class="headerlink" title="2.2.6 breakText() // 截取某长度的字符串"></a>2.2.6 breakText() // 截取某长度的字符串</h4><p>google api是这样写的<br>Measure the text, stopping early if the measured width exceeds maxWidth.意思是测量文本，如果宽度超过给定的宽度就停止测量。其效果就是如果你的字符串的长度大于breakText()中指定的最大长度，drawtext的时候就只显示这个被截取的定长的文字。返回值为截取的字符的个数。</p>
-<pre><code>String text = &quot;Hencode is very very very ... nice!&quot;;
-mPaint.setTextSize(64);
-int i = mPaint.breakText(text.toCharArray(), 0, 17, 600, new float[]{});
-canvas.drawText(text.toCharArray(), 0, i, 100, 100, mPaint);
-</code></pre><p><img src="https://ws3.sinaimg.cn/large/52eb2279ly1fig67950cnj21080m4grf.jpg" alt=""></p>
-<h4 id="2-2-7-光标相关"><a href="#2-2-7-光标相关" class="headerlink" title="2.2.7 光标相关"></a>2.2.7 光标相关</h4><p>对于像EditText一样的场景，就会需要绘制光标，在API 23开始引入两个新方法来计算光标。(这跟光标没有毛线关系貌似，主要是测量字符的宽度)</p>
-<h5 id="2-2-7-1-getRunAdvance-String-text-int-start-int-end-int-contextStart-int-contextEnd-boolean-isRtl-int-offset"><a href="#2-2-7-1-getRunAdvance-String-text-int-start-int-end-int-contextStart-int-contextEnd-boolean-isRtl-int-offset" class="headerlink" title="2.2.7.1 getRunAdvance(String text, int start, int end, int contextStart, int contextEnd, boolean isRtl, int offset) //"></a>2.2.7.1 getRunAdvance(String text, int start, int end, int contextStart, int contextEnd, boolean isRtl, int offset) //</h5><table>
-<thead>
-<tr>
-<th>params</th>
-<th>des</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>text</td>
-<td>CharSequence: the text to measure. Cannot be null.</td>
-</tr>
-<tr>
-<td>start</td>
-<td>int: the index of the start of the range to measure</td>
-</tr>
-<tr>
-<td>end</td>
-<td>int: the index + 1 of the end of the range to measure</td>
-</tr>
-<tr>
-<td>contextStart</td>
-<td>int: the index of the start of the shaping context</td>
-</tr>
-<tr>
-<td>contextEnd</td>
-<td>int: the index + 1 of the end of the shaping context</td>
-</tr>
-<tr>
-<td>isRtl</td>
-<td>boolean: whether the run is in RTL direction</td>
-</tr>
-<tr>
-<td>offset</td>
-<td>int: index of caret position</td>
-</tr>
-</tbody>
-</table>
-<p>return : width measurement between start and offset</p>
-<p>即是说 text指的是原文本，start,end指的是要测量的开始和结束的位置，contextStart，contextEnd不知道什么意思， isrtl是否反转字符串，offset指要插入的位置。</p>
-<p>返回的是start和offset之间的距离。</p>
-<pre><code>mPaint.setTextSize(36);
-// 包含特殊符号的绘制（如 emoji 表情）
-String text = &quot;Hello HenCoder \uD83C\uDDE8\uD83C\uDDF3&quot;; // &quot;Hello HenCoder 🇨🇳&quot;
-int start = 0;
-int end = text.length();
-int contextStart = 0;
-int contextEnd = text.length();
-boolean isRtl = false;
-int offset = text.length();
-float advance = mPaint.getRunAdvance(text, start, end, contextStart, contextEnd, isRtl, offset - 4);
-canvas.drawText(text, 100, 100, mPaint);
-canvas.drawLine(100 + advance, 60, 100 + advance, 100, mPaint);
-</code></pre><p><img src="https://ws3.sinaimg.cn/large/52eb2279ly1fig67pon53j215s0owdru.jpg" alt=""></p>
-<h5 id="2-2-7-2-getOffsetForAdvance-CharSequence-text-int-start-int-end-int-contextStart-int-contextEnd-boolean-isRtl-float-advance-给出一个位置的像素值，计算出文字中最接近这个位置的字符偏移量"><a href="#2-2-7-2-getOffsetForAdvance-CharSequence-text-int-start-int-end-int-contextStart-int-contextEnd-boolean-isRtl-float-advance-给出一个位置的像素值，计算出文字中最接近这个位置的字符偏移量" class="headerlink" title="2.2.7.2 getOffsetForAdvance(CharSequence text, int start, int end, int contextStart, int contextEnd, boolean isRtl, float advance) // 给出一个位置的像素值，计算出文字中最接近这个位置的字符偏移量"></a>2.2.7.2 getOffsetForAdvance(CharSequence text, int start, int end, int contextStart, int contextEnd, boolean isRtl, float advance) // 给出一个位置的像素值，计算出文字中最接近这个位置的字符偏移量</h5><h5 id="2-2-8-hasGlyph-String-string-检查指定的字符串中是否是一个单独的字形。"><a href="#2-2-8-hasGlyph-String-string-检查指定的字符串中是否是一个单独的字形。" class="headerlink" title="2.2.8 hasGlyph(String string) // 检查指定的字符串中是否是一个单独的字形。"></a>2.2.8 hasGlyph(String string) // 检查指定的字符串中是否是一个单独的字形。</h5><p><img src="https://ws1.sinaimg.cn/large/006tNc79ly1flgaf31rskj31120damyn.jpg" alt=""></p>
-<h2 id="练习"><a href="#练习" class="headerlink" title="练习"></a>练习</h2><h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/24/获取Android系统权限/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sparky">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/logo_s.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Sparky">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/11/24/获取Android系统权限/" itemprop="url">应用获取系统权限</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-24T18:33:25+08:00">
-                2017-11-24
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="应用获取系统权限"><a href="#应用获取系统权限" class="headerlink" title="应用获取系统权限"></a>应用获取系统权限</h1><p>将程序打包成系统应用才能获得系统权限</p>
+</li>
+</ol>
 <ol>
-<li><p>添加清单文件</p>
-<pre><code>android:sharedUserId=&quot;android.uid.system&quot;
-</code></pre></li>
-<li><p>build未签名apk</p>
-<p> android studio –&gt; build –&gt; build apk(s)</p>
+<li><p>创建并上传生成的sdk项目到github</p>
+<p> 使用git命令上传到github目录</p>
 </li>
-<li><p>找到系统签名秘钥和系统签名工具</p>
-<p> 系统密钥为：platform.pk8和platform.x509.pem</p>
-<p> AOSP路径： build\target\product\security</p>
-<p> 工具为：signApk.jar</p>
-<p> AOSP路径：/out/host/linux-x86/framework/ signApk.jar</p>
-</li>
-<li><p>对未签名apk进行签名</p>
-<p> 使用下边的命令进行签名</p>
-<pre><code>java -jar $(signApk.jar的全路径地址) $(platform.x509.pem的全路径地址) $(platform.pk8的全路径地址) $(未签名apk文件的全路径地址) $(要生成的apk文件的全路径地址) 
-</code></pre></li>
-<li><p>放入/system/app/文件夹下（需要root权限）</p>
-<pre><code>adb remount
-adb push $(系统签名过的apk全路径地址) /system/app/
+<li><p>在应用项目中调用</p>
+<p> 在app module的build.gradle根节点下添加repositories节点</p>
+<pre><code>repositories {
+    jcenter()
+    maven{url &quot;https://github.com/flameandroid/mysdk/raw/master&quot;}
+}
+</code></pre><p>  在dependencies中添加compile</p>
+<pre><code>compile(&apos;com.flame:mySDK:1.0&apos;)
 </code></pre></li>
 </ol>
-<p><a href="http://pan.baidu.com/s/1nurbgYd" target="_blank" rel="noopener">签名工具和签名秘钥下载地址</a></p>
 
           
         
@@ -1784,7 +1678,7 @@ adb push $(系统签名过的apk全路径地址) /system/app/
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/24/自定义viewgroup踩坑记录/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/25/【踩坑记录】 android 7.0 签名之INSTALL_PARSE_FAILED_NO_CERTIFICATES/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Sparky">
@@ -1803,7 +1697,7 @@ adb push $(系统签名过的apk全路径地址) /system/app/
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2017/11/24/自定义viewgroup踩坑记录/" itemprop="url">【踩坑记录】自定义ViewGroup</a></h1>
+                <a class="post-title-link" href="/2017/10/25/【踩坑记录】 android 7.0 签名之INSTALL_PARSE_FAILED_NO_CERTIFICATES/" itemprop="url">【踩坑记录】 android 7.0 签名之INSTALL_PARSE_FAILED_NO_CERTIFICATES</a></h1>
         
 
         <div class="post-meta">
@@ -1815,8 +1709,8 @@ adb push $(系统签名过的apk全路径地址) /system/app/
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-24T18:33:25+08:00">
-                2017-11-24
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-25T08:12:46+08:00">
+                2017-10-25
               </time>
             
 
@@ -1855,669 +1749,24 @@ adb push $(系统签名过的apk全路径地址) /system/app/
       
         
           
-            <h1 id="【踩坑记录】自定义ViewGroup"><a href="#【踩坑记录】自定义ViewGroup" class="headerlink" title="【踩坑记录】自定义ViewGroup"></a>【踩坑记录】自定义ViewGroup</h1><h4 id="1-获取自定义viewgroup对象为空"><a href="#1-获取自定义viewgroup对象为空" class="headerlink" title="1.获取自定义viewgroup对象为空"></a>1.获取自定义viewgroup对象为空</h4><p>解决方法:</p>
-<p>检查自定义viewgroup的构造方法</p>
-<pre><code>public SearchHistoryView(Context context) {
-    this(context, null);
-}
-
-public SearchHistoryView(Context context, AttributeSet attrs) {
-    this(context, attrs, 0);
-}
-
-public SearchHistoryView(Context context, AttributeSet attrs, int defStyleAttr) {
-    super(context, attrs, defStyleAttr);
-}
-</code></pre><p>看构造方法调用是否正确，参数是否正确。我出现这个错误是在两个参数的构造方法中把第二个参数写成了null导致这个错误。</p>
-<p>原因:</p>
-<p>在自定义viewgroup的类中，构造方法中一般会调用两个参数的构造方法，在写构造方法时注意，一般都是最后调用this(arg1, arg2,arg3)这个构造方法，如果出现对象为空的情况，检查构造方法，参数是否正确，是否调用正确。</p>
-<h4 id="2-自定义viewgroup，直接在布局中添加子view正常，代码添加view时出现java-lang-ClassCastException-android-view-ViewGroup-LayoutParams-cannot-be-cast-to-android-view-ViewGroup-MarginLayoutParams"><a href="#2-自定义viewgroup，直接在布局中添加子view正常，代码添加view时出现java-lang-ClassCastException-android-view-ViewGroup-LayoutParams-cannot-be-cast-to-android-view-ViewGroup-MarginLayoutParams" class="headerlink" title="2.自定义viewgroup，直接在布局中添加子view正常，代码添加view时出现java.lang.ClassCastException: android.view.ViewGroup$LayoutParams cannot be cast to android.view.ViewGroup$MarginLayoutParams"></a>2.自定义viewgroup，直接在布局中添加子view正常，代码添加view时出现java.lang.ClassCastException: android.view.ViewGroup$LayoutParams cannot be cast to android.view.ViewGroup$MarginLayoutParams</h4><p>解决方法:</p>
-<p>自定义LayoutParams类，</p>
-<pre><code>public class LayoutParams extends MarginLayoutParams {
-
-    public int gravity = -1;
-
-    public LayoutParams(Context c, AttributeSet attrs) {
-        super(c, attrs);
-    }
-
-    public LayoutParams(int width, int height) {
-        super(width, height);
-        gravity = Gravity.TOP;
-    }
-
-    public LayoutParams(int width, int height, int gravity) {
-        super(width, height);
-        this.gravity = gravity;
-    }
-
-    public LayoutParams(ViewGroup.LayoutParams source) {
-        super(source);
-    }
-}
-</code></pre><p>并在自定义viewgroup类中重写如下几个构造方法</p>
-<pre><code>@Override
-protected LayoutParams generateDefaultLayoutParams() {
-    return new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-}
-
-@Override
-protected boolean checkLayoutParams(ViewGroup.LayoutParams p) {
-    return super.checkLayoutParams(p) &amp;&amp; p instanceof LayoutParams;
-}
-
-@Override
-protected LayoutParams generateLayoutParams(ViewGroup.LayoutParams p) {
-    return new LayoutParams(p);
-}
-
-@Override
-public LayoutParams generateLayoutParams(AttributeSet attrs) {
-    return new LayoutParams(getContext(), attrs);
-}
-</code></pre><p>原因:</p>
-<p>我是按照网上的zhy大神的flowlayout教程写下来的，他是在自定义viewgroup中重写了generatelayoutparams()方法，然后在onmeasure中直接讲layoutparams直接强转成marginlayoutparams，做demo的时候因为是直接在xml中把子view添加到viewgroup控件中，这种做法是没有问题的，但是在写项目的时候因为需要动态添加布局，这时候就出现了以上的问题。建议去看一下layoutparams的知识。</p>
-<h4 id="3-子view设置了margin，但是在viewgroup中看到log打印margin还是0"><a href="#3-子view设置了margin，但是在viewgroup中看到log打印margin还是0" class="headerlink" title="3.子view设置了margin，但是在viewgroup中看到log打印margin还是0"></a>3.子view设置了margin，但是在viewgroup中看到log打印margin还是0</h4><p>解决方法：</p>
-<p>因为我使用的是动态添加子view的方式</p>
-<pre><code>TextView textView = (TextView) LayoutInflater.from(SearchActivity.this).inflate(R.layout.item_shv_textview, null, false);
-           textView.setText(bean);
-</code></pre><p>上边的代码一般都是我写inflat view的代码，3个参数中,arg1代表资源文件，arg2代表父布局，arg3代表是否依赖父布局，一般情况下用到的时候我都是上边的代码，但是在这里用要改为</p>
-<pre><code>TextView textView = (TextView) LayoutInflater.from(SearchActivity.this).inflate(R.layout.item_shv_textview, mParent, false);
-            textView.setText(bean);
-</code></pre><p> 就是说必须指定他所在的viewgroup，margin属性才有值.</p>
-<p>原因：</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/24/知识体系/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sparky">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/logo_s.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Sparky">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/11/24/知识体系/" itemprop="url">知识体系和碎片化阅读</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-24T18:33:25+08:00">
-                2017-11-24
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="知识体系和碎片化阅读"><a href="#知识体系和碎片化阅读" class="headerlink" title="知识体系和碎片化阅读"></a>知识体系和碎片化阅读</h1><p><a href="https://www.zhihu.com/question/19591121" target="_blank" rel="noopener">知乎上关于知识体系的问答</a></p>
-<h2 id="概念及误区"><a href="#概念及误区" class="headerlink" title="概念及误区"></a>概念及误区</h2><p>通俗点的解释就是将一些零碎的，分散的，相对独立的知识点或者概念加以整合，使之形成具有一定联系的知识系统。</p>
-<h3 id="个人知识体系的两大误区"><a href="#个人知识体系的两大误区" class="headerlink" title="个人知识体系的两大误区"></a>个人知识体系的两大误区</h3><ol>
-<li>以“知识收集”为中心的学习观念</li>
-<li>“囫囵吞枣，不求甚解”的学习方法</li>
-</ol>
-<p><img src="https://pic2.zhimg.com/50/v2-fde7d30ff017536a0895edcd026d6b91_hd.jpg" alt=""></p>
-<h2 id="建立知识体系的一般方法"><a href="#建立知识体系的一般方法" class="headerlink" title="建立知识体系的一般方法"></a>建立知识体系的一般方法</h2><ol>
-<li><p>明确知识体系的主题和用途</p>
-<p> 我的知识体系是什么，我做这个是为了什么。</p>
-<p> 只有搞清楚自己知识体系的方向，找到自己最愿意学习的部分，并且能让自己更专业的知识，你才有足够的动力去坚持。</p>
-<p> 明确知识体系的主题和用途可以帮助你迅速理清脉络，剔除无效信息，不必再在无关的内容上浪费自己宝贵的时间。</p>
-</li>
-<li><p>知识的整理和分类</p>
-<p> <a href="https://www.zhihu.com/question/22696632/answer/82190516?utm_source=qq&amp;utm_medium=social" target="_blank" rel="noopener">碎片阅读如何形成知识体系？ - 知乎</a></p>
+            <h1 id="【踩坑记录】-android-7-0-签名之INSTALL-PARSE-FAILED-NO-CERTIFICATES"><a href="#【踩坑记录】-android-7-0-签名之INSTALL-PARSE-FAILED-NO-CERTIFICATES" class="headerlink" title="【踩坑记录】 android 7.0 签名之INSTALL_PARSE_FAILED_NO_CERTIFICATES"></a>【踩坑记录】 android 7.0 签名之INSTALL_PARSE_FAILED_NO_CERTIFICATES</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Android更新快，Android studio更新也快，Aradle更新更快</p>
+<p>项目在之前的开发环境上没有一点问题（windows 10 / AS 2.2 / JDK 1.8 / gradle 2.2.0 / 设备HONOR 8(Android 7.0未安装app)），正好换电脑，换了一个开发环境（Ubuntu 16.04 / AS 2.3.1 / JDK 1.8 / gradle 2.3.1 / 设备有7.0也有7.0之前）。</p>
+<p>导入项目之后，因为是最新的as版本，有一个更新提示<br><img src="https://github.com/douyn/Photos/blob/master/res/TIM%E5%9B%BE%E7%89%8720170410172524.jpg?raw=true" alt="罪魁祸首"></p>
+<p>google爸爸推荐更新能不更新吗，果断更新，long long ago之后，更新完了，终于俺的项目可以执行了，编译运行一条龙，木有任何问题，接下来就是给测试妹子打包，仍然是木有问题，打包出来之后，还本着不要打包出错的心态(丢人现眼)的心态安装了一次，perfect，木有问题。然后就等着所有bug都测试通过的喜讯了。然而，第一步就挂了。</p>
+<h2 id="现象"><a href="#现象" class="headerlink" title="现象"></a>现象</h2><p>妹子说安装不上，心想这一定是你的打开方式不对，果断装起逼来，拿过来adb命令走起，果然啊，在我的手机上就可以，在测试的手机上就不行，通过adb报错发现INSTALL_PARSE_FAILED_NO_CERTIFICATES,这啥啊，不懂没关系，google baidu走起来。(网上大多数都是很久之前的过滤掉不要看，关键词不能少)</p>
+<p>还有一个现象，打包的时候没有在意，也是一个关键失误。就是在gradle 2.3.1上打包的时候，最后一步要选择APK signature scheme，当时没在意直接选的v2 full apk,不要问为什么，英语好就是这么吊(脑洞翻译一下嘛v1打包jar，v2打包apk)。事实证明就是google给的提示不够明确啊。</p>
+<h2 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h2><p>Android 7.0 引入一项新的应用签名方案 APK Signature Scheme v2，它能提供更快的应用安装时间和更多针对未授权 APK 文件更改的保护。在默认情况下，Android Studio 2.2 和 Android Plugin for Gradle 2.2 会使用 APK Signature Scheme v2 和传统签名方案来签署您的应用。</p>
+<p>如这里所述，Android 7.0引入了新的签名方案V2。V2方案是对整个APK进行签名，而不是像V1一样只对JAR那样签名。如果您仅使用V2进行登录，并尝试在7.0之前的目标上安装，则会收到此错误，因为JAR本身未签名，并且7.0 之前的PackageManager无法检测V2 APK签名的存在。</p>
+<h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><p>所以方案也就有两种</p>
 <ol>
-<li>从深度到广度</li>
-<li><p>从广度到深度</p>
-<p>可以使用有道云，印象笔记等笔记类软件进行整合，建立专门的笔记本，然后把你的知识点按照名称，作为笔记归纳到你的知识体系中。</p>
-</li>
+<li>降低gradle版本，像我们这样多人开发，每个人的studio版本都不一样，gradle版本也有不一样的，这样就会好一些。就是要把项目目录下的build.gradle中的gradle配置改一下。比如’classpath ‘com.android.tools.build:gradle:2.3.1’’改为’classpath ‘com.android.tools.build:gradle:2.2.3’’</li>
+<li>如果是个人的话，用越新的东西越能装逼，当然推荐用最新的gradle了，只是在打包的时候注意要兼容7.0以前和以后，这就需要注意把Signature Scheme V1和Signature Scheme V2都选上。</li>
 </ol>
-</li>
-<li><p>知识的输出和运用</p>
-<p> 把自己学到的知识写成文章等发出去。</p>
-<p> “每章小结”是很有必要的。不一定要每章，至少一周一复习</p>
-</li>
-<li><p>找到获取知识的途径</p>
-<ol>
-<li>网络</li>
-<li>书籍</li>
-<li>课堂</li>
-<li>留心生活中的点滴</li>
-</ol>
-</li>
-<li><p>把握知识动态，更新知识体系</p>
-<p> 要去经常浏览最新的跟自己知识体系有关的新技术</p>
-</li>
-</ol>
-<h2 id="如何构建自己的知识体系"><a href="#如何构建自己的知识体系" class="headerlink" title="如何构建自己的知识体系"></a>如何构建自己的知识体系</h2><ol>
-<li>确定哪些知识加入知识体系</li>
-<li>知识组块</li>
-<li>及时复习</li>
-</ol>
-<h2 id="碎片阅读如何形成知识体系"><a href="#碎片阅读如何形成知识体系" class="headerlink" title="碎片阅读如何形成知识体系"></a>碎片阅读如何形成知识体系</h2><h4 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h4><ol>
-<li>并非碎片化就能形成有价值的体系</li>
-<li>最大的问题是知识的获取和整理</li>
-<li>碎片化阅读和知识体系的构建的本质：<strong>拿来主义，分门别类</strong></li>
-</ol>
-<h4 id="材料选择和基本特点"><a href="#材料选择和基本特点" class="headerlink" title="材料选择和基本特点"></a>材料选择和基本特点</h4><ol>
-<li><p>阅读的愉悦感</p>
-<p> 一个感兴趣的内容能加强你的抗干扰能力，把碎片化阅读的效率极大的提高。</p>
-<p> 碎片化信息的第一选择是：具有吸引力的内容</p>
-</li>
-<li><p>难度较低的陌生材料或者熟悉的材料</p>
-<p> 碎片化阅读并不盲目追求陌生知识，陌生知识是对自己有用，但是陌生知识一般有自己的知识体系。你可以在遇到陌生领域的时候，先去构建该领域知识体系，了解该领域基本知识之后再进行阅读。</p>
-</li>
-</ol>
-<h4 id="养成收集整合，反复阅读的习惯"><a href="#养成收集整合，反复阅读的习惯" class="headerlink" title="养成收集整合，反复阅读的习惯"></a>养成收集整合，反复阅读的习惯</h4><p>最好把有价值的内容随手保存到笔记软件里，整合在一起。减少出现“我好像在哪里见过这个问题”“不过我想不起在哪里看到的了”的困扰，原作者推荐有道云笔记</p>
-<ol>
-<li><p>有目的的阅读</p>
-<p> 阅读时可以将有用的片段进行保存，可以保存到云笔记等软件中。</p>
-</li>
-<li><p>无目的的阅读和浏览</p>
-<p> 有趣的内容也可以浏览，扩大知识体系</p>
-</li>
-</ol>
-<h4 id="归纳"><a href="#归纳" class="headerlink" title="归纳"></a>归纳</h4><p>分类是一种重要的科学方法，从碎片到块到系统，归纳可以说是核心的一步。</p>
-<p>带着疑问，遇到就保存，清晰的整理归类后，绕开繁琐复杂的信息，大脑的顿悟系统就开始起作用了，你会发现比较复杂的事物变的易于理解和条理清晰起来。</p>
-<p>分好类之后，再遇到什么有用内容，我都知道保存归纳到哪里，并且去哪里提取相关的信息。除此之外，我还有很多其他学科类收集与整理，都获益颇多。同理，题主的很多的学习与工作的事都可以通过这个方式提高效率并且对于问题有更好的认识，这也是为建立知识系统进行的必要铺垫。</p>
-<h4 id="整理和构建体系"><a href="#整理和构建体系" class="headerlink" title="整理和构建体系"></a>整理和构建体系</h4><p>在你归纳整合之后，你就可以对当前知识进行系统的整理，建立一个文件夹，写一些心得等，基本的知识分类框架就已经出来。</p>
-<h4 id="总结一下步骤"><a href="#总结一下步骤" class="headerlink" title="总结一下步骤"></a>总结一下步骤</h4><ol>
-<li>碎片阅读的选择</li>
-<li>随手保存</li>
-<li>整理归纳</li>
-<li>在归纳之后建立不同层级的文件夹</li>
-</ol>
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>不要害怕遇到问题，遇到问题就记下来装逼啊。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://developer.android.google.cn/aboutersionsugat/android-7.0.html#apk_signature_v2" target="_blank" rel="noopener">官方文档</a></p>
+<p><a href="http://stackoverflow.com/a/42377418" target="_blank" rel="noopener">解放方案1</a></p>
+<p><a href="http://stackoverflow.com/a/43097991" target="_blank" rel="noopener">解决方案2</a></p>
 
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/24/[Android WIFI开发]/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sparky">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/logo_s.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Sparky">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/11/24/[Android WIFI开发]/" itemprop="url">Android WIFI开发</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-24T18:33:25+08:00">
-                2017-11-24
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="Android-WIFI开发"><a href="#Android-WIFI开发" class="headerlink" title="[Android WIFI开发]"></a>[Android WIFI开发]</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在Android应用层的开发中，使用到wifi相关知识点的地方并不多，所以之前对wifi开发并不熟悉，最近接到的两个硬件项目都有用到wifi并且知识点越来越深入，所以有必要记一下笔记，做一些注释。</p>
-<h2 id="基本使用"><a href="#基本使用" class="headerlink" title="基本使用"></a>基本使用</h2><h4 id="1-权限"><a href="#1-权限" class="headerlink" title="1.权限"></a>1.权限</h4><p>Android中要使用系统功能一般都要申请权限，在6.0上可能还要手动申请权限，这里wifi需要的权限有</p>
-<pre><code>&lt;uses-permission android:name=&quot;android.permission.CHANGE_NETWORK_STATE&quot;/&gt;
-&lt;uses-permission android:name=&quot;android.permission.CHANGE_WIFI_STATE&quot;/&gt;
-&lt;uses-permission android:name=&quot;android.permission.ACCESS_NETWORK_STATE&quot;/&gt;
-&lt;uses-permission android:name=&quot;android.permission.ACCESS_WIFI_STATE&quot;/&gt;
-&lt;uses-permission android:name=&quot;android.permission.ACCESS_FINE_LOCATION&quot;/&gt; // 需要系统权限 [定位权限]
-</code></pre><p>其中在6.0以上设备，定位权限需要主动申请，并且如果要获取扫描wifi列表需要打开系统的定位开关。</p>
-<h4 id="2-WiFi相关API"><a href="#2-WiFi相关API" class="headerlink" title="2. WiFi相关API"></a>2. WiFi相关API</h4><p><img src="http://img.blog.csdn.net/20160301131454334" alt="WIFI相关API"></p>
-<p>ScanResult类用于存放wifi扫描结果信息，包含ssid(wifi名称), bssid(网络接入点地址),capabilities(加密类型),frequency(传输频率),level(信号强度)等。这里的解释并不太标准，但是对应功能很形象，如果你要了解更多，可以去具体的查阅资料。</p>
-<p>WifiConfiguration类用于存放wifi的配置信息。包括wifi的密码，加密类型，网络id(用于连接wifi)等。他的几个子类分别对应秘钥加密方式，安全协议等，这些在设置wifi配置的时候会被用到</p>
-<p>wifiinfo类用来描述wifi属性和连接状态。暴露了一些方法给开发者调用。getBSSID(), getMacAddress(), getIpAddress()，getSSID()等</p>
-<p>WifiManager类是framework层暴露的api，用来管理wifi。通过调用 Context.getSystemService(Context.WIFI_SERVICE)可以得到类的实例。通过他可以得到:1.已经配置的网络列表。2.当前连接的wifi。3.扫描到的wifi。4.以及一些常量表示广播的意图等</p>
-<h4 id="3-wifi状态及开关"><a href="#3-wifi状态及开关" class="headerlink" title="3. wifi状态及开关"></a>3. wifi状态及开关</h4><pre><code>/**
- * 判断wifi是否打开
- * &lt;p&gt;需添加权限 {@code &lt;uses-permission android:name=&quot;android.permission.ACCESS_WIFI_STATE&quot;/&gt;}&lt;/p&gt;
- *
- * @return {@code true}: 是&lt;br&gt;{@code false}: 否
- */
-public static boolean getWifiEnabled() {
-    @SuppressLint(&quot;WifiManagerLeak&quot;)
-    WifiManager wifiManager = (WifiManager) Utils.getApp().getSystemService(Context.WIFI_SERVICE);
-    return wifiManager.isWifiEnabled();
-}
-
-/**
- * 打开或关闭wifi
- * &lt;p&gt;需添加权限 {@code &lt;uses-permission android:name=&quot;android.permission.CHANGE_WIFI_STATE&quot;/&gt;}&lt;/p&gt;
- *
- * @param enabled {@code true}: 打开&lt;br&gt;{@code false}: 关闭
- */
-public static void setWifiEnabled(final boolean enabled) {
-    @SuppressLint(&quot;WifiManagerLeak&quot;)
-    WifiManager wifiManager = (WifiManager) Utils.getApp().getSystemService(Context.WIFI_SERVICE);
-    if (enabled) {
-        if (!wifiManager.isWifiEnabled()) {
-            wifiManager.setWifiEnabled(true);
-        }
-    } else {
-        if (wifiManager.isWifiEnabled()) {
-            wifiManager.setWifiEnabled(false);
-        }
-    }
-}
-</code></pre><h4 id="4-扫描wifi"><a href="#4-扫描wifi" class="headerlink" title="4. 扫描wifi"></a>4. 扫描wifi</h4><pre><code> /**
- *
- * 获取WIFI列表
- * &lt;p&gt;需要权限{@code &lt;uses-permission android:name=&quot;android.permission.ACCESS_WIFI_STATE&quot;/&gt; &lt;uses-permission android:name=&quot;android.permission.ACCESS_FINE_LOCATION&quot;/&gt;}&lt;/p&gt;
- * &lt;p&gt;注意Android6.0上需要主动申请定位权限，并且打开定位开关&lt;/p&gt;
- *
- * @param context 上下文
- * @return wifi列表
- */
-public static List&lt;ScanResult&gt; getWifiList(Context context) {
-    WifiManager wm = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-    List&lt;ScanResult&gt; scanResults = wm.getScanResults();
-
-    Collections.sort(scanResults, new Comparator&lt;ScanResult&gt;() {
-        @Override
-        public int compare(ScanResult scanResult1, ScanResult scanResult2) {
-            return scanResult2.level - scanResult1.level;
-        }
-    });
-    return scanResultsCopy;
-}
-
- /**
- * 获取当前链接的WiFi信息
- *
- * @param context 上下文
- * @return 当前wifi数据
- */
-public static WifiInfo getCurrentWifi (Context context) {
-    WifiManager wm = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-    return wm.getConnectionInfo();
-}
-
-
-public static String getWifiEncryptTypeStr (String capabilitie) {
-    if (TextUtils.isEmpty(capabilitie)) return null;
-
-    String encryptType;
-
-    if (capabilitie.contains(&quot;WPA&quot;) &amp;&amp; capabilitie.contains(&quot;WPA2&quot;)) {
-        encryptType = &quot;WPA/WPA2 PSK&quot;;
-    } else if (capabilitie.contains(&quot;WPA2&quot;)) {
-        encryptType = &quot;WPA2 PSK&quot;;
-    } else if (capabilitie.contains(&quot;WPA&quot;)) {
-        encryptType = &quot;WPA PSK&quot;;
-    } else if (capabilitie.contains(&quot;WEP&quot;)) {
-        encryptType = &quot;WEP&quot;;
-    } else {
-        encryptType = &quot;NONE&quot;;
-    }
-
-    return encryptType;
-}
-
-/**
- * wifi加密方式有5种
- * 0 - WPA/WPA2 PSK
- * 1 - WPA2 PSK
- * 2 - WPA PSK
- * 3 - WEP
- * 4 - NONE
- * @param capabilitie
- * @return
- */
-public static int getWifiEncryptType (String capabilitie) {
-    if (TextUtils.isEmpty(capabilitie)) return -1;
-
-    int encryptType;
-
-    if (capabilitie.contains(&quot;WPA&quot;) &amp;&amp; capabilitie.contains(&quot;WPA2&quot;)) {
-        encryptType = 0;
-    } else if (capabilitie.contains(&quot;WPA2&quot;)) {
-        encryptType = 1;
-    } else if (capabilitie.contains(&quot;WPA&quot;)) {
-        encryptType = 2;
-    } else if (capabilitie.contains(&quot;WEP&quot;)) {
-        encryptType = 3;
-    } else {
-        encryptType = 4;
-    }
-
-    return encryptType;
-}
-</code></pre><h4 id="5-连接wifi"><a href="#5-连接wifi" class="headerlink" title="5. 连接wifi"></a>5. 连接wifi</h4><pre><code> /**
- * @des 连接已经保存过配置的wifi
- * @param context
- * @param ssid
- */
-public static void connectWifi (Context context, String ssid) {
-
-    Log.d(TAG, &quot;connectWifi: 去连接wifi: &quot; + ssid);
-
-    if (!getWifiEnabled()) return;
-
-    WifiManager wm = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-    WifiConfiguration wc = new WifiConfiguration();
-
-    wc.SSID = &quot;\&quot;&quot; + ssid + &quot;\&quot;&quot;;
-
-    WifiConfiguration configuration = getWifiConfig(context, ssid);
-    if (configuration != null) {
-        wm.enableNetwork(configuration.networkId, true);
-    }
-
-}
-
-/**
- * @des 连接没有配置过的wifi
- * @param context
- * @param ssid
- * @param password
- * @param encryptType
- */
-public static void connectWifi (Context context, String ssid, String password, int encryptType) {
-
-    Log.d(TAG, &quot;connectWifi: 去连接wifi: &quot; + ssid);
-
-    if (!getWifiEnabled()) return;
-
-    WifiManager wm = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-    WifiConfiguration wc = new WifiConfiguration();
-    wc.allowedAuthAlgorithms.clear();
-    wc.allowedGroupCiphers.clear();
-    wc.allowedKeyManagement.clear();
-    wc.allowedPairwiseCiphers.clear();
-    wc.allowedProtocols.clear();
-
-    wc.SSID = &quot;\&quot;&quot; + ssid + &quot;\&quot;&quot;;
-
-    WifiConfiguration configuration = getWifiConfig(context, ssid);
-    if (configuration != null) {
-        wm.removeNetwork(configuration.networkId);
-    }
-
-    switch (encryptType) {
-        case 4://不加密
-            wc.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
-            break;
-
-        case 3://wep加密
-            wc.hiddenSSID = true;
-            wc.wepKeys[0] = &quot;\&quot;&quot; + password +&quot;\&quot;&quot;;
-            wc.allowedAuthAlgorithms.set(WifiConfiguration.AuthAlgorithm.SHARED);
-            wc.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.CCMP);
-            wc.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.TKIP);
-            wc.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP40);
-            wc.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP104);
-            wc.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
-
-            break;
-        case 0: //wpa/wap2加密
-        case 1: //wpa2加密
-        case 2: //wpa加密
-
-            wc.preSharedKey = &quot;\&quot;&quot; + password + &quot;\&quot;&quot;;
-            wc.hiddenSSID = true;
-            wc.allowedAuthAlgorithms.set(WifiConfiguration.AuthAlgorithm.OPEN);
-            wc.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.TKIP);
-            wc.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.CCMP);
-            wc.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.WPA_PSK);
-            wc.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.CCMP);
-            wc.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.TKIP);
-            wc.status = WifiConfiguration.Status.ENABLED;
-            break;
-    }
-
-    int network = wm.addNetwork(wc);
-    wm.enableNetwork(network, true);
-}
-
-public static void disConnectWifi (Context context, int networkId) {
-    WifiManager wm = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-    wm.disableNetwork(networkId);
-    wm.disconnect();
-}
-</code></pre><h4 id="6-获取和清除WIFI配置"><a href="#6-获取和清除WIFI配置" class="headerlink" title="6. 获取和清除WIFI配置"></a>6. 获取和清除WIFI配置</h4><pre><code>/**
- * @des 清除wifi配置信息
- * @param context
- * @param ssid
- */
-public static void clearWifiInfo(Context context, String ssid) {
-
-    Log.d(TAG, &quot;clearWifiInfo: 清除WIFI配置信息: &quot; + ssid);
-
-    WifiManager wm = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-
-    String newSSID = &quot;\&quot;&quot; + ssid + &quot;\&quot;&quot;;
-
-    if (!(ssid.startsWith(&quot;\&quot;&quot;) &amp;&amp; ssid.endsWith(&quot;\&quot;&quot;))) {
-        newSSID = &quot;\&quot;&quot; + ssid + &quot;\&quot;&quot;;
-    } else {
-        newSSID = ssid;
-    }
-
-    WifiConfiguration configuration = getWifiConfig(context, newSSID);
-    configuration.allowedAuthAlgorithms.clear();
-    configuration.allowedGroupCiphers.clear();
-    configuration.allowedKeyManagement.clear();
-    configuration.allowedPairwiseCiphers.clear();
-    configuration.allowedProtocols.clear();
-
-    if (configuration != null) {
-
-        wm.removeNetwork(configuration.networkId);
-        wm.saveConfiguration();
-    }
-}
-
-public static WifiConfiguration getWifiConfig (Context context, String ssid) {
-
-    Log.d(TAG, &quot;getWifiConfig: 获取wifi配置信息: &quot; + ssid);
-
-    if (TextUtils.isEmpty(ssid)) return null;
-
-    String newSSID;
-
-    if (!(ssid.startsWith(&quot;\&quot;&quot;) &amp;&amp; ssid.endsWith(&quot;\&quot;&quot;))) {
-        newSSID = &quot;\&quot;&quot; + ssid + &quot;\&quot;&quot;;
-    } else {
-        newSSID = ssid;
-    }
-
-    WifiManager wm = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-    List&lt;WifiConfiguration&gt; configuredNetworks = wm.getConfiguredNetworks();
-
-    for (WifiConfiguration configuration : configuredNetworks) {
-        if (newSSID.equalsIgnoreCase(configuration.SSID)) {
-            return configuration;
-        }
-    }
-
-    return null;
-}
-</code></pre><h2 id="高级用法"><a href="#高级用法" class="headerlink" title="高级用法"></a>高级用法</h2><h4 id="1-监听wifi状态的变化并刷新wifi列表和连接状态"><a href="#1-监听wifi状态的变化并刷新wifi列表和连接状态" class="headerlink" title="1. 监听wifi状态的变化并刷新wifi列表和连接状态"></a>1. 监听wifi状态的变化并刷新wifi列表和连接状态</h4><h4 id="2-5Gwfif和2-4Gwifi"><a href="#2-5Gwfif和2-4Gwifi" class="headerlink" title="2. 5Gwfif和2.4Gwifi"></a>2. 5Gwfif和2.4Gwifi</h4><h2 id="踩坑记录"><a href="#踩坑记录" class="headerlink" title="踩坑记录"></a>踩坑记录</h2><h4 id="1-wifi的ssid是带有””，所以你如果要判空是不行的，并且在连接wifi的时候要手动给ssid加上””。"><a href="#1-wifi的ssid是带有””，所以你如果要判空是不行的，并且在连接wifi的时候要手动给ssid加上””。" class="headerlink" title="1. wifi的ssid是带有””，所以你如果要判空是不行的，并且在连接wifi的时候要手动给ssid加上””。"></a>1. wifi的ssid是带有””，所以你如果要判空是不行的，并且在连接wifi的时候要手动给ssid加上””。</h4><h4 id="2-前文已经说了Android6-0以上要想扫描到wifi需要开启权限和手机的定位功能，不然得到的列表为空。"><a href="#2-前文已经说了Android6-0以上要想扫描到wifi需要开启权限和手机的定位功能，不然得到的列表为空。" class="headerlink" title="2. 前文已经说了Android6.0以上要想扫描到wifi需要开启权限和手机的定位功能，不然得到的列表为空。"></a>2. 前文已经说了Android6.0以上要想扫描到wifi需要开启权限和手机的定位功能，不然得到的列表为空。</h4><h4 id="3-wifi的秘钥安全模式网上并没有人给出标准的答案，各个手机厂商的wifi系统上也都不一样，对于我们开发者而言，主要有5种方式也可以总结为3中：NONE-无密码模式-WEP-安全性较低-WAP-PSK-WAP2-PSK-WPA-WPA2-PSK-这三种安全性较高-。需要注意的是通过capabilitie属性得到的字符串是类似-WPA-PSK-CCMP-TKIP-WPA2-PSK-CCMP-TKIP-ESS-这样的，因为wifi的加密方式是安全模式-密码加密类型组合的方式。你要通过string-contains-方法解析出其中的安全模式，上文的扫描wifi中有解析的代码。"><a href="#3-wifi的秘钥安全模式网上并没有人给出标准的答案，各个手机厂商的wifi系统上也都不一样，对于我们开发者而言，主要有5种方式也可以总结为3中：NONE-无密码模式-WEP-安全性较低-WAP-PSK-WAP2-PSK-WPA-WPA2-PSK-这三种安全性较高-。需要注意的是通过capabilitie属性得到的字符串是类似-WPA-PSK-CCMP-TKIP-WPA2-PSK-CCMP-TKIP-ESS-这样的，因为wifi的加密方式是安全模式-密码加密类型组合的方式。你要通过string-contains-方法解析出其中的安全模式，上文的扫描wifi中有解析的代码。" class="headerlink" title="3. wifi的秘钥安全模式网上并没有人给出标准的答案，各个手机厂商的wifi系统上也都不一样，对于我们开发者而言，主要有5种方式也可以总结为3中：NONE(无密码模式), WEP(安全性较低), WAP PSK, WAP2 PSK, WPA/WPA2 PSK(这三种安全性较高)。需要注意的是通过capabilitie属性得到的字符串是类似 [WPA-PSK-CCMP+TKIP][WPA2-PSK-CCMP+TKIP][ESS] 这样的，因为wifi的加密方式是安全模式+密码加密类型组合的方式。你要通过string.contains()方法解析出其中的安全模式，上文的扫描wifi中有解析的代码。"></a>3. wifi的秘钥安全模式网上并没有人给出标准的答案，各个手机厂商的wifi系统上也都不一样，对于我们开发者而言，主要有5种方式也可以总结为3中：NONE(无密码模式), WEP(安全性较低), WAP PSK, WAP2 PSK, WPA/WPA2 PSK(这三种安全性较高)。需要注意的是通过capabilitie属性得到的字符串是类似 [WPA-PSK-CCMP+TKIP][WPA2-PSK-CCMP+TKIP][ESS] 这样的，因为wifi的加密方式是安全模式+密码加密类型组合的方式。你要通过string.contains()方法解析出其中的安全模式，上文的扫描wifi中有解析的代码。</h4><h4 id="4-扫描列表中ssid可能为空或””，一般要剔除掉，而且wifi列表一般是根据信号强度排序。也有可能列表中出现同名的wifi-我之前遇到是因为现在的路由器同时支持5G-wifi和2-4G-wifi，两个wifi属于不同的频段。"><a href="#4-扫描列表中ssid可能为空或””，一般要剔除掉，而且wifi列表一般是根据信号强度排序。也有可能列表中出现同名的wifi-我之前遇到是因为现在的路由器同时支持5G-wifi和2-4G-wifi，两个wifi属于不同的频段。" class="headerlink" title="4. 扫描列表中ssid可能为空或””，一般要剔除掉，而且wifi列表一般是根据信号强度排序。也有可能列表中出现同名的wifi,我之前遇到是因为现在的路由器同时支持5G wifi和2.4G wifi，两个wifi属于不同的频段。"></a>4. 扫描列表中ssid可能为空或””，一般要剔除掉，而且wifi列表一般是根据信号强度排序。也有可能列表中出现同名的wifi,我之前遇到是因为现在的路由器同时支持5G wifi和2.4G wifi，两个wifi属于不同的频段。</h4><h4 id="5-wifi是可以设置为隐藏wifi的，设置为隐藏wifi后不能被扫描到，但是可以通过直接输入ssid和秘钥的方式连接上。"><a href="#5-wifi是可以设置为隐藏wifi的，设置为隐藏wifi后不能被扫描到，但是可以通过直接输入ssid和秘钥的方式连接上。" class="headerlink" title="5. wifi是可以设置为隐藏wifi的，设置为隐藏wifi后不能被扫描到，但是可以通过直接输入ssid和秘钥的方式连接上。"></a>5. wifi是可以设置为隐藏wifi的，设置为隐藏wifi后不能被扫描到，但是可以通过直接输入ssid和秘钥的方式连接上。</h4><h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2>
           
         
       
@@ -2556,7 +1805,7 @@ public static WifiConfiguration getWifiConfig (Context context, String ssid) {
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/9/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><span class="page-number current">10</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/11/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/9/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><span class="page-number current">10</span>
   </nav>
 
 
@@ -2606,7 +1855,7 @@ public static WifiConfiguration getWifiConfig (Context context, String ssid) {
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">109</span>
+                  <span class="site-state-item-count">99</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

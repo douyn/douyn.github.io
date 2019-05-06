@@ -242,7 +242,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/06/Android开发感悟/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/06/知识点/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Sparky">
@@ -261,7 +261,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2019/05/06/Android开发感悟/" itemprop="url">未命名</a></h1>
+                <a class="post-title-link" href="/2019/05/06/知识点/" itemprop="url">未命名</a></h1>
         
 
         <div class="post-meta">
@@ -313,1720 +313,1362 @@
       
         
           
-            <h2 id="Android系统开发工作感悟"><a href="#Android系统开发工作感悟" class="headerlink" title="Android系统开发工作感悟"></a>Android系统开发工作感悟</h2><ul>
-<li>repo</li>
-<li>git</li>
-<li>gerrit</li>
-<li>adb </li>
-<li>fastboot</li>
-<li>vim</li>
-<li>bash</li>
-<li>sourceinsight</li>
-<li>putty</li>
-<li>secureCRT</li>
-<li>ssh</li>
-<li>sftp</li>
-<li>eclipse</li>
-<li>android studio</li>
-<li>linux</li>
-<li>shell</li>
-<li>makefile</li>
-<li>python</li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/06/Android混淆踩坑实践/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sparky">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/logo_s.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Sparky">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/05/06/Android混淆踩坑实践/" itemprop="url">未命名</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-06T20:09:10+08:00">
-                2019-05-06
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="Android混淆踩坑实践"><a href="#Android混淆踩坑实践" class="headerlink" title="Android混淆踩坑实践"></a>Android混淆踩坑实践</h2><p>一般情况下，网上的大多数模板都是可用的，如果出错通常需要特殊的指定要不去混淆的类或方法等。</p>
-<p>两种混淆错误，一种是编译时报错，一种是运行时报错。<br>编译时错误一般是某些类需要混淆。<br>运行时错误一般是库调用java代码出错。</p>
-<h4 id="1-耐心看log，一般根据log就可以定位到错误的地方。"><a href="#1-耐心看log，一般根据log就可以定位到错误的地方。" class="headerlink" title="1. 耐心看log，一般根据log就可以定位到错误的地方。"></a>1. 耐心看log，一般根据log就可以定位到错误的地方。</h4><p>跟Android项目中的warning不一样这里的warning也会导致编译不过去</p>
-<pre><code>Warning: Exception while processing task java.io.IOException: Please correct the above warnings first.
-:fBReader:transformClassesAndResourcesWithProguardForRelease FAILED
-
-FAILURE: Build failed with an exception.
-
-
-遇到这种情况就滑到上边看log里的最上边的出现的warning
-
-Note: the configuration refers to the unknown class &apos;android.webkit.webViewClient&apos;
-Note: the configuration refers to the unknown class &apos;android.webkit.webViewClient&apos;
-Note: the configuration refers to the unknown class &apos;android.webkit.webView&apos;
-Note: the configuration refers to the unknown class &apos;jav.lang.String&apos;
-      Maybe you meant the fully qualified name &apos;java.lang.String&apos;?
-Note: the configuration refers to the unknown class &apos;org.greenrobot.greendao.AbstractDao&apos;
-Warning: com.xxx.xxx: can&apos;t find superclass or interface android.xxx.xxx
-
-说明com.xxx.xxx这个类出现了warning，在proguard.pro文件中添加
-
-    -dontwarn com.xx.xx即可
-</code></pre><h4 id="2-如果混淆之后打包编译都正常，千万不要以为万事大吉，一定要安装查看运行时基本功能是否正常"><a href="#2-如果混淆之后打包编译都正常，千万不要以为万事大吉，一定要安装查看运行时基本功能是否正常" class="headerlink" title="2. 如果混淆之后打包编译都正常，千万不要以为万事大吉，一定要安装查看运行时基本功能是否正常"></a>2. 如果混淆之后打包编译都正常，千万不要以为万事大吉，一定要安装查看运行时基本功能是否正常</h4><p>混淆之后经常出现运行时错误，也是需要去看应用crash的log，一行一行分析定位，实在不行就去google。</p>
-<h5 id="1、ClassNotFoundException，NoSuchMethodError"><a href="#1、ClassNotFoundException，NoSuchMethodError" class="headerlink" title="1、ClassNotFoundException，NoSuchMethodError"></a>1、ClassNotFoundException，NoSuchMethodError</h5><p>找不到类和方法的原因很多，需要根据log去定位。</p>
-<pre><code>Didn&apos;t find class &quot;xxx&quot; on path: DexPathList[[zip file &quot;/data/app/xxx/base.apk&quot;],nativeLibraryDirectories=[/data/app/xxx/lib/arm, /vendor/lib, /system/lib]]
-
-然后java的loadLibrary方法会报错，这个问题乍一看可能以为是so库的问题，你可能回去不混淆so等，但是其实不用，因为so默认就是不混淆的，问题在于jni调用java类时，java类的路径因为混淆而发生变化，所以你需要去不去混淆这个类。
-
--keep class xxx{*;}
-
-除了这种jni调用java会出现classnotfoundexception之外，本地代码通过反射调用其他的类等也会出现上述问题，只要分析log找到对应的类不混淆即可
-</code></pre><h4 id="2、ExceptionInInitializerError"><a href="#2、ExceptionInInitializerError" class="headerlink" title="2、ExceptionInInitializerError"></a>2、ExceptionInInitializerError</h4><pre><code>原因：这是由于类初始化的时候发生了异常。
-
-解决办法：找到具体是哪里的类哪个方法哪个类初始化的时候发生的异常，然后解决问题。
-
-注：遇到这个错误，首先要确认是不是因为第三方的jar包导致的。如果不是的话，就找本地代码，看是不是写的有问题。如果确实是因为第三方jar包的代码导致的，尽量找到源码或者反编译，查看问题到底是什么引起的，然后找到相应的配置在proguard里面配置。
-
-例如：我们项目中碰到过一个问题，就是因为第三方的jar包里面有一个字段初始化的时候报了空指针，然后导致我们的代码报了上面的错。当时很奇怪，为什么第三方的jar包还能报错，最后调查了之后才发现，是因为人家用到了类的注解，而proguard在混淆优化的时候把注解去掉了，所以报了空指针，只需要在proguard里面加上保护注解就可以了-keepattributes *Annotation*
-</code></pre><h4 id="3、-ClassCastException"><a href="#3、-ClassCastException" class="headerlink" title="3、 ClassCastException"></a>3、 ClassCastException</h4><pre><code>原因：类强制转换的时候出错。
-
-解决办法：找到代码，看是代码写的问题，还是混淆后的问题。如果没有混淆正常运行的话，一般都是因为混淆后遇到了各种问题才报的错。我们项目中遇到的问题是因为没有让proguard保持泛型，所以强转的时候报错。只需要在proguard文件里面加上泛型即可-keepattributes Signature
-</code></pre><h4 id="4、Resources-NotFoundException-resource-not-found"><a href="#4、Resources-NotFoundException-resource-not-found" class="headerlink" title="4、Resources$NotFoundException(resource not found)"></a>4、Resources$NotFoundException(resource not found)</h4><p>资源没有找到，是因为第三方jar包或者自己的代码是通过反射获得R文件中的资源，所以需要将R文件屏蔽掉</p>
-<pre><code>原因：代码进行了混淆，R文件没有了，所以通过反射获取的R文件找不到
-
-解决办法：在proguard文件里设置不混淆R文件    -keep class **.R$* { *; }
-</code></pre>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/06/Android高级进阶知识点/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sparky">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/logo_s.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Sparky">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/05/06/Android高级进阶知识点/" itemprop="url">未命名</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-06T20:09:10+08:00">
-                2019-05-06
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h4 id="1-触摸事件传递机制"><a href="#1-触摸事件传递机制" class="headerlink" title="1. 触摸事件传递机制"></a>1. 触摸事件传递机制</h4><ol>
-<li>触摸事件的类型（MotionEvent(ACTION_DOWN,ACTION_MOVE,ACTION_UP等)）</li>
-<li>触摸事件的三个阶段（分发-拦截-消费）</li>
-<li>view的时间传递机制（activity-&gt;view）</li>
-<li>viewgroup的时间传递机制 (activity-&gt;viewgroup-&gt;view)</li>
-</ol>
-<h4 id="2-Android-View的绘制流程"><a href="#2-Android-View的绘制流程" class="headerlink" title="2. Android View的绘制流程"></a>2. Android View的绘制流程</h4><p><a href="http://blog.csdn.net/yanbober/article/details/45970721" target="_blank" rel="noopener">setContentView方法详解</a></p>
+            <p>知识点</p>
+<p>Android</p>
 <ol>
-<li>Android UI管理系统的层级关系(activity-phonewindow-decorview-(titleview,contentview))</li>
-<li>绘制的整个流程(performtraversals-&gt;performMeasure-&gt;performLayout-&gt;performDraw)</li>
-<li>MesureSpec(unspecified,at_most(wrap_content),exactly(match_parent))</li>
-<li>Measure</li>
-<li>layout</li>
-<li>draw(drawBackground-saveLayer-onDraw-dispatchDraw-restoreToCount-onDrawScrollBar)</li>
+<li>MVC和MVP模式， 设计模式(单例模式，工厂模式，观察者模式，代理模式，适配器模式，模板模式)</li>
+<li>NDK开发，aidl。(通过jni实现java和c之间的调用和回调数据通信)</li>
+<li>第三方sdk(高德地图，第三方登录和分享，个推/FCM推送)</li>
+<li>Android混淆和多渠道打包,包括应用市场上线流程，bug修复和优化</li>
+<li>自定义recyclerview和listview，分页加载，异步加载</li>
+<li>屏幕适配方案(图片适配，像素适配和layout适配)</li>
+<li>Android主流开发框架(greendao, eventbus, retrofit, pulltorefresh, glide)</li>
+<li>Handler机制和Binder机制，aidl</li>
+<li>Android常用的布局控件(线性布局，绝对布局，帧布局，相对布局，表格布局)以及Material Design布局(Constrainlayout,Cordinatorlayout,DrawerLayout,NavigationBar,Toolbar,Snakebar,FloatActionBar,NeastScrollView)，以及一些主流的第三方ui控件(Butterknife,pulltorefresh,MaterialCalendar,CircleImageView,CardView)</li>
+<li>Android数据(图片，文字，文件)缓存，内存优化，并且能够对图片的优化做相应的处理，熟悉ASimpleCache，LruCache和DiskLruCache。</li>
+<li>掌握oom，anr异常处理，以及全局Crash处理和Bugly等异常上报</li>
+<li>视频处理(FFmpeg)和视频播放(IJKplayer,自定义视频播放器)</li>
+<li>google全家桶(goole map, gcm/fcm, zxing, google billing)</li>
+<li>二维码开发，扫描二维码，解析和生成二维码</li>
+<li>熟悉组件之间的数据传递和进程之间的通信(AIDL)</li>
+<li>wifi开发，监听wifi状态，wifi信息状态</li>
+<li>[了解]热修复技术</li>
+<li>[了解]第三方源码</li>
+<li>事件传递机制，并能处理滑动冲突，使用手势识别器</li>
+<li><p>良好的开发习惯和代码风格。<br>Java</p>
+</li>
+<li><p>扎实的java基础，熟悉java序列化机制和实现Android下的IPC</p>
+</li>
+<li>集合，IO流，并发(多线程同步，线程池)</li>
 </ol>
-<h4 id="3-Android动画"><a href="#3-Android动画" class="headerlink" title="3. Android动画"></a>3. Android动画</h4><ol>
-<li>帧动画（xml方式/动画方式添加）</li>
-<li>补间动画（alpha/rotate/scale/translate，添加方式）</li>
-<li>属性动画（Evaluator，animatorset，valueanimator，objectanimator）</li>
-<li><p>过渡动画（transition）（本质是属性动画，但是对属性动画做了封装，方便实现过度动画的效果。需要动画前后两个布局）（定义transition的步骤：1. 定义动画前后两个布局 2. 根据布局文件创建布局前后的scene 3. 创建过度动画transitionset 4. 调用TransitionManager.go(scene, transitionSet)）</p>
+<p>其它</p>
+<ol>
+<li>Linux(linux操作系统，常用的linux命令)</li>
+<li>kotlin和python(kotlin和python语法)</li>
+<li>Git和SVN版本控制</li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/06/正则表达式/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sparky">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/logo_s.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sparky">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/05/06/正则表达式/" itemprop="url">未命名</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-06T20:09:10+08:00">
+                2019-05-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="正则表达式"><a href="#正则表达式" class="headerlink" title="正则表达式"></a>正则表达式</h2><h3 id="基本正则表达式"><a href="#基本正则表达式" class="headerlink" title="基本正则表达式"></a>基本正则表达式</h3><h3 id="扩展正则表达式"><a href="#扩展正则表达式" class="headerlink" title="扩展正则表达式"></a>扩展正则表达式</h3><h3 id="普通字符"><a href="#普通字符" class="headerlink" title="普通字符"></a>普通字符</h3><h3 id="元字符"><a href="#元字符" class="headerlink" title="元字符"></a>元字符</h3><ul>
+<li>* 该符号之前的字符出现0次或多次</li>
+<li>. 匹配任意字符</li>
+<li>[] 字符集合</li>
+<li>^ 匹配行首</li>
+<li>$ 匹配行尾</li>
+<li>\ 转义</li>
+<li>\&lt;> 精确匹配</li>
+<li>{n,m} 之前的字符出现n,m次</li>
+</ul>
+<h3 id="扩展元字符"><a href="#扩展元字符" class="headerlink" title="扩展元字符"></a>扩展元字符</h3><ul>
+<li>? ？之前的符号出现0次或1次</li>
+<li><ul>
+<li>+之前的字符出现1次或多次</li>
+</ul>
+</li>
+<li>() </li>
+<li>|</li>
+</ul>
+<h3 id="通配"><a href="#通配" class="headerlink" title="通配"></a>通配</h3><ul>
+<li>*</li>
+<li>.</li>
+<li>^</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/06/阅读器取词标注/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sparky">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/logo_s.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sparky">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/05/06/阅读器取词标注/" itemprop="url">未命名</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-06T20:09:10+08:00">
+                2019-05-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="阅读器取词标注"><a href="#阅读器取词标注" class="headerlink" title="阅读器取词标注"></a>阅读器取词标注</h2>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/06/阅读Android源码/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sparky">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/logo_s.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sparky">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/05/06/阅读Android源码/" itemprop="url">未命名</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-06T20:09:10+08:00">
+                2019-05-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="阅读Android源码"><a href="#阅读Android源码" class="headerlink" title="阅读Android源码"></a>阅读Android源码</h2><p>由浅入深，同时横向和纵向阅读</p>
+<h4 id="基础"><a href="#基础" class="headerlink" title="基础"></a>基础</h4><p>Handler-Message-Lopper</p>
+<p>Activity-Service</p>
+<p>Fragment</p>
+<p>View</p>
+<p>MotionEvent</p>
+<p>LayoutInflator</p>
+<p>SurfaceView-TextureView</p>
+<p>AsyncTask</p>
+<p>Volley</p>
+<p>android.util.*</p>
+<h4 id="进阶"><a href="#进阶" class="headerlink" title="进阶"></a>进阶</h4><p>Context</p>
+<p>ClassLoader</p>
+<p>Binder</p>
+<p>WMS-AMS-PMS-NMS-IMS</p>
+<h4 id="第三方开源项目"><a href="#第三方开源项目" class="headerlink" title="第三方开源项目"></a>第三方开源项目</h4><p>EventBus</p>
+<p>RxJava</p>
+<p>Guava</p>
+<p>再讲一下老罗给出的Android学习路线<a href="http://blog.csdn.net/luoshengyang/article/details/8923485" target="_blank" rel="noopener">那两年炼就的Android内功修养-(罗升阳)</a>，他给出三纵三横的路线，<img src="http://img.blog.csdn.net/20130528234751506" alt=""></p>
+<ol>
+<li><p>准备 (横向)</p>
 <ul>
-<li>scene（定义页面信息）</li>
-<li>transition（changebounds，fade，transitionset，autotransition）</li>
-<li>transitionmanager（切换控制器）</li>
+<li>阅读相关的书籍了解linux内核和Android应用基础知识</li>
+<li>搭建Android源码环境</li>
+<li>C/C++基础，<a href="http://blog.csdn.net/luoshengyang/article/details/6786239" target="_blank" rel="noopener">Android系统的智能指针（轻量级指针、强指针和弱指针）的实现原理分析</a></li>
+</ul>
+</li>
+<li><p>dalvik虚拟机 (横向)</p>
+<p>  Android系统的应用程序及部分应用程序框架是使用Java语言开发的，它们运行在Dalvik虚拟机之上，还有另外一部分应用唾弃框架在使用C/C++语言开发的。使用Java语言开发的应用程序框架老罗称之为Java Runtime Framework，而使用C/C++语言开发的应用程序框架老罗称之为C/C++ Runtime Framework，它们被Dalvik虚拟机一分为二。通过前面的学习，其实我们都已经了解Android系统的Java Runtime Framework和C/C++ Runtime Framework，因此，我们最后将注意力集中在Dalvik虚拟机上.<br>  <a href="http://blog.csdn.net/luoshengyang/article/details/8852432" target="_blank" rel="noopener">Dalvik虚拟机简要介绍和学习计划</a></p>
+</li>
+<li><p>专用驱动 (横向)，这些专用驱动就是指Logger,Binder和Ashmem，他们是整个Android系统的基石。</p>
+<ul>
+<li>Logger，<a href="http://blog.csdn.net/luoshengyang/article/details/6595744" target="_blank" rel="noopener">Android日志系统驱动程序Logger源代码分析</a></li>
+<li>Binder, <a href="http://blog.csdn.net/luoshengyang/article/details/6618363" target="_blank" rel="noopener">Android进程间通信（IPC）机制Binder简要介绍和学习计划</a></li>
+<li>Ashmem, <a href="http://blog.csdn.net/luoshengyang/article/details/6651971" target="_blank" rel="noopener">Android系统匿名共享内存Ashmem（Anonymous Shared Memory）简要介绍和学习计划</a></li>
+</ul>
+</li>
+<li>HAL (纵向)<br> 硬件抽象层最适合用作Android系统的学习入口，它从下到上涉及到了Android系统的各个层次。<ul>
+<li><a href="http://blog.csdn.net/luoshengyang/article/details/6567257" target="_blank" rel="noopener">Android硬件抽象层（HAL）概要介绍和学习计划</a></li>
+<li><a href="http://blog.csdn.net/luoshengyang/article/details/6578352" target="_blank" rel="noopener">在Ubuntu上为Android系统的Application Frameworks层增加硬件访问服务</a></li>
+</ul>
+</li>
+<li><p>Application Component (纵向)</p>
+<p> 应用程序组件是Android系统的核心，为开发者提供了贴心服务，应用程序组件有四种，围绕应用程序组件，又有应用程序进程、消息循环和安装三个相关模块。</p>
+<ul>
+<li>Activity</li>
+<li>Service</li>
+<li>BroadcastReceiver</li>
+<li>ContentProvider</li>
+<li>进程</li>
+<li>消息循环</li>
+<li>安装</li>
+</ul>
+</li>
+<li><p>ui (纵向)</p>
+<p> 6.1 ui框架</p>
+<p> <img src="http://img.blog.csdn.net/20130529004204159" alt="4.2ui渲染图"></p>
+<p> 上图可以看出关于Android的UI架构的三条主线：</p>
+<ul>
+<li>每一个window的surface是怎么渲染的</li>
+<li>surfaceflinger是怎样合成每一个window的surface</li>
+<li><p>windowmanagerservice是怎样管理window的</p>
+<p>6.2 分析路线</p>
+<p>6.2.1 首先以开机动画作为切入点，了解linux内核中的驱动。</p>
+<p>FB驱动抽象了显卡，上面的用户控件程序就是通过它显示UI的</p>
+<p>HAL层的Gralloc模块对FB驱动进行了封装，以方便SurfaceFlinger对他进行访问<br><a href="http://blog.csdn.net/luoshengyang/article/details/7747932" target="_blank" rel="noopener">Android帧缓冲区（Frame Buffer）硬件抽象层（HAL）模块Gralloc的实现原理分析</a></p>
+<p>SurfaceFlinger负责合成各个应用程序窗口的ui，也就是将各个窗口的ui合成，并通过FB显示在屏幕上<br><a href="http://blog.csdn.net/luoshengyang/article/details/7846923" target="_blank" rel="noopener">Android应用程序与SurfaceFlinger服务的关系概述和学习计划</a></p>
+<p>6.2.2 分析SurfaceBlinger</p>
+<p><a href="http://blog.csdn.net/luoshengyang/article/details/8010977" target="_blank" rel="noopener">Android系统Surface机制的SurfaceFlinger服务简要介绍和学习计划</a></p>
+<p>6.2.3 SurfaceFlinger的操作对象是应用程序窗口，因此我们要掌握应用程序窗口的组成</p>
+<p><a href="http://blog.csdn.net/luoshengyang/article/details/8170307" target="_blank" rel="noopener">Android应用程序窗口（Activity）实现框架简要介绍和学习计划</a></p>
+<p>6.2.4 应用程序窗口是windowmanagerservice管理的，并且也是wms负责提供窗口信息给surfaceflinger的，因此需要分析wms</p>
+<p><a href="http://blog.csdn.net/luoshengyang/article/details/8462738" target="_blank" rel="noopener">Android窗口管理服务WindowManagerService的简要介绍和学习计划</a></p>
+<p>6.2.5 以上Android系统的ui框架就清晰了，但是前面所研究的应用程序的窗口还是太抽象了，再去具体研究一下某些系统ui控件是怎么实现的。例如：</p>
+<p><a href="http://blog.csdn.net/luoshengyang/article/details/8636153" target="_blank" rel="noopener">Android控件TextView的实现原理分析</a></p>
+<p><a href="http://blog.csdn.net/luoshengyang/article/details/8661317" target="_blank" rel="noopener">Android视图SurfaceView的实现原理分析</a></p>
+<p>6.2.6 最后分析一下资源管理框架，他有效分离了代码和ui</p>
+<p><a href="http://blog.csdn.net/luoshengyang/article/details/8738877" target="_blank" rel="noopener"> Android资源管理框架（Asset Manager）简要介绍和学习计划</a></p>
+<p><a href="http://blog.csdn.net/luoshengyang/article/details/8744683" target="_blank" rel="noopener">Android应用程序资源的编译和打包过程分析</a></p>
+</li>
 </ul>
 </li>
 </ol>
-<h4 id="4-Support-Annotation-Library"><a href="#4-Support-Annotation-Library" class="headerlink" title="4. Support Annotation Library"></a>4. Support Annotation Library</h4><ol>
-<li>基础概念（support library，support annotion library）</li>
-<li>Nullness注解（@NonNull，@Nullable）</li>
-<li>资源文件类型注解（@AnimatorRes,@AnimRes,@AnyRes,@ArrayRes,@AttrRes,@BoolRes,@ColorRes,@DrawableRes,@FractionRes,@IdRes,@IntegerRes,@InterpolatorRes,@LayoutRes,@MenuRes,@PluralsRes,@RawRes,@StringRes,@StyleableRes,@StyleRes,@TransitionRes,@XmlRes）</li>
-<li>权限注解(@RequiresPermission)</li>
-<li>类型定义注解(@IntDef @interface @Retention，定义注解类)</li>
-<li>线程注解（@MainThread，@UiThread, @WorkThread,@BinderThread）</li>
-<li>颜色值注解(@ColorInt)</li>
-<li>值范围注解(@Size(n),@Size(max=m),@Size(min=n),@Size(Multiple=2),@IntRange(from=0,to=255),@FloatRange(from=0.0,to=1.0))</li>
-<li>重写函数注解(@CallSuper)</li>
-<li>返回值注解(@CheckResult)</li>
-<li>keep注解(@keep)</li>
-<li>visibletest注解(@VisibleTest)</li>
-<li>lint的用法(Analyze-&gt;Inspect Code-&gt;选择范围)</li>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/06/性能测试/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sparky">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/logo_s.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sparky">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/05/06/性能测试/" itemprop="url">未命名</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-06T20:09:10+08:00">
+                2019-05-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="性能测试"><a href="#性能测试" class="headerlink" title="性能测试"></a>性能测试</h2><p><img src="http://img.blog.csdn.net/20161008153736013" alt=""></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/06/内存优化/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sparky">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/logo_s.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sparky">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/05/06/内存优化/" itemprop="url">未命名</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-06T20:09:10+08:00">
+                2019-05-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="内存优化"><a href="#内存优化" class="headerlink" title="内存优化"></a>内存优化</h2><h4 id="内存泄露和内存溢出"><a href="#内存泄露和内存溢出" class="headerlink" title="内存泄露和内存溢出"></a>内存泄露和内存溢出</h4><p>内存泄露就是对某一内存空间的使用完成后没有关闭。<br>出现的</p>
+<p>主要原因：<br>某些长存对象持有一些应该被回收的对象，而导致垃圾回收器无法回收这些应该被回收的对象。</p>
+<p>出现的场景：</p>
+<ol>
+<li>数据库的cursor没有关闭</li>
+<li>bitmap对象使用完没有recycle</li>
+<li>adapter中没有复用contentview</li>
+<li>activity中对象的生命周期大于activity的生命周期</li>
 </ol>
-<h4 id="5-Percent-Support-Library（百分比布局）"><a href="#5-Percent-Support-Library（百分比布局）" class="headerlink" title="5. Percent Support Library（百分比布局）"></a>5. Percent Support Library（百分比布局）</h4><ol>
-<li>PercentRelativeLayout</li>
-<li>PercentFramelayout</li>
-<li>layout_heightPercent/layout_widthPercent</li>
-<li>aspectRatio</li>
+<p>优化内存的方法：</p>
+<ol>
+<li>减少不必要的全局变量尽量避免static成员变量引用资源耗费过高的实例比如Context。</li>
+<li>Cursor回收</li>
+<li>receiver回收</li>
+<li>stream/file回收</li>
+<li>避免创建不必要的对象。（不要在自定义view的ondraw方法中大量创建对象）</li>
+<li>避免内部getter/setter方法。</li>
 </ol>
-<h4 id="6-Design-Support-Library"><a href="#6-Design-Support-Library" class="headerlink" title="6. Design Support Library"></a>6. Design Support Library</h4><ol>
-<li>简介，snackbar，navigationview,floatingactionbutton,coordinatorlayout,constraintlayout,collapsingtoolbarlayout</li>
-<li>snackbar（setAction）</li>
-<li>textinputlayout(用法设置为edittext的父布局)</li>
-<li>tablayout</li>
-<li><p>navigationview</p>
-<p> 5.1 导航菜单<br> 5.2 导航头部</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/06/面试相关/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sparky">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/logo_s.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sparky">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/05/06/面试相关/" itemprop="url">未命名</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-06T20:09:10+08:00">
+                2019-05-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>面试中的问题域</p>
+<ol>
+<li>语言基础(基础概念语法，常用类)</li>
+<li>界面相关(说出一个控件的实现思路或者让面试者模拟系统控件实现)</li>
+<li>网络相关(GET/POST,multipart form,HTTP,TCP/IP,Socket编程，三次握手)</li>
+<li>逻辑框架设计相关</li>
+</ol>
+<p>求职心态</p>
+<ol>
+<li>天真无知（放低姿态） – 出现问题</li>
+<li>开始走弯路（不调整心态，三天打鱼两天晒网，拖延症）– 找到问题</li>
+<li>继续走弯路（钻牛角尖很要命，肚内无货，项目经验太真实）– 分析问题</li>
+<li>还是走弯路但开始自我救赎（开始拿起高级编程的书，敲项目代码） – 处理问题</li>
+<li>自卑（自己做的应用被调侃太基础，找开源项目，期望薪资越来越低） –调整处理问题</li>
+<li>绝望（被要求敏捷开发，心态上觉得工作和待遇不匹配）–处理的过程中遇到坑</li>
+<li>绝处逢生（放低薪资标准，全深圳投简历，白天各种网站海投，一天至少两家面试）–继续处理及解决问题</li>
+</ol>
+<p>泻药</p>
+<ol>
+<li>工作年限（如果你想证明你有x年的价值，就要在简历中体现出来比如开源项目code）</li>
+<li>复习（复习很重要，因为记性差而忘掉）</li>
+<li>项目（真or假，技术是最重要的）</li>
+<li>内推（如果要找尽量内推）</li>
+<li>公司背景（技术氛围浓厚，对技术有要求，对代码质量有要求）</li>
+<li>待遇不能低于行情</li>
+<li>保持学习的态度</li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/06/面试题/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sparky">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/logo_s.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sparky">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/05/06/面试题/" itemprop="url">未命名</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-06T20:09:10+08:00">
+                2019-05-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>MVC和MVP的区别<br><a href="http://blog.csdn.net/u010072711/article/details/77132403" target="_blank" rel="noopener">MVP与MVC的区别(图解)</a><br><img src="http://img.blog.csdn.net/20170813105245063?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMDA3MjcxMQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="MVC"></p>
+<p><img src="http://img.blog.csdn.net/20170813013123472?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMDA3MjcxMQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="MVP"></p>
+<p><strong>*</strong> 1. 结构 </p>
+<p>MVC中Model和view层是有交互的，比如自定义view中是直接使用model层的数据，在MVP中model层和view层不直接进行交互，需要调用presenter完成</p>
+<p><strong>*</strong> 2. 内容</p>
+<p>MVC: view对应自定义view和xml布局<br>controller对应activity和fragment</p>
+<p>MVP: view层对应activity和fragment<br>presenter层对应控制逻辑，是view和model之间的桥梁</p>
+<p><strong>*</strong> 3. 实现方式</p>
+<p>MVC中大多数代码都存在与activity和fragment中，文件结构简单，但是容易一个类很多代码。<br>MVP中把交互逻辑抽到了presenter层，所以要新建很多类。</p>
+<p>MVP优势：</p>
+<ol>
+<li>模型和视图完全分开（1.修改视图而不改变模型，可以更高效的使用model）</li>
+<li>presenter复用</li>
+<li>如果把逻辑都放在presenter中就能脱离用户接口实现单元测试</li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/06/进程间通信/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sparky">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/logo_s.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sparky">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/05/06/进程间通信/" itemprop="url">未命名</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-06T20:09:10+08:00">
+                2019-05-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="进程间通信"><a href="#进程间通信" class="headerlink" title="进程间通信"></a>进程间通信</h2><ol>
+<li>AIDL</li>
+<li>Broadcast</li>
+<li>Messenge</li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/06/个人网站搭建/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sparky">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/logo_s.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sparky">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/05/06/个人网站搭建/" itemprop="url">未命名</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-06T20:04:35+08:00">
+                2019-05-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="hexo-github-freenom-dnspod免费搭建个人网站教程"><a href="#hexo-github-freenom-dnspod免费搭建个人网站教程" class="headerlink" title="hexo+github+freenom+dnspod免费搭建个人网站教程"></a>hexo+github+freenom+dnspod免费搭建个人网站教程</h2><h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>本篇是一个关于搭建个人网站的总结，通过在hexo管理github page，然后在freenom上注册免费域名，并通过dnspod进行域名解析。</p>
+<p>关于hexo管理github.io可能不是很详细，因为是很早之前做的了，这里主要是总结一下，主要是讲进行域名绑定的步骤。</p>
+<h3 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h3><h4 id="工具"><a href="#工具" class="headerlink" title="工具"></a>工具</h4><ol>
+<li><p>安装Node.js</p>
+<p> <a href="https://nodejs.org/dist/v4.2.3/node-v4.2.3-x86.msi" target="_blank" rel="noopener">https://nodejs.org/dist/v4.2.3/node-v4.2.3-x86.msi</a> </p>
+<p> <a href="https://nodejs.org/dist/v4.2.3/node-v4.2.3-x64.msi" target="_blank" rel="noopener">https://nodejs.org/dist/v4.2.3/node-v4.2.3-x64.msi</a> </p>
+<p> 安装后在命令行输入node -v和npm -v.如果成功输出版本号则说明安装成功。</p>
 </li>
-<li><p>FloatingActionButton</p>
-<p> 6.1 基本属性（elevation（未按压状态的阴影），pressedTranslationZ（按压状态的阴影））<br> 6.2 其它选项（backgroundTint（背景颜色），rippleColor（波纹颜色），fabSize（可选尺寸））</p>
+<li><p>安装Git</p>
+<p> <a href="https://github.com/git-for-windows/git/releases/download/v2.11.0.windows.3/Git-2.11.0.3-32-bit.exe" target="_blank" rel="noopener">https://github.com/git-for-windows/git/releases/download/v2.11.0.windows.3/Git-2.11.0.3-32-bit.exe</a></p>
+<p> <a href="https://github.com/git-for-windows/git/releases/download/v2.11.0.windows.3/Git-2.11.0.3-64-bit.exe" target="_blank" rel="noopener">https://github.com/git-for-windows/git/releases/download/v2.11.0.windows.3/Git-2.11.0.3-64-bit.exe</a></p>
+<p> 安装后在命令行输入git –version，如果成功输出版本号则说明安装成功。</p>
 </li>
-<li><p>CoordinatorLayout(协调布局，可以使不同布局的组件之间直接相互作用，并且协调动画效果)（例如，floatingactionbar和snackbar，点击floatingactionbutton出现snackbar，然后floatingactionbutton自动往上移动，snackbar消失时，floatingactionbutton自动往下移动，这里就需要将coordinatorlayout作为floatingactionbutton的父容器）</p>
+<li><p>安装hexo<br> 因为hexo需要node.js和nmp，所以请确第一步成功。</p>
+<p> 在命令行输入./npm install hexo-cli -g</p>
+<p> 安装完成后再命令行输入hexo -v，如果成功输出版本号则说明安装成功</p>
 </li>
-<li>CollapsingToolbarLayout(可以实现当屏幕内容滚动时，toolbar收缩的效果，通常和appbar配合使用)</li>
-<li>BottomSheetBehavior（1. 布局中添加app:layout_behavior属性，并将这个view作为coordinatorlayout的子view 2. 布局文件中创建bottomsheetbehavior对象，并设置状态变化的监听）</li>
 </ol>
-<h4 id="7-NDK开发"><a href="#7-NDK开发" class="headerlink" title="7. NDK开发"></a>7. NDK开发</h4><ol>
-<li>ABI（应用程序二进制接口application binary interface）（arm-v5,arm-v7,arm-v8,x86,x86_64,mips,mips6）</li>
-<li>引入预编译的二进制文件</li>
-<li>自己写c/c++文件</li>
-<li>使用.so文件的注意事项</li>
+<h4 id="github-page配置"><a href="#github-page配置" class="headerlink" title="github page配置"></a>github page配置</h4><ol>
+<li><p>注册登录github，添加一个仓库。<br> 例如dounia.github.io,然后在地址栏输入dounia.github.io即可访问，但是刚开始是404，因为你还没有给你的页面配置任何的内容。</p>
+<p> 接下来就是利用hexo将hexo模板配置到github</p>
+</li>
 </ol>
-<h4 id="8-Gradle必知必会"><a href="#8-Gradle必知必会" class="headerlink" title="8. Gradle必知必会"></a>8. Gradle必知必会</h4><ol>
-<li>概念（是Android studio标配的构建系统，settings.gradle,project build.gradle,module build.gradle,gradle的文件结构）</li>
-<li>共享变量（1. 在项目路径下创建xxx.gradle文件 2. 在文件中定义变量如project.ext{javaVersion = 1.8} 3. 在module build.gradle中apply from: “${project.rootDir}/xxx.gradle”，然后引用变量名就可以）</li>
-<li>通用配置（在project build.gradle下创建subprojects{}定义配置）</li>
-<li>如何引用aar（1. 指定aar文件的位置，在module build.gradle中的android节点下创建repositories{flatDir{dirs ‘libs’}} 2. 在dependencies节点下添加compile(name: ‘xxx’, ext: ‘aar’)）    </li>
-<li>签名混淆的配置</li>
+<h4 id="hexo初始化配置"><a href="#hexo初始化配置" class="headerlink" title="hexo初始化配置"></a>hexo初始化配置</h4><p>创建一个文件夹用来管理github page,例如dounia.github.io</p>
+<p>然后进入该目录打开git bash</p>
+<p>然后执行命令 npm install hexo -g</p>
+<p>然后执行命令 hexo init,如果看到最后显示INFO Start blogging with Hexo!说明初始化成功了</p>
+<p>加下来的两个命令用来试验是否Hexo模板初始化成功hexo g &amp;&amp; hexo s,<br>然后在浏览器输入localhost:4000，如果进入了hexo的模板页，说明衣裳的步骤都成功了。</p>
+<h4 id="hexo-diy"><a href="#hexo-diy" class="headerlink" title="hexo diy"></a>hexo diy</h4><p>下边是使用hexo模板美化我们的github page</p>
+<h5 id="主题"><a href="#主题" class="headerlink" title="主题"></a>主题</h5><ol>
+<li><p>下载主题。<br>github上有很多开元的hexo主题，可以通过搜索hexo theme搜索。<br>然后通过git命令克隆到我们的themes目录下， 例如git clone <a href="https://github.com/iissnan/hexo-theme-next" target="_blank" rel="noopener">https://github.com/iissnan/hexo-theme-next</a> themes/next</p>
+</li>
+<li><p>配置主题。<br>主题下载下来之后要使用的话需要在hexo根目录也就是dounia.github.io/目录下 打开_config.yml，找到theme: landscape将landscape替换为next，next就是themes文件夹下你刚才下载的主题所在的文件夹。重新执行hexo -s，在浏览器输入localhost:4000测试是否成功。</p>
+</li>
 </ol>
-<h4 id="9-gradle打包发布"><a href="#9-gradle打包发布" class="headerlink" title="9. gradle打包发布"></a>9. gradle打包发布</h4><ol>
-<li>maven central</li>
-<li>jcenter</li>
-<li>jitpack</li>
-</ol>
-<h4 id="10-Builder建造者模式详解"><a href="#10-Builder建造者模式详解" class="headerlink" title="10. Builder建造者模式详解"></a>10. Builder建造者模式详解</h4><ol>
-<li>经典的建造者模式（java设计模式之建造者模式）</li>
-<li>建造者模式的变种</li>
-<li>变种的自动化生成</li>
-<li>使用builder模式的开源例子</li>
-</ol>
-<h4 id="11-注解在Android中的使用"><a href="#11-注解在Android中的使用" class="headerlink" title="11. 注解在Android中的使用"></a>11. 注解在Android中的使用</h4><ol>
-<li>注解的定义（java语言的特性之一，他是在源代码中插入的标签，在之后的编译和运行中起到某种作用，每个注解都必须通过@interface进行声明，接口的方法对应着注解的元素）</li>
-<li><p>标准注解（java包中默认给出的注解）</p>
-<p> 2.1 编译相关的注解（@override，@deprecated，@suppresswarnings，@safevarargs，@generated，@functuinalinterface）</p>
-<p> 2.2 资源相关的注解（javaee中用到）（@PostConstruct，@PreDestroy，@Resource，@resources）</p>
-<p> 2.3 元注解（用来定义和实现注解的注解）</p>
-<pre><code>2.3.1 @Target（指定注解所适用的对象的范围）
-
-2.3.2 @Retention（用来指明注解的访问范围，也就是在什么级别保留注解）（源码级注解（@Retention(RetentionPolicy.SOURCE)）,编译级注解(@Retention(RetentionPolicy.CLASS)),运行时注解（@Retention（RetentionPolicy.RUNTIME）））
-
-2.3.3 @Documented（表示被修饰的注解应该保存在被注解项的文档中）
-
-2.3.4 @Inherited（表示该注解可以被子类继承）
-
-2.3.5 @Repeatable（表示这个注解可以在注解项上应用多次）
+<h5 id="内容"><a href="#内容" class="headerlink" title="内容"></a>内容</h5><p>修改内容可以参考官方文档<a href="https://hexo.io/zh-cn/docs/configuration.html" target="_blank" rel="noopener">https://hexo.io/zh-cn/docs/configuration.html</a></p>
+<p>例如：</p>
+<pre><code>title: 网站标题
+subtitle: 副标题
+description: 个人签名
+author: 姓名
+language: zh-Hans
+timezone:
+</code></pre><p>注意：这里你可能有注意到在这个_config.yml文件中有一个deploy标签，下边就会用到了，是用来管来github的。</p>
+<h4 id="配置远程仓库"><a href="#配置远程仓库" class="headerlink" title="配置远程仓库"></a>配置远程仓库</h4><p>修改dounia.github.io/_config.yml文件的deploy标签，关联到我们的仓库。</p>
+<pre><code># Deployment
+## Docs: https://hexo.io/docs/deployment.html
+deploy:
+  type: git
+  repo: git@github.com:douyn/dounia.github.io.git
+  branch: master
+</code></pre><h4 id="推送到远程仓库"><a href="#推送到远程仓库" class="headerlink" title="推送到远程仓库"></a>推送到远程仓库</h4><ol>
+<li><p>安装部署工具。<br> npm install hexo-deployer-git –save</p>
+</li>
+<li><p>初始化git仓库</p>
+<pre><code>git init 
+git remote add origin git@github.com:douyn/dounia.github.io.git
 </code></pre></li>
-<li><p>运行时注解（该注解会被保存在.class和.java文件中，在执行时，也保留注解信息。可以通过反射机制读取注解的信息）</p>
-</li>
-<li>编译时注解</li>
-</ol>
-<h4 id="12-ANR产生的原因及定位分析"><a href="#12-ANR产生的原因及定位分析" class="headerlink" title="12. ANR产生的原因及定位分析"></a>12. ANR产生的原因及定位分析</h4><ol>
-<li><p>ANR产生的原因</p>
-<p> 只有当UI线程响应超时才会引起ANR，主要两种原因导致超时，1. 事件被阻塞，正在处理其它阻塞事件 2. 自身处理事件耗时太长。<br> activity/view 5s， broadcast 10s， Service 20s</p>
-</li>
-<li><p>经典场景</p>
+<li><p>hexo clean &amp;&amp; hexo g &amp;&amp; hexo d</p>
 <ol>
-<li>应用程序UI线程中存在耗时操作，例如在UI线程中进行网络操作，数据库操作和文件操作等，导致ui线程阻塞无法响应用户数据等。</li>
-<li>应用程序的ui线程在等待工作线程释放某个锁，从而无法处理事件</li>
-<li>耗时的动画需要大量的计算工作，可能导致CPU负荷过重</li>
+<li>使用freenom注册域名。</li>
+<li>在根目录下添加CNAME文件，里边内容为你的域名</li>
+<li>在github项目setting的github page标签下Custom domain中，填写你的域名。</li>
+<li>dnspod域名解析中添加域名解析。而且要添加两条记录。</li>
 </ol>
 </li>
-<li><p>定位和分析</p>
-<ol>
-<li>logcat分析可以看到是anr发生的进程及包名和类名，pid，reason，cpu使用情况</li>
-<li>如果还是没有具体定位到anr发生的位置，就需要借助/data/anr/xxx.txt文件。文件包括发生anr的进程名，id和时间，cpu架构，堆内存的使用情况，线程信息，以及anr发生的位置及错误信息。</li>
 </ol>
-</li>
-<li>避免和检测<br> 不要在主线程做耗时操作，使用检测工具检测存在违规操作的工具类</li>
-</ol>
-<h4 id="13-Android异步处理技术"><a href="#13-Android异步处理技术" class="headerlink" title="13. Android异步处理技术"></a>13. Android异步处理技术</h4><p>常见的异步处理技术：Thread，AsyncTask，Handler &amp; Looper， Executors。</p>
-<p>Handler异步处理消息机制：</p>
-<ol>
-<li>Looper.prepare方法会在本线程中创建一个Looper实例，在实例化过程中会创建一个MessageQueue，这个looper实例会被保存到ThreadLocal对象中(ThreadLocal对像可以再线程中存储变量)</li>
-<li>Looper.loop方法会让当前线程进入一个无限循环，不断的从Messagequeue中得到message对象，并且通过msg.target.dispatchMessage将消息发送出去</li>
-<li>Handler的构造方法会获取当前线程中保存的looper实例，并与looper对象的messagequeue关联起来</li>
-<li>handler.sendmessage中将msg.tar设置为handler对象本身，并将message添加到messagequue中</li>
-<li>msg.target.dispatchmessage即是handler.dispatchmessage，他会回调handler.message方法</li>
-</ol>
-<h6 id="1-Thread"><a href="#1-Thread" class="headerlink" title="1. Thread"></a>1. Thread</h6><p>概念： 执行任务的基本单元</p>
-<p>2种创建方式： 继承Thread，实现runnable</p>
-<p>3种线程的分类：</p>
-<ul>
-<li>主线程（ui线程），随着应用启动而启动，用来运行Android组件，刷新组件元素。通过handle顺序处理其它线程发来的消息。</li>
-<li>binder线程，Binder线程用于不同进程之间的通信，每个应用在创建之后，就创建了一个线程池，用于处理其它进程的线程发送的消息，经典场景是aidl</li>
-<li>后台线程（工作线程）</li>
-</ul>
-<h6 id="2-HandlerThread"><a href="#2-HandlerThread" class="headerlink" title="2. HandlerThread"></a>2. HandlerThread</h6><p>HandlerTread是Thread的子类，它内部集成了Looper和MessageQueue。内部其实也是handler机制。</p>
-<h6 id="3-AsyncQueryHandler"><a href="#3-AsyncQueryHandler" class="headerlink" title="3. AsyncQueryHandler"></a>3. AsyncQueryHandler</h6><p>主要用于contentprovider中的异步数据查询，不常用</p>
-<h6 id="4-AsyncTask"><a href="#4-AsyncTask" class="headerlink" title="4. AsyncTask"></a>4. AsyncTask</h6><pre><code>asynctask task = new asynctask(){
-    onpreexecute();
-    onpostexecute();
-    doinbackground();
-    onprogressupdate();
-};
-task.execute();
-</code></pre><p>构造方法中创建mHandler,mWork,mFuture-&gt;execute()-&gt;executeOnExecutor() 1. onpreexecute() 2. exec.execute()-&gt;exec.execute() exec对象是在execute方法中的参数，是sdefaultexecutor成员变量实际上是一个SerialExecutor类的实例-&gt;创建serialexecutor对象会首先生成arraydeque队列，将mfuture对象封装成runnable添加到队列中，判断mactive是否为空，如果为空执行scheduleNext()-&gt;这个方法会先去将队列的队尾赋值为mactive，然后执行THREAD_POOL_EXECUTOR.execute(mactive)方法-&gt;实际上THREAD_POOL_EXECUTOR是一个线程池，相当于执行线程的run方法-&gt;mactive对象实际上是mFuture，FutureTask.run实际上会执行callable.call()-&gt;mWork.call() 1. 执行doinbackground 2. 执行postresult-&gt;postresult 1. 封装result为message，message 2. 调用message.senttotarget发送。实际上是调用handle处理消息-&gt;mhandler对象handlemessage,两种事件 1. PostResult 回调onCancel,onPostExecute 2. PostProgress 回调onProgressUpdate</p>
-<h6 id="5-Loader"><a href="#5-Loader" class="headerlink" title="5. Loader"></a>5. Loader</h6><p>不常用</p>
-<h4 id="14-Android数据序列化"><a href="#14-Android数据序列化" class="headerlink" title="14. Android数据序列化"></a>14. Android数据序列化</h4><h4 id="15-WebView"><a href="#15-WebView" class="headerlink" title="15. WebView"></a>15. WebView</h4>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/06/Android_将独立应用作为module导入/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sparky">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/logo_s.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Sparky">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/05/06/Android_将独立应用作为module导入/" itemprop="url">未命名</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-06T20:09:10+08:00">
-                2019-05-06
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="将独立应用作为library-module导入项目"><a href="#将独立应用作为library-module导入项目" class="headerlink" title="将独立应用作为library module导入项目"></a>将独立应用作为library module导入项目</h2><p>可以视为插件化思想,之后可以作为插件方便调用.</p>
-<ol>
-<li>File-New-Import Module</li>
-<li>修改module build.gradle.主要修改: 1. 将apply plugin: ‘com.android.application’改为’com.android.library’ . 2. 将applicationId删除 3. 如果有releaseConfigs 删除之.</li>
-<li>修改Module AndroidManifest.xml. 主要修改: 将application标签中的icon leble等去掉</li>
-<li>代码修改. 1. library module中不能使用switch case,android studio alt+enter 自动修复代码可以自动转换 2. 如果module中使用了butterkenife,可参考butterknife readme中步骤将R替换为R2. 3. 项目中可能使用了系统数据库,需要修改系统数据库path,也可以改为直接使用getapplicationcontext().getdatabasepath(databsename).getabsolutepath();</li>
-</ol>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/06/Android service总结/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sparky">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/logo_s.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Sparky">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/05/06/Android service总结/" itemprop="url">未命名</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-06T20:09:10+08:00">
-                2019-05-06
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="Android-Service"><a href="#Android-Service" class="headerlink" title="Android Service"></a>Android Service</h2><p><img src="http://upload-images.jianshu.io/upload_images/3513995-0246e53ee61b8802.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="service知识点"></p>
-<h6 id="什么是service？"><a href="#什么是service？" class="headerlink" title="什么是service？"></a>什么是service？</h6><p>service是一个长时间运行在后台但不提供用户界面的应用组件。当切换到其它应用，Service仍能在后台继续运行。</p>
-<h6 id="Service两种启动方式"><a href="#Service两种启动方式" class="headerlink" title="Service两种启动方式"></a>Service两种启动方式</h6><h6 id="1-bindservice"><a href="#1-bindservice" class="headerlink" title="1. bindservice"></a>1. bindservice</h6><p>通过bindservice方式启动的服务是跟启动他的组件绑定在一起的。如果多个组件绑定了一个服务，当所有组件都销毁时，服务才停止，如果只有一个组件绑定了服务，这个组件销毁，服务就停止。<br>onCreate()–&gt;onBind()–&gt;onUnBind()–&gt;onDestroy()</p>
-<p>服务是如何被绑定的？</p>
-<ol>
-<li>首先添加一个类，继承Binder，在Binder类中添加与其它组件要与服务交互的方法，并在onBind()方法中返回IBinder实例。</li>
-<li>在创建服务的时候需要传递ServiceConnection对象。在接口回调中获取binder对象与服务通信。</li>
-<li>绑定和解绑服务。<h6 id="2-startservice"><a href="#2-startservice" class="headerlink" title="2. startservice"></a>2. startservice</h6>通过startservice方式启动的服务，一旦启动就会独立于启动他的组件，即使组件销毁了也会继续在后台执行。<br>onCreate()–&gt;onCommandStart()–&gt;onDestroy()</li>
-</ol>
-<h6 id="3-startservice并且bindservice"><a href="#3-startservice并且bindservice" class="headerlink" title="3. startservice并且bindservice"></a>3. startservice并且bindservice</h6><p>当一个service在startservice的同时bindservice，该Service即使所有的与之绑定的组件都销毁了这个组件也不会停止，如果你想要手动去结束掉服务，必须调用stopService或者stopself方法。</p>
-<h6 id="组件和服务之间进行通信"><a href="#组件和服务之间进行通信" class="headerlink" title="组件和服务之间进行通信"></a>组件和服务之间进行通信</h6><ol>
-<li><p>BroadcastReceiver</p>
-<p> 如果是以startservice方式启动服务，那么他与组件将是相对独立的。</p>
-</li>
-<li><p>BindService</p>
-<p> 组件和服务之间通信的常用方式</p>
-</li>
-<li><p>AIDL</p>
-</li>
-</ol>
-<h4 id="IntentService"><a href="#IntentService" class="headerlink" title="IntentService"></a>IntentService</h4><blockquote>
-<p>IntentService is a base class for {@link Service}s that handle asynchronous<br>requests (expressed as {@link Intent}s) on demand. Clients send requests<br>through {@link android.content.Context#startService(Intent)} calls; the<br>service is started as needed, handles each Intent in turn using a worker<br>thread, and stops itself when it runs out of work.</p>
-</blockquote>
-<p>IntentService是一个异步处理的类，你可以通过startservice来提交请求，该Service会在需要的时候创建，请求是在工作线程处理，并且Service会在执行完销毁。</p>
-<p>所以IntentService是Service的子类，他是使用工作线程逐一处理启动请求，如果你不要求服务同时处理多个请求，这是最好的选择。</p>
-<p>分析IntentService源码：<br>oncreate(): 创建一个工作线程，获取到这个工作线程的looper对象用于意图处理，创建一个ServiceHandler对象用于处理消息。<br>onStart()/onCOmmandStart():发送消息给handler<br>ServiceHandler.handleMessage()中会回调onHandleIntent(),之后调用stopSelf()方法停止service</p>
-<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><h6 id="Service"><a href="#Service" class="headerlink" title="Service"></a>Service</h6><p>Service 有2种启动方式，startService 启动服务，服务启动起来后，在后台无限期运行，直到通过stopService 或者 stopSelf 停止服务，服务与组件独立，通信比较困难（但还是有办法的，通过BroadcastReceiver ）。另一种方式就是 bindService 即绑定服务，组件和服务绑定在一起，服务的生命后期受组件影响，如果绑定到服务的组件全部被销毁了，那么服务也就会停止了。绑定服务的方式通常用于组件和服务之间 需要相互通信。startService 这种 方式一般用于在后台执行任务，而不需要返回结果给组件。 这两种方式并非完全独立，也就是说，你可以绑定已经通过 startService 启动起来的服务，可以通过在Intent 中添加Action 来标示要执行的动作。比如：通过Intent Action 标记要播放的音乐，调用startService 来启动音乐服务播放音乐，在界面需要显示播放进度的时候，可以通过binderService 来绑定服务，从而获取歌曲信息。这种情况下，Service 需要实现两种方式的生命周期。这种情况下，除非所有客户端都已经取消绑定，否则通过stopService 或者 stopSelf 是不能停止服务的。</p>
-<p>Service 是运行在主线程中的，因此不能执行耗时的或者密集型的任务，如果要执行耗时操作或者密集型计算任务，请在服务中开启工作线程，在线程中执行。或者使用下面一节将要讲的IntentService。</p>
-<h6 id="Intentservice"><a href="#Intentservice" class="headerlink" title="Intentservice"></a>Intentservice</h6><p>IntentService是Service 的子类，默认给我们开启了一个工作线程执行耗时任务，并且执行完任务后自 动停止服务。扩展IntentService比较简单，提供一个构造方法和实现onHandleIntent 方法就可了，不用重写父类的其他方法。但是如果要绑定服务的话，还是要重写onBind 返回一个IBinder 的。使用Service 可以同时执行多个请求，而使用IntentService 只能同时执行一个请求。</p>
-<h4 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h4><p><a href="http://blog.csdn.net/qq_23205911/article/details/73430954" target="_blank" rel="noopener">Service和IntentService详解</a></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/06/alway-on-the-way/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sparky">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/logo_s.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Sparky">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/05/06/alway-on-the-way/" itemprop="url">未命名</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-06T20:09:10+08:00">
-                2019-05-06
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>star法则<br>situaction ：介绍项目的背景<br>task：介绍自己的职责<br>action：介绍自己所做的工作<br>result：介绍自己的成果</p>
-<p>s：Android电子书阅读器<br>t: launcher界面和阅读器模块<br>a: </p>
-<ol>
-<li>ndk(编译mupdf/koreader等开源项目so，进行深度开发)</li>
-<li>适配(1072*1440与普通手机)(因为是e-ink屏幕所以减少刷新频率，使用一些少刷新的控件)</li>
-<li>自定义view实现阅读器(pageview)及部分ui(搜索view，亮度调节view，开机动画)</li>
-<li>自定义recyclerview(可以横向滑动的recyclerview)</li>
-<li>封装网络接口显示ui数据(没有给出接口的时候，事先封装好databean)</li>
-<li>使用greendao实现本地数据库接口(launcher的书架数据库和阅读器的书签，笔记，书摘数据库)</li>
-<li>其它(仿京东购买详情页，本地图书管理，第三方登录，第三方支付)</li>
-</ol>
-<p>r: 成果及收获</p>
-<ol>
-<li>完成所有ui以及大部分功能的开发(mupdf是一个完整的开源项目，并不是只针对Android的开源项目，所以需要自己去编译相关的ndk库，c层的东西是有很多忘记了，所以大多数功能是在java层做的，例如添加菜单，触摸事件控制，书签笔记等，因为demo是很简单的，有的问题例如修改排版和字体需要在c层实现)</li>
-<li>对ndk有了系统实际的开发经验，对make fike及aosp有一定认识(aosp编译失败)</li>
-<li>对阅读器行业有一定认识</li>
-<li>对自身的优缺点有进一步认识(强[ui，自定义view]，弱[底层，阅读代码能力，缺乏性能优化实践])</li>
-<li>业余实践搞了一下ffmpeg和基于ijkplayer的视频播放器。看了一些kotlin和python的语法</li>
-<li>从入门到放弃xxxx</li>
-</ol>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/06/AIDL/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sparky">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/logo_s.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Sparky">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/05/06/AIDL/" itemprop="url">未命名</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-06T20:09:10+08:00">
-                2019-05-06
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="AIDL"><a href="#AIDL" class="headerlink" title="AIDL"></a>AIDL</h2><p>aidl全称Android接口定义语言</p>
-<ul>
-<li>为什么要定义这个语言</li>
-<li>aidl语法是什么</li>
-<li>如何使用aidl进行进程间通信<h4 id="为什么要定义AIDL，以及AIDL的应用场景"><a href="#为什么要定义AIDL，以及AIDL的应用场景" class="headerlink" title="为什么要定义AIDL，以及AIDL的应用场景"></a>为什么要定义AIDL，以及AIDL的应用场景</h4>进程间通信，通过aidl来制定一些规则规定数据格式等</li>
-</ul>
-<h4 id="AIDL语法"><a href="#AIDL语法" class="headerlink" title="AIDL语法"></a>AIDL语法</h4><ul>
-<li>文件类型，aidl文件类型是.aidl而不是.java</li>
-<li>数据结构。aidl中除了默认支持的数据类型，其它数据类型都需要导包。比如自定义的bean类需要导包。默认数据类型有java中的八种基本数据类型，String,CharSequence,List,Map</li>
-<li>定向tag，in，out，inout</li>
-<li>数据分类，一种是数据型，一种是接口型<h4 id="使用AIDL的步骤"><a href="#使用AIDL的步骤" class="headerlink" title="使用AIDL的步骤"></a>使用AIDL的步骤</h4></li>
-</ul>
-<ol>
-<li>使数据实现Parceable接口</li>
-<li>编写aidl文件</li>
-<li>编写service文件</li>
-</ol>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/06/组件化实践/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sparky">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/logo_s.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Sparky">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/05/06/组件化实践/" itemprop="url">未命名</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-06T20:09:10+08:00">
-                2019-05-06
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <ol>
-<li>config.gradle</li>
-<li>isBuildApp</li>
-<li>apply plugin: ‘com.android.application’</li>
-<li>applicationId “com.gw.ebookos.ebookos”</li>
-<li>manifest</li>
-<li>aroute</li>
-</ol>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/06/自定义注解/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sparky">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/logo_s.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Sparky">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/05/06/自定义注解/" itemprop="url">未命名</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-06T20:09:10+08:00">
-                2019-05-06
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="java-annotation基础"><a href="#java-annotation基础" class="headerlink" title="java annotation基础"></a>java annotation基础</h3><p>java注解分为标准注解和元注解。</p>
-<p>标准注解是java为我们提供的预定义的注解，@override,@deprecated,@suppresswarnnings，@safevarargs</p>
-<p>元注解是给我们自定义注解用的共有5种,@target,@retention,@documented,@inherited,@repeatable</p>
-<p>@Target：用来修饰注解能够修饰的对象的类型，接收一个elementtype类型的数组。</p>
-<p>@Remention：用来指定注解的保留策略。可以指定如下值</p>
-<pre><code>- SOURCE 注解只保留在源码层面，编译时即被丢弃
-- CLASS 注解可以保留在class文件中，但会被jvm丢弃
-- RUNTIME 注解也会在jvm运行事件保留，可以通过反射读取注解信息
-</code></pre><p>@Documented：此注解将被包含在javadoc中</p>
-<p>@Inherited：此注解可以被继承</p>
-<p>@Repeatable：指定的注解可以重复应用到指定的对象上边</p>
-<p>标准注解也是用元注解创建的</p>
-<pre><code>@Target(ElementType.METHOD)
-@Retention(RetentionPolicy.SOURCE)
-public @interface Override{}
-</code></pre><p>如上所示：</p>
-<p>@Target(ElementType.METHOD)表示这个注解能够修饰方法</p>
-<p>@Retention(RetentionPolicy.SOURCE)表示这个注解只存在于源码</p>
-<h3 id="解析注解的两种方式"><a href="#解析注解的两种方式" class="headerlink" title="解析注解的两种方式"></a>解析注解的两种方式</h3><h4 id="1-运行时注解可以使用反射解析"><a href="#1-运行时注解可以使用反射解析" class="headerlink" title="1. 运行时注解可以使用反射解析"></a>1. 运行时注解可以使用反射解析</h4><p>下边的使用反射解析注解的实例：创建一个类，然后在类中对字段做注解，最后通过反射的方法解析注解的内容</p>
-<p>首先需要创建注解类</p>
-<pre><code>@Target(ElementType.FIELD)
-@Retention(RetentionPolicy.RUNTIME)
-public @interface UseCase {
-    String name();
-    int id() default -1;
-}
-</code></pre><p>然后定义一个类，使用上边的注解</p>
-<pre><code>public class Persion {
-    @UseCase(id = 0, name = &quot;nancy&quot;)
-    int number;
-
-    @UseCase(id = 2, name = &quot;lucky&quot;)
-    String name;
-}
-</code></pre><p>最后通过反射解析注解</p>
-<pre><code>try {
-            Class clz =Class.forName(&quot;com.dou.demo.knife_annotation.Persion&quot;);
-            Field[] fields = clz.getDeclaredFields();
-
-            for (Field field : fields) {
-                UseCase annotation = field.getAnnotation(UseCase.class);
-
-                if (annotation != null) {
-                    System.out.println(annotation.name() + annotation.id());
-                }
-            }
-
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-</code></pre><h4 id="2-编译时注解可以使用annotationprocessor解析"><a href="#2-编译时注解可以使用annotationprocessor解析" class="headerlink" title="2. 编译时注解可以使用annotationprocessor解析"></a>2. 编译时注解可以使用annotationprocessor解析</h4><p>编译时注解的使用场景很多，包括很多的第三方库例如Butterknife, Retrofit, GreenDao等，下边我们就做一个简单的demo，类似于butterknife的例子来讲解如何使用annotationprocessor。</p>
-<p>首先来讲一下butterknife的大致的注入流程</p>
-<p>首先我们需要在activity中使用@BindView(R.id.xx)注解对应的控件，然后使用Butterknife.bind(this)方法完成对控件的绑定，实际上底层还是调用findviewbyid方法。大概的思路就是在编译期生成一个类似MainActivity_ViewBinding.java文件，在这个类的构造方法中最终会调用findViewById()方法。而调用Butterknife.bind(this)方法，首先会找到MainActivity_ViewBinding这个类的构造方法对象，然后实例化该构造方法(执行类的构造方法)，也就是执行findviewbyid动作</p>
-<h3 id="基于annotationprocessor使用注解的步骤"><a href="#基于annotationprocessor使用注解的步骤" class="headerlink" title="基于annotationprocessor使用注解的步骤"></a>基于annotationprocessor使用注解的步骤</h3><p>原理为：先在activity中使用注解@BindView或者@OnClick标注控件对象，然后调用knife.bind(this)方法进行绑定，编译注解时生成一个Activity$$Injector类，bind方法主要就是调用这个类的inject方法，这个方法底层调用findviewbyid</p>
-<p>因为自己学习时已经定义了@BindView,下边主要定义另外一个注解@OnClick</p>
-<h4 id="定义注解类"><a href="#定义注解类" class="headerlink" title="定义注解类"></a>定义注解类</h4><pre><code>@Target(ElementType.METHOD)
-@Retention(RetentionPolicy.CLASS)
-public @interface OnClick {
-    int[] id() default -1;
-}
-</code></pre><h4 id="封装绑定接口"><a href="#封装绑定接口" class="headerlink" title="封装绑定接口"></a>封装绑定接口</h4><p>在activity中使用了注解之后，在编译的时候自动生成对应的XXActivity$$Inject类，这个类中有一个inject方法，这个方法提供findviewbyid和setonclicklistener方法。这里的我们首先定义一个Injector接口,在接口中定义一个inject方法，自动生成的xxactivity$$injector类实现了这个方法。这个接口封装绑定接口指的就是Knife.bind(this)的这个过程，我们使用多态的特性调用Injector.inject()方法完成绑定。具体代码如下：</p>
-<p>Knife类：</p>
-<pre><code>public class Knife {
-
-    static Finder ACTIVITY_FINDER = new ActivityFinder();
-    static Finder VIEW_FINDER = new ViewFinder();
-
-    public Knife() {
-        throw new AssertionError(&quot;not available for instance.&quot;);
-    }
-
-    public static void bind(Context context){
-        bind(context, ACTIVITY_FINDER);
-    }
-
-    public static void bind(View view){
-        bind(view, VIEW_FINDER);
-    }
-
-    public static void bind(Object host, Finder finder){
-        bind(host, host, finder);
-    }
-
-    public static void bind(Object host, Object source, Finder finder){
-        String className = host.getClass().getName();
-
-        try {
-            Class findClass = Class.forName(className + &quot;$$Injector&quot;);
-            Injector injector = null;
-            try {
-                injector = (Injector) findClass.newInstance();
-            } catch (InstantiationException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
-
-            if (host == null) {
-                Log.d(&quot;xxx&quot;, &quot;bind: host&quot;);
-                return;
-            } else if (finder == null) {
-                Log.d(&quot;xxx&quot;, &quot;bind: finder&quot;);
-                return;
-            }
-
-            injector.inject(host, source, finder);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
-}
-</code></pre><p>Injector接口:</p>
-<pre><code>public interface Injector&lt;T&gt; {
-    void inject(T host, Object source, Finder finder);
-}
-</code></pre><p>其他的类：</p>
-<pre><code>public interface Finder {
-    Context getContext();
-    View findView(Object source, int resId);
-}
-
-public class ActivityFinder implements Finder {
-
-    Context context;
-
-    @Override
-    public Context getContext() {
-        return context;
-    }
-
-    @Override
-    public View findView(Object activity, int resId) {
-        context = ((Activity) activity);
-        return ((Activity) activity).findViewById(resId);
-    }
-}
-
-public class ViewFinder implements Finder {
-
-    Context context;
-
-    @Override
-    public Context getContext() {
-        return context;
-    }
-
-    @Override
-    public View findView(Object view, int resId) {
-        context = ((View) view).getContext();
-        return ((View) view).findViewById(resId);
-    }
-}
-</code></pre><h4 id="定义annotationprocessor"><a href="#定义annotationprocessor" class="headerlink" title="定义annotationprocessor"></a>定义annotationprocessor</h4><p>这里是对编译时注解进行解析并生成对应类的地方，我们在这里使用annotationprocessor和javapoet。annotationprocessor会在注解编译时期提供回调，我们的主要工作都是在它的process()中进行的。javapoet是square开源的生成java类的开源库。</p>
-<p>首先我们需要定义一个类集成AbstractProcessor,他是annotationprocessor的核心类，我们需要实现它的4个方法：</p>
-<ul>
-<li>init() 初始化代码，一般会去获取Elements,messager,filer</li>
-<li>process() 处理方法</li>
-<li>getSupportedAnnotationTypes() 用来指定该处理器适用的注解</li>
-<li>getSupportedSourceVersion() 用来指定你的编译器的java版本</li>
-</ul>
-<p>之后还需要对处理器进行注册，第一种方法是在java同级目录下创建一个resources/META-INF/service文件夹，然后在文件夹中创建名为javax.annotation.processing.Processor的文件，文件内容为 我们的处理器的目录。<br>另一种方法是使用谷歌的@AutoService注解，你需要添加依赖</p>
-<pre><code>compile &apos;com.google.auto.service:auto-service:1.0-rc2&apos;
-</code></pre><p>然后在自己的处理器上面加上@AutoService(Processor.class)注解即可。</p>
-<h6 id="代码的生成过程"><a href="#代码的生成过程" class="headerlink" title="代码的生成过程"></a>代码的生成过程</h6><p>首先做一些初始化操作，指定要注解类型，java编译器版本</p>
-<pre><code>  @Override
-public synchronized void init(ProcessingEnvironment processingEnvironment) {
-    super.init(processingEnvironment);
-    System.out.println(&quot;processor: init&quot;);
-    filer = processingEnvironment.getFiler();
-    messager = processingEnvironment.getMessager();
-    elements = processingEnvironment.getElementUtils();
-}
-
-@Override
-public Set&lt;String&gt; getSupportedAnnotationTypes() {
-    System.out.println(&quot;processor: getSupportedAnnotationTypes&quot;);
-    Set&lt;String&gt; types = new LinkedHashSet&lt;&gt;();
-    types.add(BindView.class.getCanonicalName());
-    return types;
-}
-
-@Override
-public SourceVersion getSupportedSourceVersion() {
-    System.out.println(&quot;processor: getSupportedSourceVersion&quot;);
-    return SourceVersion.latestSupported();
-}
-</code></pre><p>在process中进行代码生成的工作，从参数roundEnvironment中，我们可以获得注解对应的Element信息。</p>
-<pre><code>@Override
-    public boolean process(Set&lt;? extends TypeElement&gt; set, RoundEnvironment roundEnvironment) {
-        System.out.println(&quot;processor: process&quot;);
-        processBindview(roundEnvironment);
-        processOnClick(roundEnvironment);
-
-        System.out.println(&quot;processor: annotationCount = &quot; + annotationClassMap.size());
-
-        for (AnnotationClass annotation : annotationClassMap.values()) {
-            try {
-                annotation.generateInjector().writeTo(filer);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return true;
-    }
-
-private void processOnClick(RoundEnvironment roundEnvironment) {
-        System.out.println(&quot;processor: processOnClick&quot;);
-
-        for (Element element : roundEnvironment.getElementsAnnotatedWith(OnClick.class)){
-
-            AnnotationClass annotationClass = getAnnotationClass(element);
-            OnClickMethod field = new OnClickMethod(element);
-            annotationClass.addField(field);
-        }
-    }
-
-    private void processBindview(RoundEnvironment roundEnvironment) {
-
-        System.out.println(&quot;processor: processBindview&quot;);
-
-        for (Element element : roundEnvironment.getElementsAnnotatedWith(BindView.class)){
-            AnnotationClass annotationClass = getAnnotationClass(element);
-            BindViewField bindViewField = new BindViewField(element);
-            annotationClass.addField(bindViewField);
-        }
-    }
-
-    private AnnotationClass getAnnotationClass(Element element){
-        String className = ((TypeElement) element.getEnclosingElement()).getQualifiedName().toString();
-        AnnotationClass annotationClass = annotationClassMap.get(className);
-        if (annotationClass == null) {
-            annotationClass = new AnnotationClass((TypeElement) element.getEnclosingElement(), elements);
-            annotationClassMap.put(className, annotationClass);
-        }
-        return annotationClass;
-    }
-</code></pre><p>上边的逻辑主要是根据roundEnvironment分别处理@BindView和@OnClick注解，这些注解分别被保存到AnnotaionClass对象的List<bindviewfield>和List<onclickmethod>集合中，最后调用annotationClass.generateInjector()来生成java类。</onclickmethod></bindviewfield></p>
-<pre><code>public JavaFile generateInjector(){
-        System.out.println(&quot;processor: generateInjector&quot;);
-        // to create method declear
-        // @Override
-        // public void inject(MainActivity host, Object source, Finder finder) {
-        // }
-        MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder(&quot;inject&quot;)
-                .addModifiers(Modifier.PUBLIC)
-                .addAnnotation(Override.class)
-                .addParameter(TypeName.get(typeElement.asType()), &quot;host&quot;, Modifier.FINAL)
-                .addParameter(TypeName.OBJECT, &quot;source&quot;)
-                .addParameter(ClassName.get(&quot;com.dou.demo.knife_api.finder&quot;, &quot;Finder&quot;), &quot;finder&quot;);
-
-        // to create method body
-        // host.targetview = (TextView) finder.findView)(source, R.id.xx)
-        for (BindViewField field : bindViewFields) {
-            methodBuilder.addStatement(&quot;host.$N=($T)finder.findView(source,$L)&quot;,
-                    field.getFieldName(),
-                    ClassName.get(field.getFieldType()),
-                    field.getViewId());
-        }
-
-        // to create variable declear
-        // OnClickListener listener;
-        if (onClickMethods.size() &gt; 0) {
-            methodBuilder.addStatement(&quot;$T listener&quot;,
-                    ClassName.get(&quot;android.view&quot;, &quot;View&quot;, &quot;OnClickListener&quot;));
-        }
-
-        // to create varible define
-        // listener = new OnClickListener(){
-        //      @Override
-        //      public void onClick(View v ){
-        //          host.onClick();
-        //      }
-        // }
-        for (OnClickMethod onClickMethod : onClickMethods) {
-            TypeSpec listener = TypeSpec.anonymousClassBuilder(&quot;&quot;)
-                    .addSuperinterface(ClassName.get(&quot;android.view&quot;, &quot;View&quot;, &quot;OnClickListener&quot;))
-                    .addMethod(MethodSpec.methodBuilder(&quot;onClick&quot;)
-                            .addAnnotation(Override.class)
-                            .addModifiers(Modifier.PUBLIC)
-                            .returns(TypeName.VOID)
-                            .addParameter(ClassName.get(&quot;android.view&quot;, &quot;View&quot;), &quot;view&quot;)
-                            .addStatement(&quot;host.$N()&quot;, onClickMethod.methodName)
-                            .build())
-                    .build();
-
-            methodBuilder.addStatement(&quot;listener=$L&quot;, listener);
-
-            for (int id : onClickMethod.viewIds) {
-                methodBuilder.addStatement(&quot;finder.findView(source, $L).setOnClickListener(listener)&quot;, id);
-            }
-        }
-
-        String packagename = getPackageName(typeElement);
-        String classname = getBinderClassName(packagename, typeElement);
-
-        ClassName binderClassname = ClassName.get(packagename, classname);
-        TypeSpec injectorClass = TypeSpec.classBuilder(binderClassname.simpleName() + &quot;$$Injector&quot;)
-                .addModifiers(Modifier.PUBLIC)
-                .addSuperinterface(ParameterizedTypeName.get(ClassName.get(&quot;com.dou.demo.knife_api&quot;, &quot;Injector&quot;), TypeName.get(typeElement.asType())))
-                .addMethod(methodBuilder.build())
-                .build();
-
-        return JavaFile.builder(packagename, injectorClass).build();
-    }
-</code></pre><h3 id="使用方式"><a href="#使用方式" class="headerlink" title="使用方式"></a>使用方式</h3><pre><code>implementation project(&quot;:knife-annotation&quot;)
-    implementation project(&quot;:knife-api&quot;)
-    annotationProcessor project(&quot;:knife-compiler&quot;)
-
-
-public class MainActivity extends AppCompatActivity {
-
-    @BindView(id = R.id.tv_content)
-    TextView tv_content;
-
-    @OnClick(id = R.id.tv_content)
-    public void onclick(){
-        Toast.makeText(this, &quot;ggggggg&quot;, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        Knife.bind(this);
-        tv_content.setText(&quot;hello knife&quot;);
-    }
-}
-</code></pre><h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>上边可能有一些需要注意的地方：</p>
-<ol>
-<li>定义processor时最好创建java library类型，不然会提示AbstractProcessor类找不到</li>
-<li>可能会出现注解编译的时候没有生成对应的注解的情况，需要配合gradle console的log查看哪里出错了</li>
-</ol>
-<p>源码:</p>
-<p><a href="https://github.com/douyn/annotation-demo.git" target="_blank" rel="noopener">douyn/annotation-demo
-</a></p>
-<p>参考:</p>
-<p><a href="https://juejin.im/post/5b824b8751882542f105447d?utm_source=gold_browser_extension" target="_blank" rel="noopener">Java 注解及其在 Android 中的应用</a></p>
-<p><a href="https://github.com/Shouheng88/Android-references" target="_blank" rel="noopener">Shouheng88/Android-references
-</a></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/06/终极适配/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sparky">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/logo_s.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Sparky">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/05/06/终极适配/" itemprop="url">未命名</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-06T20:09:10+08:00">
-                2019-05-06
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="终极适配"><a href="#终极适配" class="headerlink" title="终极适配"></a>终极适配</h2><p>参考<a href="https://blog.csdn.net/qeqeqe236/article/details/42968805" target="_blank" rel="noopener">https://blog.csdn.net/qeqeqe236/article/details/42968805</a></p>
+<pre><code>        |主机记录|记录类型|线路类型|记录值|权重|MMX优先值|TTL|
+        |--|--|--|--|--|--|--|
+        |www|CNAME|默认|dounia.github.io.|-|-|600|
+        |@|A|默认|185.199.111.153|-|-|600|
+
+        其中185.199.111.153为你的github page的ip，可以通过ping dounia.github.io得到
+
+5. 在freenom网站services-&gt;My Domains,选择Manage Domain，选择Management Tools-&gt;Nameservers,填入F1G1NS1.DNSPOD.NET和F1G1NS2.DNSPOD.NET。
+</code></pre><p>等待dns生效后即可访问</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://blog.csdn.net/wapchief/article/details/54602515" target="_blank" rel="noopener">https://blog.csdn.net/wapchief/article/details/54602515</a></p>
+<p><a href="https://freeknight.cf/2018/04/21/World/" target="_blank" rel="noopener">https://freeknight.cf/2018/04/21/World/</a></p>
 
           
         
@@ -2066,7 +1708,7 @@ public class MainActivity extends AppCompatActivity {
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/7/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/9/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/7/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><a class="page-number" href="/page/10/">10</a><a class="extend next" rel="next" href="/page/9/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -2116,7 +1758,7 @@ public class MainActivity extends AppCompatActivity {
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">109</span>
+                  <span class="site-state-item-count">99</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
