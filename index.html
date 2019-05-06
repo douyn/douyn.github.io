@@ -242,6 +242,203 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/06/个人网站搭建/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sparky">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/logo_s.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sparky">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/05/06/个人网站搭建/" itemprop="url">未命名</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-06T20:04:35+08:00">
+                2019-05-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="hexo-github-freenom-dnspod免费搭建个人网站教程"><a href="#hexo-github-freenom-dnspod免费搭建个人网站教程" class="headerlink" title="hexo+github+freenom+dnspod免费搭建个人网站教程"></a>hexo+github+freenom+dnspod免费搭建个人网站教程</h2><h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>本篇是一个关于搭建个人网站的总结，通过在hexo管理github page，然后在freenom上注册免费域名，并通过dnspod进行域名解析。</p>
+<p>关于hexo管理github.io可能不是很详细，因为是很早之前做的了，这里主要是总结一下，主要是讲进行域名绑定的步骤。</p>
+<h3 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h3><h4 id="工具"><a href="#工具" class="headerlink" title="工具"></a>工具</h4><ol>
+<li><p>安装Node.js</p>
+<p> <a href="https://nodejs.org/dist/v4.2.3/node-v4.2.3-x86.msi" target="_blank" rel="noopener">https://nodejs.org/dist/v4.2.3/node-v4.2.3-x86.msi</a> </p>
+<p> <a href="https://nodejs.org/dist/v4.2.3/node-v4.2.3-x64.msi" target="_blank" rel="noopener">https://nodejs.org/dist/v4.2.3/node-v4.2.3-x64.msi</a> </p>
+<p> 安装后在命令行输入node -v和npm -v.如果成功输出版本号则说明安装成功。</p>
+</li>
+<li><p>安装Git</p>
+<p> <a href="https://github.com/git-for-windows/git/releases/download/v2.11.0.windows.3/Git-2.11.0.3-32-bit.exe" target="_blank" rel="noopener">https://github.com/git-for-windows/git/releases/download/v2.11.0.windows.3/Git-2.11.0.3-32-bit.exe</a></p>
+<p> <a href="https://github.com/git-for-windows/git/releases/download/v2.11.0.windows.3/Git-2.11.0.3-64-bit.exe" target="_blank" rel="noopener">https://github.com/git-for-windows/git/releases/download/v2.11.0.windows.3/Git-2.11.0.3-64-bit.exe</a></p>
+<p> 安装后在命令行输入git –version，如果成功输出版本号则说明安装成功。</p>
+</li>
+<li><p>安装hexo<br> 因为hexo需要node.js和nmp，所以请确第一步成功。</p>
+<p> 在命令行输入./npm install hexo-cli -g</p>
+<p> 安装完成后再命令行输入hexo -v，如果成功输出版本号则说明安装成功</p>
+</li>
+</ol>
+<h4 id="github-page配置"><a href="#github-page配置" class="headerlink" title="github page配置"></a>github page配置</h4><ol>
+<li><p>注册登录github，添加一个仓库。<br> 例如dounia.github.io,然后在地址栏输入dounia.github.io即可访问，但是刚开始是404，因为你还没有给你的页面配置任何的内容。</p>
+<p> 接下来就是利用hexo将hexo模板配置到github</p>
+</li>
+</ol>
+<h4 id="hexo初始化配置"><a href="#hexo初始化配置" class="headerlink" title="hexo初始化配置"></a>hexo初始化配置</h4><p>创建一个文件夹用来管理github page,例如dounia.github.io</p>
+<p>然后进入该目录打开git bash</p>
+<p>然后执行命令 npm install hexo -g</p>
+<p>然后执行命令 hexo init,如果看到最后显示INFO Start blogging with Hexo!说明初始化成功了</p>
+<p>加下来的两个命令用来试验是否Hexo模板初始化成功hexo g &amp;&amp; hexo s,<br>然后在浏览器输入localhost:4000，如果进入了hexo的模板页，说明衣裳的步骤都成功了。</p>
+<h4 id="hexo-diy"><a href="#hexo-diy" class="headerlink" title="hexo diy"></a>hexo diy</h4><p>下边是使用hexo模板美化我们的github page</p>
+<h5 id="主题"><a href="#主题" class="headerlink" title="主题"></a>主题</h5><ol>
+<li><p>下载主题。<br>github上有很多开元的hexo主题，可以通过搜索hexo theme搜索。<br>然后通过git命令克隆到我们的themes目录下， 例如git clone <a href="https://github.com/iissnan/hexo-theme-next" target="_blank" rel="noopener">https://github.com/iissnan/hexo-theme-next</a> themes/next</p>
+</li>
+<li><p>配置主题。<br>主题下载下来之后要使用的话需要在hexo根目录也就是dounia.github.io/目录下 打开_config.yml，找到theme: landscape将landscape替换为next，next就是themes文件夹下你刚才下载的主题所在的文件夹。重新执行hexo -s，在浏览器输入localhost:4000测试是否成功。</p>
+</li>
+</ol>
+<h5 id="内容"><a href="#内容" class="headerlink" title="内容"></a>内容</h5><p>修改内容可以参考官方文档<a href="https://hexo.io/zh-cn/docs/configuration.html" target="_blank" rel="noopener">https://hexo.io/zh-cn/docs/configuration.html</a></p>
+<p>例如：</p>
+<pre><code>title: 网站标题
+subtitle: 副标题
+description: 个人签名
+author: 姓名
+language: zh-Hans
+timezone:
+</code></pre><p>注意：这里你可能有注意到在这个_config.yml文件中有一个deploy标签，下边就会用到了，是用来管来github的。</p>
+<h4 id="配置远程仓库"><a href="#配置远程仓库" class="headerlink" title="配置远程仓库"></a>配置远程仓库</h4><p>修改dounia.github.io/_config.yml文件的deploy标签，关联到我们的仓库。</p>
+<pre><code># Deployment
+## Docs: https://hexo.io/docs/deployment.html
+deploy:
+  type: git
+  repo: git@github.com:douyn/dounia.github.io.git
+  branch: master
+</code></pre><h4 id="推送到远程仓库"><a href="#推送到远程仓库" class="headerlink" title="推送到远程仓库"></a>推送到远程仓库</h4><ol>
+<li><p>安装部署工具。<br> npm install hexo-deployer-git –save</p>
+</li>
+<li><p>初始化git仓库</p>
+<pre><code>git init 
+git remote add origin git@github.com:douyn/dounia.github.io.git
+</code></pre></li>
+<li><p>hexo clean &amp;&amp; hexo g &amp;&amp; hexo d</p>
+<ol>
+<li>使用freenom注册域名。</li>
+<li>在根目录下添加CNAME文件，里边内容为你的域名</li>
+<li>在github项目setting的github page标签下Custom domain中，填写你的域名。</li>
+<li>dnspod域名解析中添加域名解析。而且要添加两条记录。</li>
+</ol>
+</li>
+</ol>
+<pre><code>        |主机记录|记录类型|线路类型|记录值|权重|MMX优先值|TTL|
+        |--|--|--|--|--|--|--|
+        |www|CNAME|默认|dounia.github.io.|-|-|600|
+        |@|A|默认|185.199.111.153|-|-|600|
+
+        其中185.199.111.153为你的github page的ip，可以通过ping dounia.github.io得到
+
+5. 在freenom网站services-&gt;My Domains,选择Manage Domain，选择Management Tools-&gt;Nameservers,填入F1G1NS1.DNSPOD.NET和F1G1NS2.DNSPOD.NET。
+</code></pre><p>等待dns生效后即可访问</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://blog.csdn.net/wapchief/article/details/54602515" target="_blank" rel="noopener">https://blog.csdn.net/wapchief/article/details/54602515</a></p>
+<p><a href="https://freeknight.cf/2018/04/21/World/" target="_blank" rel="noopener">https://freeknight.cf/2018/04/21/World/</a></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/02/01/增量更新/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2156,402 +2353,6 @@ public LayoutParams generateLayoutParams(AttributeSet attrs) {
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/24/[Android WIFI开发]/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sparky">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/logo_s.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Sparky">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/11/24/[Android WIFI开发]/" itemprop="url">Android WIFI开发</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-24T18:33:25+08:00">
-                2017-11-24
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="Android-WIFI开发"><a href="#Android-WIFI开发" class="headerlink" title="[Android WIFI开发]"></a>[Android WIFI开发]</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在Android应用层的开发中，使用到wifi相关知识点的地方并不多，所以之前对wifi开发并不熟悉，最近接到的两个硬件项目都有用到wifi并且知识点越来越深入，所以有必要记一下笔记，做一些注释。</p>
-<h2 id="基本使用"><a href="#基本使用" class="headerlink" title="基本使用"></a>基本使用</h2><h4 id="1-权限"><a href="#1-权限" class="headerlink" title="1.权限"></a>1.权限</h4><p>Android中要使用系统功能一般都要申请权限，在6.0上可能还要手动申请权限，这里wifi需要的权限有</p>
-<pre><code>&lt;uses-permission android:name=&quot;android.permission.CHANGE_NETWORK_STATE&quot;/&gt;
-&lt;uses-permission android:name=&quot;android.permission.CHANGE_WIFI_STATE&quot;/&gt;
-&lt;uses-permission android:name=&quot;android.permission.ACCESS_NETWORK_STATE&quot;/&gt;
-&lt;uses-permission android:name=&quot;android.permission.ACCESS_WIFI_STATE&quot;/&gt;
-&lt;uses-permission android:name=&quot;android.permission.ACCESS_FINE_LOCATION&quot;/&gt; // 需要系统权限 [定位权限]
-</code></pre><p>其中在6.0以上设备，定位权限需要主动申请，并且如果要获取扫描wifi列表需要打开系统的定位开关。</p>
-<h4 id="2-WiFi相关API"><a href="#2-WiFi相关API" class="headerlink" title="2. WiFi相关API"></a>2. WiFi相关API</h4><p><img src="http://img.blog.csdn.net/20160301131454334" alt="WIFI相关API"></p>
-<p>ScanResult类用于存放wifi扫描结果信息，包含ssid(wifi名称), bssid(网络接入点地址),capabilities(加密类型),frequency(传输频率),level(信号强度)等。这里的解释并不太标准，但是对应功能很形象，如果你要了解更多，可以去具体的查阅资料。</p>
-<p>WifiConfiguration类用于存放wifi的配置信息。包括wifi的密码，加密类型，网络id(用于连接wifi)等。他的几个子类分别对应秘钥加密方式，安全协议等，这些在设置wifi配置的时候会被用到</p>
-<p>wifiinfo类用来描述wifi属性和连接状态。暴露了一些方法给开发者调用。getBSSID(), getMacAddress(), getIpAddress()，getSSID()等</p>
-<p>WifiManager类是framework层暴露的api，用来管理wifi。通过调用 Context.getSystemService(Context.WIFI_SERVICE)可以得到类的实例。通过他可以得到:1.已经配置的网络列表。2.当前连接的wifi。3.扫描到的wifi。4.以及一些常量表示广播的意图等</p>
-<h4 id="3-wifi状态及开关"><a href="#3-wifi状态及开关" class="headerlink" title="3. wifi状态及开关"></a>3. wifi状态及开关</h4><pre><code>/**
- * 判断wifi是否打开
- * &lt;p&gt;需添加权限 {@code &lt;uses-permission android:name=&quot;android.permission.ACCESS_WIFI_STATE&quot;/&gt;}&lt;/p&gt;
- *
- * @return {@code true}: 是&lt;br&gt;{@code false}: 否
- */
-public static boolean getWifiEnabled() {
-    @SuppressLint(&quot;WifiManagerLeak&quot;)
-    WifiManager wifiManager = (WifiManager) Utils.getApp().getSystemService(Context.WIFI_SERVICE);
-    return wifiManager.isWifiEnabled();
-}
-
-/**
- * 打开或关闭wifi
- * &lt;p&gt;需添加权限 {@code &lt;uses-permission android:name=&quot;android.permission.CHANGE_WIFI_STATE&quot;/&gt;}&lt;/p&gt;
- *
- * @param enabled {@code true}: 打开&lt;br&gt;{@code false}: 关闭
- */
-public static void setWifiEnabled(final boolean enabled) {
-    @SuppressLint(&quot;WifiManagerLeak&quot;)
-    WifiManager wifiManager = (WifiManager) Utils.getApp().getSystemService(Context.WIFI_SERVICE);
-    if (enabled) {
-        if (!wifiManager.isWifiEnabled()) {
-            wifiManager.setWifiEnabled(true);
-        }
-    } else {
-        if (wifiManager.isWifiEnabled()) {
-            wifiManager.setWifiEnabled(false);
-        }
-    }
-}
-</code></pre><h4 id="4-扫描wifi"><a href="#4-扫描wifi" class="headerlink" title="4. 扫描wifi"></a>4. 扫描wifi</h4><pre><code> /**
- *
- * 获取WIFI列表
- * &lt;p&gt;需要权限{@code &lt;uses-permission android:name=&quot;android.permission.ACCESS_WIFI_STATE&quot;/&gt; &lt;uses-permission android:name=&quot;android.permission.ACCESS_FINE_LOCATION&quot;/&gt;}&lt;/p&gt;
- * &lt;p&gt;注意Android6.0上需要主动申请定位权限，并且打开定位开关&lt;/p&gt;
- *
- * @param context 上下文
- * @return wifi列表
- */
-public static List&lt;ScanResult&gt; getWifiList(Context context) {
-    WifiManager wm = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-    List&lt;ScanResult&gt; scanResults = wm.getScanResults();
-
-    Collections.sort(scanResults, new Comparator&lt;ScanResult&gt;() {
-        @Override
-        public int compare(ScanResult scanResult1, ScanResult scanResult2) {
-            return scanResult2.level - scanResult1.level;
-        }
-    });
-    return scanResultsCopy;
-}
-
- /**
- * 获取当前链接的WiFi信息
- *
- * @param context 上下文
- * @return 当前wifi数据
- */
-public static WifiInfo getCurrentWifi (Context context) {
-    WifiManager wm = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-    return wm.getConnectionInfo();
-}
-
-
-public static String getWifiEncryptTypeStr (String capabilitie) {
-    if (TextUtils.isEmpty(capabilitie)) return null;
-
-    String encryptType;
-
-    if (capabilitie.contains(&quot;WPA&quot;) &amp;&amp; capabilitie.contains(&quot;WPA2&quot;)) {
-        encryptType = &quot;WPA/WPA2 PSK&quot;;
-    } else if (capabilitie.contains(&quot;WPA2&quot;)) {
-        encryptType = &quot;WPA2 PSK&quot;;
-    } else if (capabilitie.contains(&quot;WPA&quot;)) {
-        encryptType = &quot;WPA PSK&quot;;
-    } else if (capabilitie.contains(&quot;WEP&quot;)) {
-        encryptType = &quot;WEP&quot;;
-    } else {
-        encryptType = &quot;NONE&quot;;
-    }
-
-    return encryptType;
-}
-
-/**
- * wifi加密方式有5种
- * 0 - WPA/WPA2 PSK
- * 1 - WPA2 PSK
- * 2 - WPA PSK
- * 3 - WEP
- * 4 - NONE
- * @param capabilitie
- * @return
- */
-public static int getWifiEncryptType (String capabilitie) {
-    if (TextUtils.isEmpty(capabilitie)) return -1;
-
-    int encryptType;
-
-    if (capabilitie.contains(&quot;WPA&quot;) &amp;&amp; capabilitie.contains(&quot;WPA2&quot;)) {
-        encryptType = 0;
-    } else if (capabilitie.contains(&quot;WPA2&quot;)) {
-        encryptType = 1;
-    } else if (capabilitie.contains(&quot;WPA&quot;)) {
-        encryptType = 2;
-    } else if (capabilitie.contains(&quot;WEP&quot;)) {
-        encryptType = 3;
-    } else {
-        encryptType = 4;
-    }
-
-    return encryptType;
-}
-</code></pre><h4 id="5-连接wifi"><a href="#5-连接wifi" class="headerlink" title="5. 连接wifi"></a>5. 连接wifi</h4><pre><code> /**
- * @des 连接已经保存过配置的wifi
- * @param context
- * @param ssid
- */
-public static void connectWifi (Context context, String ssid) {
-
-    Log.d(TAG, &quot;connectWifi: 去连接wifi: &quot; + ssid);
-
-    if (!getWifiEnabled()) return;
-
-    WifiManager wm = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-    WifiConfiguration wc = new WifiConfiguration();
-
-    wc.SSID = &quot;\&quot;&quot; + ssid + &quot;\&quot;&quot;;
-
-    WifiConfiguration configuration = getWifiConfig(context, ssid);
-    if (configuration != null) {
-        wm.enableNetwork(configuration.networkId, true);
-    }
-
-}
-
-/**
- * @des 连接没有配置过的wifi
- * @param context
- * @param ssid
- * @param password
- * @param encryptType
- */
-public static void connectWifi (Context context, String ssid, String password, int encryptType) {
-
-    Log.d(TAG, &quot;connectWifi: 去连接wifi: &quot; + ssid);
-
-    if (!getWifiEnabled()) return;
-
-    WifiManager wm = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-    WifiConfiguration wc = new WifiConfiguration();
-    wc.allowedAuthAlgorithms.clear();
-    wc.allowedGroupCiphers.clear();
-    wc.allowedKeyManagement.clear();
-    wc.allowedPairwiseCiphers.clear();
-    wc.allowedProtocols.clear();
-
-    wc.SSID = &quot;\&quot;&quot; + ssid + &quot;\&quot;&quot;;
-
-    WifiConfiguration configuration = getWifiConfig(context, ssid);
-    if (configuration != null) {
-        wm.removeNetwork(configuration.networkId);
-    }
-
-    switch (encryptType) {
-        case 4://不加密
-            wc.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
-            break;
-
-        case 3://wep加密
-            wc.hiddenSSID = true;
-            wc.wepKeys[0] = &quot;\&quot;&quot; + password +&quot;\&quot;&quot;;
-            wc.allowedAuthAlgorithms.set(WifiConfiguration.AuthAlgorithm.SHARED);
-            wc.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.CCMP);
-            wc.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.TKIP);
-            wc.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP40);
-            wc.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP104);
-            wc.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
-
-            break;
-        case 0: //wpa/wap2加密
-        case 1: //wpa2加密
-        case 2: //wpa加密
-
-            wc.preSharedKey = &quot;\&quot;&quot; + password + &quot;\&quot;&quot;;
-            wc.hiddenSSID = true;
-            wc.allowedAuthAlgorithms.set(WifiConfiguration.AuthAlgorithm.OPEN);
-            wc.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.TKIP);
-            wc.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.CCMP);
-            wc.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.WPA_PSK);
-            wc.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.CCMP);
-            wc.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.TKIP);
-            wc.status = WifiConfiguration.Status.ENABLED;
-            break;
-    }
-
-    int network = wm.addNetwork(wc);
-    wm.enableNetwork(network, true);
-}
-
-public static void disConnectWifi (Context context, int networkId) {
-    WifiManager wm = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-    wm.disableNetwork(networkId);
-    wm.disconnect();
-}
-</code></pre><h4 id="6-获取和清除WIFI配置"><a href="#6-获取和清除WIFI配置" class="headerlink" title="6. 获取和清除WIFI配置"></a>6. 获取和清除WIFI配置</h4><pre><code>/**
- * @des 清除wifi配置信息
- * @param context
- * @param ssid
- */
-public static void clearWifiInfo(Context context, String ssid) {
-
-    Log.d(TAG, &quot;clearWifiInfo: 清除WIFI配置信息: &quot; + ssid);
-
-    WifiManager wm = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-
-    String newSSID = &quot;\&quot;&quot; + ssid + &quot;\&quot;&quot;;
-
-    if (!(ssid.startsWith(&quot;\&quot;&quot;) &amp;&amp; ssid.endsWith(&quot;\&quot;&quot;))) {
-        newSSID = &quot;\&quot;&quot; + ssid + &quot;\&quot;&quot;;
-    } else {
-        newSSID = ssid;
-    }
-
-    WifiConfiguration configuration = getWifiConfig(context, newSSID);
-    configuration.allowedAuthAlgorithms.clear();
-    configuration.allowedGroupCiphers.clear();
-    configuration.allowedKeyManagement.clear();
-    configuration.allowedPairwiseCiphers.clear();
-    configuration.allowedProtocols.clear();
-
-    if (configuration != null) {
-
-        wm.removeNetwork(configuration.networkId);
-        wm.saveConfiguration();
-    }
-}
-
-public static WifiConfiguration getWifiConfig (Context context, String ssid) {
-
-    Log.d(TAG, &quot;getWifiConfig: 获取wifi配置信息: &quot; + ssid);
-
-    if (TextUtils.isEmpty(ssid)) return null;
-
-    String newSSID;
-
-    if (!(ssid.startsWith(&quot;\&quot;&quot;) &amp;&amp; ssid.endsWith(&quot;\&quot;&quot;))) {
-        newSSID = &quot;\&quot;&quot; + ssid + &quot;\&quot;&quot;;
-    } else {
-        newSSID = ssid;
-    }
-
-    WifiManager wm = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-    List&lt;WifiConfiguration&gt; configuredNetworks = wm.getConfiguredNetworks();
-
-    for (WifiConfiguration configuration : configuredNetworks) {
-        if (newSSID.equalsIgnoreCase(configuration.SSID)) {
-            return configuration;
-        }
-    }
-
-    return null;
-}
-</code></pre><h2 id="高级用法"><a href="#高级用法" class="headerlink" title="高级用法"></a>高级用法</h2><h4 id="1-监听wifi状态的变化并刷新wifi列表和连接状态"><a href="#1-监听wifi状态的变化并刷新wifi列表和连接状态" class="headerlink" title="1. 监听wifi状态的变化并刷新wifi列表和连接状态"></a>1. 监听wifi状态的变化并刷新wifi列表和连接状态</h4><h4 id="2-5Gwfif和2-4Gwifi"><a href="#2-5Gwfif和2-4Gwifi" class="headerlink" title="2. 5Gwfif和2.4Gwifi"></a>2. 5Gwfif和2.4Gwifi</h4><h2 id="踩坑记录"><a href="#踩坑记录" class="headerlink" title="踩坑记录"></a>踩坑记录</h2><h4 id="1-wifi的ssid是带有””，所以你如果要判空是不行的，并且在连接wifi的时候要手动给ssid加上””。"><a href="#1-wifi的ssid是带有””，所以你如果要判空是不行的，并且在连接wifi的时候要手动给ssid加上””。" class="headerlink" title="1. wifi的ssid是带有””，所以你如果要判空是不行的，并且在连接wifi的时候要手动给ssid加上””。"></a>1. wifi的ssid是带有””，所以你如果要判空是不行的，并且在连接wifi的时候要手动给ssid加上””。</h4><h4 id="2-前文已经说了Android6-0以上要想扫描到wifi需要开启权限和手机的定位功能，不然得到的列表为空。"><a href="#2-前文已经说了Android6-0以上要想扫描到wifi需要开启权限和手机的定位功能，不然得到的列表为空。" class="headerlink" title="2. 前文已经说了Android6.0以上要想扫描到wifi需要开启权限和手机的定位功能，不然得到的列表为空。"></a>2. 前文已经说了Android6.0以上要想扫描到wifi需要开启权限和手机的定位功能，不然得到的列表为空。</h4><h4 id="3-wifi的秘钥安全模式网上并没有人给出标准的答案，各个手机厂商的wifi系统上也都不一样，对于我们开发者而言，主要有5种方式也可以总结为3中：NONE-无密码模式-WEP-安全性较低-WAP-PSK-WAP2-PSK-WPA-WPA2-PSK-这三种安全性较高-。需要注意的是通过capabilitie属性得到的字符串是类似-WPA-PSK-CCMP-TKIP-WPA2-PSK-CCMP-TKIP-ESS-这样的，因为wifi的加密方式是安全模式-密码加密类型组合的方式。你要通过string-contains-方法解析出其中的安全模式，上文的扫描wifi中有解析的代码。"><a href="#3-wifi的秘钥安全模式网上并没有人给出标准的答案，各个手机厂商的wifi系统上也都不一样，对于我们开发者而言，主要有5种方式也可以总结为3中：NONE-无密码模式-WEP-安全性较低-WAP-PSK-WAP2-PSK-WPA-WPA2-PSK-这三种安全性较高-。需要注意的是通过capabilitie属性得到的字符串是类似-WPA-PSK-CCMP-TKIP-WPA2-PSK-CCMP-TKIP-ESS-这样的，因为wifi的加密方式是安全模式-密码加密类型组合的方式。你要通过string-contains-方法解析出其中的安全模式，上文的扫描wifi中有解析的代码。" class="headerlink" title="3. wifi的秘钥安全模式网上并没有人给出标准的答案，各个手机厂商的wifi系统上也都不一样，对于我们开发者而言，主要有5种方式也可以总结为3中：NONE(无密码模式), WEP(安全性较低), WAP PSK, WAP2 PSK, WPA/WPA2 PSK(这三种安全性较高)。需要注意的是通过capabilitie属性得到的字符串是类似 [WPA-PSK-CCMP+TKIP][WPA2-PSK-CCMP+TKIP][ESS] 这样的，因为wifi的加密方式是安全模式+密码加密类型组合的方式。你要通过string.contains()方法解析出其中的安全模式，上文的扫描wifi中有解析的代码。"></a>3. wifi的秘钥安全模式网上并没有人给出标准的答案，各个手机厂商的wifi系统上也都不一样，对于我们开发者而言，主要有5种方式也可以总结为3中：NONE(无密码模式), WEP(安全性较低), WAP PSK, WAP2 PSK, WPA/WPA2 PSK(这三种安全性较高)。需要注意的是通过capabilitie属性得到的字符串是类似 [WPA-PSK-CCMP+TKIP][WPA2-PSK-CCMP+TKIP][ESS] 这样的，因为wifi的加密方式是安全模式+密码加密类型组合的方式。你要通过string.contains()方法解析出其中的安全模式，上文的扫描wifi中有解析的代码。</h4><h4 id="4-扫描列表中ssid可能为空或””，一般要剔除掉，而且wifi列表一般是根据信号强度排序。也有可能列表中出现同名的wifi-我之前遇到是因为现在的路由器同时支持5G-wifi和2-4G-wifi，两个wifi属于不同的频段。"><a href="#4-扫描列表中ssid可能为空或””，一般要剔除掉，而且wifi列表一般是根据信号强度排序。也有可能列表中出现同名的wifi-我之前遇到是因为现在的路由器同时支持5G-wifi和2-4G-wifi，两个wifi属于不同的频段。" class="headerlink" title="4. 扫描列表中ssid可能为空或””，一般要剔除掉，而且wifi列表一般是根据信号强度排序。也有可能列表中出现同名的wifi,我之前遇到是因为现在的路由器同时支持5G wifi和2.4G wifi，两个wifi属于不同的频段。"></a>4. 扫描列表中ssid可能为空或””，一般要剔除掉，而且wifi列表一般是根据信号强度排序。也有可能列表中出现同名的wifi,我之前遇到是因为现在的路由器同时支持5G wifi和2.4G wifi，两个wifi属于不同的频段。</h4><h4 id="5-wifi是可以设置为隐藏wifi的，设置为隐藏wifi后不能被扫描到，但是可以通过直接输入ssid和秘钥的方式连接上。"><a href="#5-wifi是可以设置为隐藏wifi的，设置为隐藏wifi后不能被扫描到，但是可以通过直接输入ssid和秘钥的方式连接上。" class="headerlink" title="5. wifi是可以设置为隐藏wifi的，设置为隐藏wifi后不能被扫描到，但是可以通过直接输入ssid和秘钥的方式连接上。"></a>5. wifi是可以设置为隐藏wifi的，设置为隐藏wifi后不能被扫描到，但是可以通过直接输入ssid和秘钥的方式连接上。</h4><h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2606,7 +2407,7 @@ public static WifiConfiguration getWifiConfig (Context context, String ssid) {
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-count">20</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
