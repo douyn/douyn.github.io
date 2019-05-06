@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="java annotation基础java注解分为标准注解和元注解。 标准注解是java为我们提供的预定义的注解，@override,@deprecated,@suppresswarnnings，@safevarargs 元注解是给我们自定义注解用的共有5种,@target,@retention,@documented,@inherited,@repeatable @Target：用来修饰注解能够">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Sparky">
+<meta property="og:url" content="http://yoursite.com/2019/05/06/自定义注解/index.html">
+<meta property="og:site_name" content="Sparky">
+<meta property="og:description" content="java annotation基础java注解分为标准注解和元注解。 标准注解是java为我们提供的预定义的注解，@override,@deprecated,@suppresswarnnings，@safevarargs 元注解是给我们自定义注解用的共有5种,@target,@retention,@documented,@inherited,@repeatable @Target：用来修饰注解能够">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-05-06T11:51:47.689Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Sparky">
+<meta name="twitter:description" content="java annotation基础java注解分为标准注解和元注解。 标准注解是java为我们提供的预定义的注解，@override,@deprecated,@suppresswarnnings，@safevarargs 元注解是给我们自定义注解用的共有5种,@target,@retention,@documented,@inherited,@repeatable @Target：用来修饰注解能够">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/05/06/自定义注解/"/>
+
+
+
+
+
+  <title> | Sparky</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?23f2f984b557cd9c31da9a75b4da08e4";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Sparky</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/06/自定义注解/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sparky">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/logo_s.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sparky">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline"></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-06T20:09:10+08:00">
+                2019-05-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="java-annotation基础"><a href="#java-annotation基础" class="headerlink" title="java annotation基础"></a>java annotation基础</h3><p>java注解分为标准注解和元注解。</p>
+<p>标准注解是java为我们提供的预定义的注解，@override,@deprecated,@suppresswarnnings，@safevarargs</p>
+<p>元注解是给我们自定义注解用的共有5种,@target,@retention,@documented,@inherited,@repeatable</p>
+<p>@Target：用来修饰注解能够修饰的对象的类型，接收一个elementtype类型的数组。</p>
+<p>@Remention：用来指定注解的保留策略。可以指定如下值</p>
+<pre><code>- SOURCE 注解只保留在源码层面，编译时即被丢弃
+- CLASS 注解可以保留在class文件中，但会被jvm丢弃
+- RUNTIME 注解也会在jvm运行事件保留，可以通过反射读取注解信息
+</code></pre><p>@Documented：此注解将被包含在javadoc中</p>
+<p>@Inherited：此注解可以被继承</p>
+<p>@Repeatable：指定的注解可以重复应用到指定的对象上边</p>
+<p>标准注解也是用元注解创建的</p>
+<pre><code>@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.SOURCE)
+public @interface Override{}
+</code></pre><p>如上所示：</p>
+<p>@Target(ElementType.METHOD)表示这个注解能够修饰方法</p>
+<p>@Retention(RetentionPolicy.SOURCE)表示这个注解只存在于源码</p>
+<h3 id="解析注解的两种方式"><a href="#解析注解的两种方式" class="headerlink" title="解析注解的两种方式"></a>解析注解的两种方式</h3><h4 id="1-运行时注解可以使用反射解析"><a href="#1-运行时注解可以使用反射解析" class="headerlink" title="1. 运行时注解可以使用反射解析"></a>1. 运行时注解可以使用反射解析</h4><p>下边的使用反射解析注解的实例：创建一个类，然后在类中对字段做注解，最后通过反射的方法解析注解的内容</p>
+<p>首先需要创建注解类</p>
+<pre><code>@Target(ElementType.FIELD)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface UseCase {
+    String name();
+    int id() default -1;
+}
+</code></pre><p>然后定义一个类，使用上边的注解</p>
+<pre><code>public class Persion {
+    @UseCase(id = 0, name = &quot;nancy&quot;)
+    int number;
+
+    @UseCase(id = 2, name = &quot;lucky&quot;)
+    String name;
+}
+</code></pre><p>最后通过反射解析注解</p>
+<pre><code>try {
+            Class clz =Class.forName(&quot;com.dou.demo.knife_annotation.Persion&quot;);
+            Field[] fields = clz.getDeclaredFields();
+
+            for (Field field : fields) {
+                UseCase annotation = field.getAnnotation(UseCase.class);
+
+                if (annotation != null) {
+                    System.out.println(annotation.name() + annotation.id());
+                }
+            }
+
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+</code></pre><h4 id="2-编译时注解可以使用annotationprocessor解析"><a href="#2-编译时注解可以使用annotationprocessor解析" class="headerlink" title="2. 编译时注解可以使用annotationprocessor解析"></a>2. 编译时注解可以使用annotationprocessor解析</h4><p>编译时注解的使用场景很多，包括很多的第三方库例如Butterknife, Retrofit, GreenDao等，下边我们就做一个简单的demo，类似于butterknife的例子来讲解如何使用annotationprocessor。</p>
+<p>首先来讲一下butterknife的大致的注入流程</p>
+<p>首先我们需要在activity中使用@BindView(R.id.xx)注解对应的控件，然后使用Butterknife.bind(this)方法完成对控件的绑定，实际上底层还是调用findviewbyid方法。大概的思路就是在编译期生成一个类似MainActivity_ViewBinding.java文件，在这个类的构造方法中最终会调用findViewById()方法。而调用Butterknife.bind(this)方法，首先会找到MainActivity_ViewBinding这个类的构造方法对象，然后实例化该构造方法(执行类的构造方法)，也就是执行findviewbyid动作</p>
+<h3 id="基于annotationprocessor使用注解的步骤"><a href="#基于annotationprocessor使用注解的步骤" class="headerlink" title="基于annotationprocessor使用注解的步骤"></a>基于annotationprocessor使用注解的步骤</h3><p>原理为：先在activity中使用注解@BindView或者@OnClick标注控件对象，然后调用knife.bind(this)方法进行绑定，编译注解时生成一个Activity$$Injector类，bind方法主要就是调用这个类的inject方法，这个方法底层调用findviewbyid</p>
+<p>因为自己学习时已经定义了@BindView,下边主要定义另外一个注解@OnClick</p>
+<h4 id="定义注解类"><a href="#定义注解类" class="headerlink" title="定义注解类"></a>定义注解类</h4><pre><code>@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.CLASS)
+public @interface OnClick {
+    int[] id() default -1;
+}
+</code></pre><h4 id="封装绑定接口"><a href="#封装绑定接口" class="headerlink" title="封装绑定接口"></a>封装绑定接口</h4><p>在activity中使用了注解之后，在编译的时候自动生成对应的XXActivity$$Inject类，这个类中有一个inject方法，这个方法提供findviewbyid和setonclicklistener方法。这里的我们首先定义一个Injector接口,在接口中定义一个inject方法，自动生成的xxactivity$$injector类实现了这个方法。这个接口封装绑定接口指的就是Knife.bind(this)的这个过程，我们使用多态的特性调用Injector.inject()方法完成绑定。具体代码如下：</p>
+<p>Knife类：</p>
+<pre><code>public class Knife {
+
+    static Finder ACTIVITY_FINDER = new ActivityFinder();
+    static Finder VIEW_FINDER = new ViewFinder();
+
+    public Knife() {
+        throw new AssertionError(&quot;not available for instance.&quot;);
+    }
+
+    public static void bind(Context context){
+        bind(context, ACTIVITY_FINDER);
+    }
+
+    public static void bind(View view){
+        bind(view, VIEW_FINDER);
+    }
+
+    public static void bind(Object host, Finder finder){
+        bind(host, host, finder);
+    }
+
+    public static void bind(Object host, Object source, Finder finder){
+        String className = host.getClass().getName();
+
+        try {
+            Class findClass = Class.forName(className + &quot;$$Injector&quot;);
+            Injector injector = null;
+            try {
+                injector = (Injector) findClass.newInstance();
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+
+            if (host == null) {
+                Log.d(&quot;xxx&quot;, &quot;bind: host&quot;);
+                return;
+            } else if (finder == null) {
+                Log.d(&quot;xxx&quot;, &quot;bind: finder&quot;);
+                return;
+            }
+
+            injector.inject(host, source, finder);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+}
+</code></pre><p>Injector接口:</p>
+<pre><code>public interface Injector&lt;T&gt; {
+    void inject(T host, Object source, Finder finder);
+}
+</code></pre><p>其他的类：</p>
+<pre><code>public interface Finder {
+    Context getContext();
+    View findView(Object source, int resId);
+}
+
+public class ActivityFinder implements Finder {
+
+    Context context;
+
+    @Override
+    public Context getContext() {
+        return context;
+    }
+
+    @Override
+    public View findView(Object activity, int resId) {
+        context = ((Activity) activity);
+        return ((Activity) activity).findViewById(resId);
+    }
+}
+
+public class ViewFinder implements Finder {
+
+    Context context;
+
+    @Override
+    public Context getContext() {
+        return context;
+    }
+
+    @Override
+    public View findView(Object view, int resId) {
+        context = ((View) view).getContext();
+        return ((View) view).findViewById(resId);
+    }
+}
+</code></pre><h4 id="定义annotationprocessor"><a href="#定义annotationprocessor" class="headerlink" title="定义annotationprocessor"></a>定义annotationprocessor</h4><p>这里是对编译时注解进行解析并生成对应类的地方，我们在这里使用annotationprocessor和javapoet。annotationprocessor会在注解编译时期提供回调，我们的主要工作都是在它的process()中进行的。javapoet是square开源的生成java类的开源库。</p>
+<p>首先我们需要定义一个类集成AbstractProcessor,他是annotationprocessor的核心类，我们需要实现它的4个方法：</p>
+<ul>
+<li>init() 初始化代码，一般会去获取Elements,messager,filer</li>
+<li>process() 处理方法</li>
+<li>getSupportedAnnotationTypes() 用来指定该处理器适用的注解</li>
+<li>getSupportedSourceVersion() 用来指定你的编译器的java版本</li>
+</ul>
+<p>之后还需要对处理器进行注册，第一种方法是在java同级目录下创建一个resources/META-INF/service文件夹，然后在文件夹中创建名为javax.annotation.processing.Processor的文件，文件内容为 我们的处理器的目录。<br>另一种方法是使用谷歌的@AutoService注解，你需要添加依赖</p>
+<pre><code>compile &apos;com.google.auto.service:auto-service:1.0-rc2&apos;
+</code></pre><p>然后在自己的处理器上面加上@AutoService(Processor.class)注解即可。</p>
+<h6 id="代码的生成过程"><a href="#代码的生成过程" class="headerlink" title="代码的生成过程"></a>代码的生成过程</h6><p>首先做一些初始化操作，指定要注解类型，java编译器版本</p>
+<pre><code>  @Override
+public synchronized void init(ProcessingEnvironment processingEnvironment) {
+    super.init(processingEnvironment);
+    System.out.println(&quot;processor: init&quot;);
+    filer = processingEnvironment.getFiler();
+    messager = processingEnvironment.getMessager();
+    elements = processingEnvironment.getElementUtils();
+}
+
+@Override
+public Set&lt;String&gt; getSupportedAnnotationTypes() {
+    System.out.println(&quot;processor: getSupportedAnnotationTypes&quot;);
+    Set&lt;String&gt; types = new LinkedHashSet&lt;&gt;();
+    types.add(BindView.class.getCanonicalName());
+    return types;
+}
+
+@Override
+public SourceVersion getSupportedSourceVersion() {
+    System.out.println(&quot;processor: getSupportedSourceVersion&quot;);
+    return SourceVersion.latestSupported();
+}
+</code></pre><p>在process中进行代码生成的工作，从参数roundEnvironment中，我们可以获得注解对应的Element信息。</p>
+<pre><code>@Override
+    public boolean process(Set&lt;? extends TypeElement&gt; set, RoundEnvironment roundEnvironment) {
+        System.out.println(&quot;processor: process&quot;);
+        processBindview(roundEnvironment);
+        processOnClick(roundEnvironment);
+
+        System.out.println(&quot;processor: annotationCount = &quot; + annotationClassMap.size());
+
+        for (AnnotationClass annotation : annotationClassMap.values()) {
+            try {
+                annotation.generateInjector().writeTo(filer);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return true;
+    }
+
+private void processOnClick(RoundEnvironment roundEnvironment) {
+        System.out.println(&quot;processor: processOnClick&quot;);
+
+        for (Element element : roundEnvironment.getElementsAnnotatedWith(OnClick.class)){
+
+            AnnotationClass annotationClass = getAnnotationClass(element);
+            OnClickMethod field = new OnClickMethod(element);
+            annotationClass.addField(field);
+        }
+    }
+
+    private void processBindview(RoundEnvironment roundEnvironment) {
+
+        System.out.println(&quot;processor: processBindview&quot;);
+
+        for (Element element : roundEnvironment.getElementsAnnotatedWith(BindView.class)){
+            AnnotationClass annotationClass = getAnnotationClass(element);
+            BindViewField bindViewField = new BindViewField(element);
+            annotationClass.addField(bindViewField);
+        }
+    }
+
+    private AnnotationClass getAnnotationClass(Element element){
+        String className = ((TypeElement) element.getEnclosingElement()).getQualifiedName().toString();
+        AnnotationClass annotationClass = annotationClassMap.get(className);
+        if (annotationClass == null) {
+            annotationClass = new AnnotationClass((TypeElement) element.getEnclosingElement(), elements);
+            annotationClassMap.put(className, annotationClass);
+        }
+        return annotationClass;
+    }
+</code></pre><p>上边的逻辑主要是根据roundEnvironment分别处理@BindView和@OnClick注解，这些注解分别被保存到AnnotaionClass对象的List<bindviewfield>和List<onclickmethod>集合中，最后调用annotationClass.generateInjector()来生成java类。</onclickmethod></bindviewfield></p>
+<pre><code>public JavaFile generateInjector(){
+        System.out.println(&quot;processor: generateInjector&quot;);
+        // to create method declear
+        // @Override
+        // public void inject(MainActivity host, Object source, Finder finder) {
+        // }
+        MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder(&quot;inject&quot;)
+                .addModifiers(Modifier.PUBLIC)
+                .addAnnotation(Override.class)
+                .addParameter(TypeName.get(typeElement.asType()), &quot;host&quot;, Modifier.FINAL)
+                .addParameter(TypeName.OBJECT, &quot;source&quot;)
+                .addParameter(ClassName.get(&quot;com.dou.demo.knife_api.finder&quot;, &quot;Finder&quot;), &quot;finder&quot;);
+
+        // to create method body
+        // host.targetview = (TextView) finder.findView)(source, R.id.xx)
+        for (BindViewField field : bindViewFields) {
+            methodBuilder.addStatement(&quot;host.$N=($T)finder.findView(source,$L)&quot;,
+                    field.getFieldName(),
+                    ClassName.get(field.getFieldType()),
+                    field.getViewId());
+        }
+
+        // to create variable declear
+        // OnClickListener listener;
+        if (onClickMethods.size() &gt; 0) {
+            methodBuilder.addStatement(&quot;$T listener&quot;,
+                    ClassName.get(&quot;android.view&quot;, &quot;View&quot;, &quot;OnClickListener&quot;));
+        }
+
+        // to create varible define
+        // listener = new OnClickListener(){
+        //      @Override
+        //      public void onClick(View v ){
+        //          host.onClick();
+        //      }
+        // }
+        for (OnClickMethod onClickMethod : onClickMethods) {
+            TypeSpec listener = TypeSpec.anonymousClassBuilder(&quot;&quot;)
+                    .addSuperinterface(ClassName.get(&quot;android.view&quot;, &quot;View&quot;, &quot;OnClickListener&quot;))
+                    .addMethod(MethodSpec.methodBuilder(&quot;onClick&quot;)
+                            .addAnnotation(Override.class)
+                            .addModifiers(Modifier.PUBLIC)
+                            .returns(TypeName.VOID)
+                            .addParameter(ClassName.get(&quot;android.view&quot;, &quot;View&quot;), &quot;view&quot;)
+                            .addStatement(&quot;host.$N()&quot;, onClickMethod.methodName)
+                            .build())
+                    .build();
+
+            methodBuilder.addStatement(&quot;listener=$L&quot;, listener);
+
+            for (int id : onClickMethod.viewIds) {
+                methodBuilder.addStatement(&quot;finder.findView(source, $L).setOnClickListener(listener)&quot;, id);
+            }
+        }
+
+        String packagename = getPackageName(typeElement);
+        String classname = getBinderClassName(packagename, typeElement);
+
+        ClassName binderClassname = ClassName.get(packagename, classname);
+        TypeSpec injectorClass = TypeSpec.classBuilder(binderClassname.simpleName() + &quot;$$Injector&quot;)
+                .addModifiers(Modifier.PUBLIC)
+                .addSuperinterface(ParameterizedTypeName.get(ClassName.get(&quot;com.dou.demo.knife_api&quot;, &quot;Injector&quot;), TypeName.get(typeElement.asType())))
+                .addMethod(methodBuilder.build())
+                .build();
+
+        return JavaFile.builder(packagename, injectorClass).build();
+    }
+</code></pre><h3 id="使用方式"><a href="#使用方式" class="headerlink" title="使用方式"></a>使用方式</h3><pre><code>implementation project(&quot;:knife-annotation&quot;)
+    implementation project(&quot;:knife-api&quot;)
+    annotationProcessor project(&quot;:knife-compiler&quot;)
+
+
+public class MainActivity extends AppCompatActivity {
+
+    @BindView(id = R.id.tv_content)
+    TextView tv_content;
+
+    @OnClick(id = R.id.tv_content)
+    public void onclick(){
+        Toast.makeText(this, &quot;ggggggg&quot;, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        Knife.bind(this);
+        tv_content.setText(&quot;hello knife&quot;);
+    }
+}
+</code></pre><h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>上边可能有一些需要注意的地方：</p>
+<ol>
+<li>定义processor时最好创建java library类型，不然会提示AbstractProcessor类找不到</li>
+<li>可能会出现注解编译的时候没有生成对应的注解的情况，需要配合gradle console的log查看哪里出错了</li>
+</ol>
+<p>源码:</p>
+<p><a href="https://github.com/douyn/annotation-demo.git" target="_blank" rel="noopener">douyn/annotation-demo
+</a></p>
+<p>参考:</p>
+<p><a href="https://juejin.im/post/5b824b8751882542f105447d?utm_source=gold_browser_extension" target="_blank" rel="noopener">Java 注解及其在 Android 中的应用</a></p>
+<p><a href="https://github.com/Shouheng88/Android-references" target="_blank" rel="noopener">Shouheng88/Android-references
+</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/05/06/终极适配/" rel="next" title="">
+                <i class="fa fa-chevron-left"></i> 
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/05/06/组件化实践/" rel="prev" title="">
+                 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/logo_s.jpg"
+                alt="Sparky" />
+            
+              <p class="site-author-name" itemprop="name">Sparky</p>
+              <p class="site-description motion-element" itemprop="description">我是谁？我在做什么？我为什么要这么做？我想做什么？我要怎么做？</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">105</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#java-annotation基础"><span class="nav-number">1.</span> <span class="nav-text">java annotation基础</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解析注解的两种方式"><span class="nav-number">2.</span> <span class="nav-text">解析注解的两种方式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-运行时注解可以使用反射解析"><span class="nav-number">2.1.</span> <span class="nav-text">1. 运行时注解可以使用反射解析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-编译时注解可以使用annotationprocessor解析"><span class="nav-number">2.2.</span> <span class="nav-text">2. 编译时注解可以使用annotationprocessor解析</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#基于annotationprocessor使用注解的步骤"><span class="nav-number">3.</span> <span class="nav-text">基于annotationprocessor使用注解的步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#定义注解类"><span class="nav-number">3.1.</span> <span class="nav-text">定义注解类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#封装绑定接口"><span class="nav-number">3.2.</span> <span class="nav-text">封装绑定接口</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#定义annotationprocessor"><span class="nav-number">3.3.</span> <span class="nav-text">定义annotationprocessor</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#代码的生成过程"><span class="nav-number">3.3.0.1.</span> <span class="nav-text">代码的生成过程</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用方式"><span class="nav-number">4.</span> <span class="nav-text">使用方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Sparky</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

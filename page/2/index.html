@@ -242,7 +242,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/24/[Android WIFI开发]/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/06/fbreader笔记/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Sparky">
@@ -261,7 +261,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2017/11/24/[Android WIFI开发]/" itemprop="url">Android WIFI开发</a></h1>
+                <a class="post-title-link" href="/2019/05/06/fbreader笔记/" itemprop="url">未命名</a></h1>
         
 
         <div class="post-meta">
@@ -273,8 +273,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-24T18:33:25+08:00">
-                2017-11-24
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-06T20:11:39+08:00">
+                2019-05-06
               </time>
             
 
@@ -313,411 +313,10 @@
       
         
           
-            <h1 id="Android-WIFI开发"><a href="#Android-WIFI开发" class="headerlink" title="[Android WIFI开发]"></a>[Android WIFI开发]</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在Android应用层的开发中，使用到wifi相关知识点的地方并不多，所以之前对wifi开发并不熟悉，最近接到的两个硬件项目都有用到wifi并且知识点越来越深入，所以有必要记一下笔记，做一些注释。</p>
-<h2 id="基本使用"><a href="#基本使用" class="headerlink" title="基本使用"></a>基本使用</h2><h4 id="1-权限"><a href="#1-权限" class="headerlink" title="1.权限"></a>1.权限</h4><p>Android中要使用系统功能一般都要申请权限，在6.0上可能还要手动申请权限，这里wifi需要的权限有</p>
-<pre><code>&lt;uses-permission android:name=&quot;android.permission.CHANGE_NETWORK_STATE&quot;/&gt;
-&lt;uses-permission android:name=&quot;android.permission.CHANGE_WIFI_STATE&quot;/&gt;
-&lt;uses-permission android:name=&quot;android.permission.ACCESS_NETWORK_STATE&quot;/&gt;
-&lt;uses-permission android:name=&quot;android.permission.ACCESS_WIFI_STATE&quot;/&gt;
-&lt;uses-permission android:name=&quot;android.permission.ACCESS_FINE_LOCATION&quot;/&gt; // 需要系统权限 [定位权限]
-</code></pre><p>其中在6.0以上设备，定位权限需要主动申请，并且如果要获取扫描wifi列表需要打开系统的定位开关。</p>
-<h4 id="2-WiFi相关API"><a href="#2-WiFi相关API" class="headerlink" title="2. WiFi相关API"></a>2. WiFi相关API</h4><p><img src="http://img.blog.csdn.net/20160301131454334" alt="WIFI相关API"></p>
-<p>ScanResult类用于存放wifi扫描结果信息，包含ssid(wifi名称), bssid(网络接入点地址),capabilities(加密类型),frequency(传输频率),level(信号强度)等。这里的解释并不太标准，但是对应功能很形象，如果你要了解更多，可以去具体的查阅资料。</p>
-<p>WifiConfiguration类用于存放wifi的配置信息。包括wifi的密码，加密类型，网络id(用于连接wifi)等。他的几个子类分别对应秘钥加密方式，安全协议等，这些在设置wifi配置的时候会被用到</p>
-<p>wifiinfo类用来描述wifi属性和连接状态。暴露了一些方法给开发者调用。getBSSID(), getMacAddress(), getIpAddress()，getSSID()等</p>
-<p>WifiManager类是framework层暴露的api，用来管理wifi。通过调用 Context.getSystemService(Context.WIFI_SERVICE)可以得到类的实例。通过他可以得到:1.已经配置的网络列表。2.当前连接的wifi。3.扫描到的wifi。4.以及一些常量表示广播的意图等</p>
-<h4 id="3-wifi状态及开关"><a href="#3-wifi状态及开关" class="headerlink" title="3. wifi状态及开关"></a>3. wifi状态及开关</h4><pre><code>/**
- * 判断wifi是否打开
- * &lt;p&gt;需添加权限 {@code &lt;uses-permission android:name=&quot;android.permission.ACCESS_WIFI_STATE&quot;/&gt;}&lt;/p&gt;
- *
- * @return {@code true}: 是&lt;br&gt;{@code false}: 否
- */
-public static boolean getWifiEnabled() {
-    @SuppressLint(&quot;WifiManagerLeak&quot;)
-    WifiManager wifiManager = (WifiManager) Utils.getApp().getSystemService(Context.WIFI_SERVICE);
-    return wifiManager.isWifiEnabled();
-}
-
-/**
- * 打开或关闭wifi
- * &lt;p&gt;需添加权限 {@code &lt;uses-permission android:name=&quot;android.permission.CHANGE_WIFI_STATE&quot;/&gt;}&lt;/p&gt;
- *
- * @param enabled {@code true}: 打开&lt;br&gt;{@code false}: 关闭
- */
-public static void setWifiEnabled(final boolean enabled) {
-    @SuppressLint(&quot;WifiManagerLeak&quot;)
-    WifiManager wifiManager = (WifiManager) Utils.getApp().getSystemService(Context.WIFI_SERVICE);
-    if (enabled) {
-        if (!wifiManager.isWifiEnabled()) {
-            wifiManager.setWifiEnabled(true);
-        }
-    } else {
-        if (wifiManager.isWifiEnabled()) {
-            wifiManager.setWifiEnabled(false);
-        }
-    }
-}
-</code></pre><h4 id="4-扫描wifi"><a href="#4-扫描wifi" class="headerlink" title="4. 扫描wifi"></a>4. 扫描wifi</h4><pre><code> /**
- *
- * 获取WIFI列表
- * &lt;p&gt;需要权限{@code &lt;uses-permission android:name=&quot;android.permission.ACCESS_WIFI_STATE&quot;/&gt; &lt;uses-permission android:name=&quot;android.permission.ACCESS_FINE_LOCATION&quot;/&gt;}&lt;/p&gt;
- * &lt;p&gt;注意Android6.0上需要主动申请定位权限，并且打开定位开关&lt;/p&gt;
- *
- * @param context 上下文
- * @return wifi列表
- */
-public static List&lt;ScanResult&gt; getWifiList(Context context) {
-    WifiManager wm = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-    List&lt;ScanResult&gt; scanResults = wm.getScanResults();
-
-    Collections.sort(scanResults, new Comparator&lt;ScanResult&gt;() {
-        @Override
-        public int compare(ScanResult scanResult1, ScanResult scanResult2) {
-            return scanResult2.level - scanResult1.level;
-        }
-    });
-    return scanResultsCopy;
-}
-
- /**
- * 获取当前链接的WiFi信息
- *
- * @param context 上下文
- * @return 当前wifi数据
- */
-public static WifiInfo getCurrentWifi (Context context) {
-    WifiManager wm = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-    return wm.getConnectionInfo();
-}
-
-
-public static String getWifiEncryptTypeStr (String capabilitie) {
-    if (TextUtils.isEmpty(capabilitie)) return null;
-
-    String encryptType;
-
-    if (capabilitie.contains(&quot;WPA&quot;) &amp;&amp; capabilitie.contains(&quot;WPA2&quot;)) {
-        encryptType = &quot;WPA/WPA2 PSK&quot;;
-    } else if (capabilitie.contains(&quot;WPA2&quot;)) {
-        encryptType = &quot;WPA2 PSK&quot;;
-    } else if (capabilitie.contains(&quot;WPA&quot;)) {
-        encryptType = &quot;WPA PSK&quot;;
-    } else if (capabilitie.contains(&quot;WEP&quot;)) {
-        encryptType = &quot;WEP&quot;;
-    } else {
-        encryptType = &quot;NONE&quot;;
-    }
-
-    return encryptType;
-}
-
-/**
- * wifi加密方式有5种
- * 0 - WPA/WPA2 PSK
- * 1 - WPA2 PSK
- * 2 - WPA PSK
- * 3 - WEP
- * 4 - NONE
- * @param capabilitie
- * @return
- */
-public static int getWifiEncryptType (String capabilitie) {
-    if (TextUtils.isEmpty(capabilitie)) return -1;
-
-    int encryptType;
-
-    if (capabilitie.contains(&quot;WPA&quot;) &amp;&amp; capabilitie.contains(&quot;WPA2&quot;)) {
-        encryptType = 0;
-    } else if (capabilitie.contains(&quot;WPA2&quot;)) {
-        encryptType = 1;
-    } else if (capabilitie.contains(&quot;WPA&quot;)) {
-        encryptType = 2;
-    } else if (capabilitie.contains(&quot;WEP&quot;)) {
-        encryptType = 3;
-    } else {
-        encryptType = 4;
-    }
-
-    return encryptType;
-}
-</code></pre><h4 id="5-连接wifi"><a href="#5-连接wifi" class="headerlink" title="5. 连接wifi"></a>5. 连接wifi</h4><pre><code> /**
- * @des 连接已经保存过配置的wifi
- * @param context
- * @param ssid
- */
-public static void connectWifi (Context context, String ssid) {
-
-    Log.d(TAG, &quot;connectWifi: 去连接wifi: &quot; + ssid);
-
-    if (!getWifiEnabled()) return;
-
-    WifiManager wm = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-    WifiConfiguration wc = new WifiConfiguration();
-
-    wc.SSID = &quot;\&quot;&quot; + ssid + &quot;\&quot;&quot;;
-
-    WifiConfiguration configuration = getWifiConfig(context, ssid);
-    if (configuration != null) {
-        wm.enableNetwork(configuration.networkId, true);
-    }
-
-}
-
-/**
- * @des 连接没有配置过的wifi
- * @param context
- * @param ssid
- * @param password
- * @param encryptType
- */
-public static void connectWifi (Context context, String ssid, String password, int encryptType) {
-
-    Log.d(TAG, &quot;connectWifi: 去连接wifi: &quot; + ssid);
-
-    if (!getWifiEnabled()) return;
-
-    WifiManager wm = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-    WifiConfiguration wc = new WifiConfiguration();
-    wc.allowedAuthAlgorithms.clear();
-    wc.allowedGroupCiphers.clear();
-    wc.allowedKeyManagement.clear();
-    wc.allowedPairwiseCiphers.clear();
-    wc.allowedProtocols.clear();
-
-    wc.SSID = &quot;\&quot;&quot; + ssid + &quot;\&quot;&quot;;
-
-    WifiConfiguration configuration = getWifiConfig(context, ssid);
-    if (configuration != null) {
-        wm.removeNetwork(configuration.networkId);
-    }
-
-    switch (encryptType) {
-        case 4://不加密
-            wc.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
-            break;
-
-        case 3://wep加密
-            wc.hiddenSSID = true;
-            wc.wepKeys[0] = &quot;\&quot;&quot; + password +&quot;\&quot;&quot;;
-            wc.allowedAuthAlgorithms.set(WifiConfiguration.AuthAlgorithm.SHARED);
-            wc.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.CCMP);
-            wc.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.TKIP);
-            wc.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP40);
-            wc.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP104);
-            wc.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
-
-            break;
-        case 0: //wpa/wap2加密
-        case 1: //wpa2加密
-        case 2: //wpa加密
-
-            wc.preSharedKey = &quot;\&quot;&quot; + password + &quot;\&quot;&quot;;
-            wc.hiddenSSID = true;
-            wc.allowedAuthAlgorithms.set(WifiConfiguration.AuthAlgorithm.OPEN);
-            wc.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.TKIP);
-            wc.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.CCMP);
-            wc.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.WPA_PSK);
-            wc.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.CCMP);
-            wc.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.TKIP);
-            wc.status = WifiConfiguration.Status.ENABLED;
-            break;
-    }
-
-    int network = wm.addNetwork(wc);
-    wm.enableNetwork(network, true);
-}
-
-public static void disConnectWifi (Context context, int networkId) {
-    WifiManager wm = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-    wm.disableNetwork(networkId);
-    wm.disconnect();
-}
-</code></pre><h4 id="6-获取和清除WIFI配置"><a href="#6-获取和清除WIFI配置" class="headerlink" title="6. 获取和清除WIFI配置"></a>6. 获取和清除WIFI配置</h4><pre><code>/**
- * @des 清除wifi配置信息
- * @param context
- * @param ssid
- */
-public static void clearWifiInfo(Context context, String ssid) {
-
-    Log.d(TAG, &quot;clearWifiInfo: 清除WIFI配置信息: &quot; + ssid);
-
-    WifiManager wm = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-
-    String newSSID = &quot;\&quot;&quot; + ssid + &quot;\&quot;&quot;;
-
-    if (!(ssid.startsWith(&quot;\&quot;&quot;) &amp;&amp; ssid.endsWith(&quot;\&quot;&quot;))) {
-        newSSID = &quot;\&quot;&quot; + ssid + &quot;\&quot;&quot;;
-    } else {
-        newSSID = ssid;
-    }
-
-    WifiConfiguration configuration = getWifiConfig(context, newSSID);
-    configuration.allowedAuthAlgorithms.clear();
-    configuration.allowedGroupCiphers.clear();
-    configuration.allowedKeyManagement.clear();
-    configuration.allowedPairwiseCiphers.clear();
-    configuration.allowedProtocols.clear();
-
-    if (configuration != null) {
-
-        wm.removeNetwork(configuration.networkId);
-        wm.saveConfiguration();
-    }
-}
-
-public static WifiConfiguration getWifiConfig (Context context, String ssid) {
-
-    Log.d(TAG, &quot;getWifiConfig: 获取wifi配置信息: &quot; + ssid);
-
-    if (TextUtils.isEmpty(ssid)) return null;
-
-    String newSSID;
-
-    if (!(ssid.startsWith(&quot;\&quot;&quot;) &amp;&amp; ssid.endsWith(&quot;\&quot;&quot;))) {
-        newSSID = &quot;\&quot;&quot; + ssid + &quot;\&quot;&quot;;
-    } else {
-        newSSID = ssid;
-    }
-
-    WifiManager wm = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-    List&lt;WifiConfiguration&gt; configuredNetworks = wm.getConfiguredNetworks();
-
-    for (WifiConfiguration configuration : configuredNetworks) {
-        if (newSSID.equalsIgnoreCase(configuration.SSID)) {
-            return configuration;
-        }
-    }
-
-    return null;
-}
-</code></pre><h2 id="高级用法"><a href="#高级用法" class="headerlink" title="高级用法"></a>高级用法</h2><h4 id="1-监听wifi状态的变化并刷新wifi列表和连接状态"><a href="#1-监听wifi状态的变化并刷新wifi列表和连接状态" class="headerlink" title="1. 监听wifi状态的变化并刷新wifi列表和连接状态"></a>1. 监听wifi状态的变化并刷新wifi列表和连接状态</h4><h4 id="2-5Gwfif和2-4Gwifi"><a href="#2-5Gwfif和2-4Gwifi" class="headerlink" title="2. 5Gwfif和2.4Gwifi"></a>2. 5Gwfif和2.4Gwifi</h4><h2 id="踩坑记录"><a href="#踩坑记录" class="headerlink" title="踩坑记录"></a>踩坑记录</h2><h4 id="1-wifi的ssid是带有””，所以你如果要判空是不行的，并且在连接wifi的时候要手动给ssid加上””。"><a href="#1-wifi的ssid是带有””，所以你如果要判空是不行的，并且在连接wifi的时候要手动给ssid加上””。" class="headerlink" title="1. wifi的ssid是带有””，所以你如果要判空是不行的，并且在连接wifi的时候要手动给ssid加上””。"></a>1. wifi的ssid是带有””，所以你如果要判空是不行的，并且在连接wifi的时候要手动给ssid加上””。</h4><h4 id="2-前文已经说了Android6-0以上要想扫描到wifi需要开启权限和手机的定位功能，不然得到的列表为空。"><a href="#2-前文已经说了Android6-0以上要想扫描到wifi需要开启权限和手机的定位功能，不然得到的列表为空。" class="headerlink" title="2. 前文已经说了Android6.0以上要想扫描到wifi需要开启权限和手机的定位功能，不然得到的列表为空。"></a>2. 前文已经说了Android6.0以上要想扫描到wifi需要开启权限和手机的定位功能，不然得到的列表为空。</h4><h4 id="3-wifi的秘钥安全模式网上并没有人给出标准的答案，各个手机厂商的wifi系统上也都不一样，对于我们开发者而言，主要有5种方式也可以总结为3中：NONE-无密码模式-WEP-安全性较低-WAP-PSK-WAP2-PSK-WPA-WPA2-PSK-这三种安全性较高-。需要注意的是通过capabilitie属性得到的字符串是类似-WPA-PSK-CCMP-TKIP-WPA2-PSK-CCMP-TKIP-ESS-这样的，因为wifi的加密方式是安全模式-密码加密类型组合的方式。你要通过string-contains-方法解析出其中的安全模式，上文的扫描wifi中有解析的代码。"><a href="#3-wifi的秘钥安全模式网上并没有人给出标准的答案，各个手机厂商的wifi系统上也都不一样，对于我们开发者而言，主要有5种方式也可以总结为3中：NONE-无密码模式-WEP-安全性较低-WAP-PSK-WAP2-PSK-WPA-WPA2-PSK-这三种安全性较高-。需要注意的是通过capabilitie属性得到的字符串是类似-WPA-PSK-CCMP-TKIP-WPA2-PSK-CCMP-TKIP-ESS-这样的，因为wifi的加密方式是安全模式-密码加密类型组合的方式。你要通过string-contains-方法解析出其中的安全模式，上文的扫描wifi中有解析的代码。" class="headerlink" title="3. wifi的秘钥安全模式网上并没有人给出标准的答案，各个手机厂商的wifi系统上也都不一样，对于我们开发者而言，主要有5种方式也可以总结为3中：NONE(无密码模式), WEP(安全性较低), WAP PSK, WAP2 PSK, WPA/WPA2 PSK(这三种安全性较高)。需要注意的是通过capabilitie属性得到的字符串是类似 [WPA-PSK-CCMP+TKIP][WPA2-PSK-CCMP+TKIP][ESS] 这样的，因为wifi的加密方式是安全模式+密码加密类型组合的方式。你要通过string.contains()方法解析出其中的安全模式，上文的扫描wifi中有解析的代码。"></a>3. wifi的秘钥安全模式网上并没有人给出标准的答案，各个手机厂商的wifi系统上也都不一样，对于我们开发者而言，主要有5种方式也可以总结为3中：NONE(无密码模式), WEP(安全性较低), WAP PSK, WAP2 PSK, WPA/WPA2 PSK(这三种安全性较高)。需要注意的是通过capabilitie属性得到的字符串是类似 [WPA-PSK-CCMP+TKIP][WPA2-PSK-CCMP+TKIP][ESS] 这样的，因为wifi的加密方式是安全模式+密码加密类型组合的方式。你要通过string.contains()方法解析出其中的安全模式，上文的扫描wifi中有解析的代码。</h4><h4 id="4-扫描列表中ssid可能为空或””，一般要剔除掉，而且wifi列表一般是根据信号强度排序。也有可能列表中出现同名的wifi-我之前遇到是因为现在的路由器同时支持5G-wifi和2-4G-wifi，两个wifi属于不同的频段。"><a href="#4-扫描列表中ssid可能为空或””，一般要剔除掉，而且wifi列表一般是根据信号强度排序。也有可能列表中出现同名的wifi-我之前遇到是因为现在的路由器同时支持5G-wifi和2-4G-wifi，两个wifi属于不同的频段。" class="headerlink" title="4. 扫描列表中ssid可能为空或””，一般要剔除掉，而且wifi列表一般是根据信号强度排序。也有可能列表中出现同名的wifi,我之前遇到是因为现在的路由器同时支持5G wifi和2.4G wifi，两个wifi属于不同的频段。"></a>4. 扫描列表中ssid可能为空或””，一般要剔除掉，而且wifi列表一般是根据信号强度排序。也有可能列表中出现同名的wifi,我之前遇到是因为现在的路由器同时支持5G wifi和2.4G wifi，两个wifi属于不同的频段。</h4><h4 id="5-wifi是可以设置为隐藏wifi的，设置为隐藏wifi后不能被扫描到，但是可以通过直接输入ssid和秘钥的方式连接上。"><a href="#5-wifi是可以设置为隐藏wifi的，设置为隐藏wifi后不能被扫描到，但是可以通过直接输入ssid和秘钥的方式连接上。" class="headerlink" title="5. wifi是可以设置为隐藏wifi的，设置为隐藏wifi后不能被扫描到，但是可以通过直接输入ssid和秘钥的方式连接上。"></a>5. wifi是可以设置为隐藏wifi的，设置为隐藏wifi后不能被扫描到，但是可以通过直接输入ssid和秘钥的方式连接上。</h4><h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/25/如何阅读开源项目/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sparky">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/logo_s.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Sparky">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/10/25/如何阅读开源项目/" itemprop="url">Android如何阅读开源项目源代码</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-25T08:12:46+08:00">
-                2017-10-25
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="Android如何阅读开源项目源代码"><a href="#Android如何阅读开源项目源代码" class="headerlink" title="Android如何阅读开源项目源代码"></a>Android如何阅读开源项目源代码</h1><p>开源项目一般分为完整项目和第三方类库，对于完整项目主要分析项目架构，引用第三方类库，总体代码风格等，分析第三方类库主要集中在功能和实现思路，设计思想等。</p>
-<p>// 了解功能，考虑实现方式</p>
-<h4 id="1-总-—-功能了解"><a href="#1-总-—-功能了解" class="headerlink" title="1 总 —- 功能了解"></a>1 总 —- 功能了解</h4><p>了解项目功能(Sample 和文档)以及主要分为几个大块。另外明白你的需求，比如 PullToRefresh 的下拉实现。<br>PS：<br>（1）大家可以自己先想想如果是自己会怎么去实现这个项目，或许看源码过程中会发现思想碰撞。<br>（2）如果时间比较紧，可以先 Google 一些该项目相关的文档结合代码看看，帮助快速掌握，不过网上分析文章参差不齐，需谨慎。</p>
-<p>// 分析项目代码目录结构 –&gt; 核心类 –&gt; 核心方法 –&gt; 找到分析重心</p>
-<h4 id="2-分-—-详细设计"><a href="#2-分-—-详细设计" class="headerlink" title="2 分 —- 详细设计"></a>2 分 —- 详细设计</h4><p>这里正式开始代码分析，分析过程中如果脑子记不住，多动手记下主要类、函数等作用<br>(1) 入口对完整 App 来说就是 Manifest 找到入口 Activity，对于工具库从调用接口中判断入口类。然后在 IDE 中一步步深入即可。PS：一般不错的开源项目规范都比较好，类、函数、变量从名字上就可以了解作用，所以如果需要快速掌握原理的话看觉得是重点的函数即可。<br>(2) 核心类在上面的一步步深入过程中已经接触了不少类，大致了解各个类的主要作用</p>
-<p>// 分析重心，分析流程</p>
-<h4 id="3-总-—-总体设计"><a href="#3-总-—-总体设计" class="headerlink" title="3 总 —- 总体设计"></a>3 总 —- 总体设计</h4><p>(1) 功能流程图上面 2-(1) 的过程完成后已经大致了解项目的流程，不费事的话可以简单画下流程及相关类、函数。如 Retrofit、Volley 的请求处理流程，Android-Universal-Image-Loader 的图片处理流程图。<br>(2) 总体设计整个库分为哪些模块及模块之间的调用关系。如大多数图片缓存会分为 Loader 和 Processer 等模块。</p>
-<p>// 顺序分析</p>
-<h4 id="4-回顾"><a href="#4-回顾" class="headerlink" title="4 回顾"></a>4 回顾</h4><p>这时候从 3-2-1（总体设计-&gt;流程图-&gt;详细设计-&gt;功能介绍）<br>反序看，大致就能了解作者最初是怎么设计的了对于快速分析可以走 1-2(1)-2(2)-3(1) 的步骤。</p>
+            <h2 id="FBReader项目笔记"><a href="#FBReader项目笔记" class="headerlink" title="FBReader项目笔记"></a>FBReader项目笔记</h2><h3 id="项目结构"><a href="#项目结构" class="headerlink" title="项目结构"></a>项目结构</h3><p><img src="https://github.com/douyn/BlogResource/blob/master/res/image/fbreader%E9%A1%B9%E7%9B%AE%E7%BB%93%E6%9E%84.png?raw=true" alt="fbreader项目结构"></p>
+<p><img src="https://github.com/douyn/BlogResource/blob/master/res/image/jni%E6%BA%90%E7%A0%81%E7%BB%93%E6%9E%84.png?raw=true" alt="jni源码结构"></p>
+<p><img src="https://github.com/douyn/BlogResource/blob/master/res/image/assert%E7%BB%93%E6%9E%84.png?raw=true" alt="assets结构"></p>
+<p><img src="" alt="java代码结构"><br>java代码没有看完，有的类自己也不知道是做什么的</p>
 
           
         
@@ -766,7 +365,7 @@ public static WifiConfiguration getWifiConfig (Context context, String ssid) {
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/25/View 事件传递/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/06/kernel目录结构/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Sparky">
@@ -785,7 +384,7 @@ public static WifiConfiguration getWifiConfig (Context context, String ssid) {
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2017/10/25/View 事件传递/" itemprop="url">View事件传递</a></h1>
+                <a class="post-title-link" href="/2019/05/06/kernel目录结构/" itemprop="url">未命名</a></h1>
         
 
         <div class="post-meta">
@@ -797,8 +396,8 @@ public static WifiConfiguration getWifiConfig (Context context, String ssid) {
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-25T08:12:46+08:00">
-                2017-10-25
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-06T20:11:27+08:00">
+                2019-05-06
               </time>
             
 
@@ -837,20 +436,30 @@ public static WifiConfiguration getWifiConfig (Context context, String ssid) {
       
         
           
-            <h1 id="View事件传递机制"><a href="#View事件传递机制" class="headerlink" title="View事件传递机制"></a>View事件传递机制</h1><h4 id="基础概念"><a href="#基础概念" class="headerlink" title="基础概念"></a>基础概念</h4><ol>
-<li>Android中的touch事件都被封装到TouchEvent对象中，包括触摸的时间，位置，动作等</li>
-<li>Touch事件的类型有ACTION_DOWN,ACTION_MOVE,ACTION_UP,ACTION_CANCEL等。每个事件都是以ACTION_DOWN开始，以ACTION_UP结束。</li>
-<li>对事件的处理有三种，传递，拦截，消费，分别是dispatchTouchEvent(), onInterceptTouchEvent(),onTouchEvent()和onTouchListener</li>
-</ol>
-<h4 id="传递流程"><a href="#传递流程" class="headerlink" title="传递流程"></a>传递流程</h4><ol>
-<li>事件都是从activity.dispatchTouchEvent()开始的，如果没有被拦截就会一直走view的diapathTouchEvent(),从最上层的ViewGroup一直向下传递到最下层的子View,最后子View可以通过onTouch()消费掉事件。如果子View没有消费掉事件，那么事件就会向上传递，这时ViewGroup可以消费事件，如果也没有消费的话，最后会走activity.onTouchEvent();</li>
-<li>事件可以被拦截。ViewGroup可以通过onInterceptTouchEvent()阻止其向下传递。</li>
-<li>如果view没有对ACTION_DOWN进行消费，则其他事件不会传递过来。</li>
-<li>onTouchListener优先与onTouchEvent进行消费.</li>
-</ol>
-<p><img src="https://raw.githubusercontent.com/android-cn/android-open-project-analysis/master/tech/touch-event/image/ignorant-view-example.jpg" alt="View不处理事件流程"></p>
-<p><img src="https://raw.githubusercontent.com/android-cn/android-open-project-analysis/master/tech/touch-event/image/interested-view-example.jpg" alt="View处理事件流程"></p>
-
+            <h2 id="kernel源码目录"><a href="#kernel源码目录" class="headerlink" title="kernel源码目录"></a>kernel源码目录</h2><h6 id="Document"><a href="#Document" class="headerlink" title="Document"></a>Document</h6><p>一些说明文档</p>
+<h6 id="android"><a href="#android" class="headerlink" title="android"></a>android</h6><h6 id="arch"><a href="#arch" class="headerlink" title="arch"></a>arch</h6><p>所有与系统架构相关的代码都保存在此目录以及include/asm-xx目录中，每种架构对应的子目录都包括下边的目录</p>
+<ul>
+<li>kernel, 存放支持系统架构所特有的诸如信号量处理和SMP之类特征的实现。</li>
+<li>lib，存放体系结构特有的诸如strlen和memcpy之类的通用函数的实现。</li>
+<li>mm，存放体系结构特有的内存管理程序的实现。</li>
+</ul>
+<p>除了上述的3个子目录之外，大多数还有boot目录，存放这种硬件平台上启动内核所使用的部分或者全部平台特有代码。</p>
+<h6 id="block"><a href="#block" class="headerlink" title="block"></a>block</h6><p>保存了block层的实现代码</p>
+<h6 id="crypto"><a href="#crypto" class="headerlink" title="crypto"></a>crypto</h6><p>保存了内核本身所使用的加密api信息，实现了常用的加密和散列算法，还有一些压缩和crc校验算法</p>
+<h6 id="drivers"><a href="#drivers" class="headerlink" title="drivers"></a>drivers</h6><p>显卡，网卡，scsi适配器，pci总线，usb总线和其它linux支持的外围设备或总线的驱动程序都可以在这里找到。</p>
+<h6 id="firmware"><a href="#firmware" class="headerlink" title="firmware"></a>firmware</h6><h6 id="fs"><a href="#fs" class="headerlink" title="fs"></a>fs</h6><p>此目录保存了虚拟文件系统的代码还有各个不同文件系统的代码。linux支持的所有文件系统在fs下都有一个对应的目录。</p>
+<h6 id="include"><a href="#include" class="headerlink" title="include"></a>include</h6><p>此目录包括内核中大部分的头文件，</p>
+<h6 id="init"><a href="#init" class="headerlink" title="init"></a>init</h6><p>保存内核的初始化代码，包括main.c、创建早期用户空间的代码以及其它初始化代码。</p>
+<h6 id="ipc"><a href="#ipc" class="headerlink" title="ipc"></a>ipc</h6><p>包含了共享内存，信号量和其它形式ipc的代码</p>
+<h6 id="kernel"><a href="#kernel" class="headerlink" title="kernel"></a>kernel</h6><p>内核中最核心的部分，包括了进程的调度，以及进程的创建和销毁等，和系统架构有关的另外一部分代码在arch/../kernel目录下</p>
+<h6 id="lib"><a href="#lib" class="headerlink" title="lib"></a>lib</h6><p>此目录保存了库代码，这些代码实现了一个标准C库的通用子集，包括字符串和内存操作等函数</p>
+<h6 id="mm"><a href="#mm" class="headerlink" title="mm"></a>mm</h6><p>包含和与系统架构无关的内存管理的代码，与体系有关的内存管理的代码在arch/../mm目录下</p>
+<h6 id="net"><a href="#net" class="headerlink" title="net"></a>net</h6><p>保存了和网络相关的代码，实现了常见的网络协议,如TCP/IP,IPX等</p>
+<h6 id="samples"><a href="#samples" class="headerlink" title="samples"></a>samples</h6><h6 id="scripts"><a href="#scripts" class="headerlink" title="scripts"></a>scripts</h6><p>包含了配置内核的脚本文件。如make menuconfig，make xconfig等</p>
+<h6 id="security"><a href="#security" class="headerlink" title="security"></a>security</h6><p>包含了linux不同的安全模型的代码，比如linux se</p>
+<h6 id="sound"><a href="#sound" class="headerlink" title="sound"></a>sound</h6><p>保存了声卡驱动以及其它声音相关的代码</p>
+<h6 id="tools"><a href="#tools" class="headerlink" title="tools"></a>tools</h6><h6 id="usr"><a href="#usr" class="headerlink" title="usr"></a>usr</h6><p>实现了用于打包和压缩的cpio</p>
+<h6 id="virt"><a href="#virt" class="headerlink" title="virt"></a>virt</h6>
           
         
       
@@ -898,7 +507,7 @@ public static WifiConfiguration getWifiConfig (Context context, String ssid) {
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/25/Java 多线程/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/06/全志B288修改日志/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Sparky">
@@ -917,7 +526,7 @@ public static WifiConfiguration getWifiConfig (Context context, String ssid) {
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2017/10/25/Java 多线程/" itemprop="url">Java 多线程</a></h1>
+                <a class="post-title-link" href="/2019/05/06/全志B288修改日志/" itemprop="url">未命名</a></h1>
         
 
         <div class="post-meta">
@@ -929,8 +538,8 @@ public static WifiConfiguration getWifiConfig (Context context, String ssid) {
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-25T08:12:46+08:00">
-                2017-10-25
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-06T20:11:00+08:00">
+                2019-05-06
               </time>
             
 
@@ -969,1061 +578,533 @@ public static WifiConfiguration getWifiConfig (Context context, String ssid) {
       
         
           
-            <h1 id="Java-多线程"><a href="#Java-多线程" class="headerlink" title="Java 多线程"></a>Java 多线程</h1><p>线程状态<br><img src="http://upload-images.jianshu.io/upload_images/1689841-383f7101e6588094.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240&amp;_=5479442" alt=""></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/25/Eclipse项目迁移到Android Studio/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sparky">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/logo_s.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Sparky">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/10/25/Eclipse项目迁移到Android Studio/" itemprop="url">Eclipse项目导入Android Studio注意事项</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-25T08:12:46+08:00">
-                2017-10-25
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="Eclipse项目导入Android-Studio注意事项"><a href="#Eclipse项目导入Android-Studio注意事项" class="headerlink" title="Eclipse项目导入Android Studio注意事项:"></a>Eclipse项目导入Android Studio注意事项:</h2><ol>
-<li>如果以前把项目从eclipse导入Android Studio失败过,最好要先删除掉gradle文件(包括build.gradle, gradle文件夹,以及gradlew, gradlew.bat文件)</li>
-<li>如果项目中使用了butterknife,需要删除某些文件,不然会报错:error: duplicate class: class_name$$ViewInjector$$.处理步骤如下:    1：删除eclipse项目中的.apt_generated文件夹和.factorypath文件 2：删除.classpath文件中的节点 3：重新导入到android studio中</li>
-<li>android studio右下角的Gradle Console很重要,如果有gradle编译报错什么的,分析里边的日志基本上都可以得到答案.比如有的文件非法,你扔了一个.key文件到drawable文件夹中,在新版Android Studio中是会报错的,但是Messenges中的log可能是很片面的说检测到文件非法,但是在gradle console中可以看到具体哪一个文件出错,去修改.</li>
-<li>如果有.9图片,最好在这个项目级别的build.gradle文件的android{}中添加节点, 因为有很多时候在eclipse上能用的.9图片在as上不能用,如果不能用,是可以在gradle console中显示log的.Error:Execution failed for task ‘:app:mergeDebugResources’. &gt; Some file crunching failed, see logs for details build gradle issues    <pre><code>aaptOptions {
-    cruncherEnabled false
-    useNewCruncher false
-}
-</code></pre></li>
-<li>如果用到google-play-service,导入到Android Studio后会自动添加远程依赖compile ‘com.google.android.gms:play-services:+’,但是最新的google-play-sercice使用到了appcompat-v7中的属性,可能与项目中的某些value值冲突,报值非法的错误,建议改为compile ‘com.google.android.gms:play-services:7.0.0’</li>
-<li>去掉project.property中的项目依赖,单独去添加module依赖</li>
-<li>文件格式转换,可能运行时报非法字符的错误,只需要在右下角点击UTF-8,选择一个其他格式,弹出窗选择convert,完毕后再次点击XX(编码格式),选择utf-8,弹出窗选择convert,保存,重新编译.</li>
-</ol>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/25/Android面试题及答案/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sparky">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/logo_s.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Sparky">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/10/25/Android面试题及答案/" itemprop="url">Android面试题及答案</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-25T08:12:46+08:00">
-                2017-10-25
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="Android面试题及答案"><a href="#Android面试题及答案" class="headerlink" title="Android面试题及答案"></a>Android面试题及答案</h1><h6 id="1-Android中的ANR"><a href="#1-Android中的ANR" class="headerlink" title="1. Android中的ANR"></a>1. Android中的ANR</h6><p>概念:<br>Android中的ANR全称是application not responding。应用程序无响应。应用程序在指定时间内没有响应用户操作,系统就会抛出ANR.在activity中的响应时间是５秒，在broadcase中的响应时间是１０秒，在service中的响应时间是２０s。注意:anr是系统抛出的异常，程序是捕捉不到的。</p>
-<p>解决方法:</p>
+            <h2 id="全志B288修改日志"><a href="#全志B288修改日志" class="headerlink" title="全志B288修改日志"></a>全志B288修改日志</h2><ul>
+<li><p>2018.3.2 【修改】隐藏NavigationBar， 步骤: frameworks/base/packages/SystemUI/src/com/android/systemui/statusbar/phone/PhoneStatusBar,java文件line 431设置showNav = false;</p>
+</li>
+<li><p>2018/3/5 【修改】修改lcd_density默认配置为160,步骤：device/softwinner/lark-eink-perf/lark_eink_perf.mk,修改ro.sf.lcd_density=167 –&gt; ro.sf.lcd_density=160 （删除out/target/product/lark-eink-perf1/system/build.prop之后再编译）</p>
+</li>
+<li><p>2018/3/5 【修改】预置apk，步骤：</p>
 <ol>
-<li>运行在主线程的任何方法都应尽量做更少的事情。特别是，Activity应该在他的关键生命周期方法里尽量少的去做创建操作。</li>
-<li>应用程序应该避免在广播接受者里做耗时或者计算操作。但不再是子线程里做这些任务，如果要做耗时操作，应该启动一个service。</li>
-</ol>
-<h6 id="2-Fragment的生命周期"><a href="#2-Fragment的生命周期" class="headerlink" title="2. Fragment的生命周期"></a>2. Fragment的生命周期</h6><p>完整的生命周期依次是:<br>onAttach() –&gt; onCreate() –&gt; onCreateView() –&gt; onActivityCreated() –&gt; onStart() –&gt; onResume() –&gt; onPaulse() –&gt; onStop() –&gt; onDestroyView() –&gt; onDestroy() –&gt; onDetach()</p>
-<p>切换到这个Fragment分别执行:<br>onAttch() –&gt; onCreate() –&gt; onCreateVIew() –&gt; onActivityCreated() –&gt; onStart() –&gt; onResume()</p>
-<p>切换到其他Fragment:<br>onPause() –&gt; onStop() –&gt; onDestroyView()</p>
-<p>从其他Fragment切换回来:<br>onCreateView() –&gt; onActivityCreated() –&gt; onStart() –&gt; onResume()</p>
-<h6 id="3-Service的生命周期"><a href="#3-Service的生命周期" class="headerlink" title="3. Service的生命周期"></a>3. Service的生命周期</h6><p>service中的４个手动调用的方法:</p>
-<pre><code>startService(); 
-stopService();
-bindService();
-unbindService();
-</code></pre><p>service中5个生命周期方法:</p>
-<pre><code>onCreate();
-onStartCommand();
-onBind();
-onUnbind();
-onDestroy();
-</code></pre><p>startService();　会执行生命周期中的onCreate() –&gt; onStartCommand();如果一个服务已经启动，不会再执行onCreate(),只会执行onStartCommand()；</p>
-<p>stopService(): 会执行onDestroy()方法，如果一个服务已经被绑定,必须先解绑才能销毁。</p>
-<p>bindService(): 会执行onCreate() –&gt; onBind()方法。</p>
-<p>unBindService(): 会执行onUnbindService() –&gt; onDestroy()方法。</p>
-<p>startService方式启动的服务，在调用者退出之后仍然存在，bindService启动的服务，如果调用者退出，服务也退出。</p>
-<h6 id="4-Android动画"><a href="#4-Android动画" class="headerlink" title="4. Android动画"></a>4. Android动画</h6><p>Android中有３中动画 帧动画，补间动画，属性动画</p>
-<p>帧动画</p>
-<p>就是一张张图片一次播放.在Android中的定义方式是在xml文件中定义<animation-list></animation-list>标签。</p>
-<p>启动可以定义oneshot属性，true表示执行一次,false表示执行多次</p>
-<p>补间动画</p>
-<p>补件动画分为４种,scale/translate/alpha/rotate<br>常用用法</p>
-<pre><code>AlphaAnimation alphaAnimation = new AlphaAnimation(1f, 0.5f);
-alphaAnimation.setDuration(100);
-alphaAnimation.setRepeatCount(11);
-alphaAnimation.start();
-ImageView imageView = null;
-imageView.startAnimation(alphaAnimation);
-</code></pre><p>属性动画<br>对于对象属性的动画。就是通过不断的对值的操作来实现动画效果。</p>
-<pre><code>ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(targetView, propertyName, valueFrom, valueTo);
-objectAnimator.setDuration(1000);
-objectAnimator.setInterceptor(interceptor);
-objectAnimator.start();
-
-
-ValueAnimator animator = ValueAnimator.ofFloat(0f, 300f);
-animator.addUpdateListener();
-animator.addListener();
-animator.start();
-</code></pre><h6 id="5-Activity的启动方式"><a href="#5-Activity的启动方式" class="headerlink" title="5. Activity的启动方式"></a>5. Activity的启动方式</h6><p>standard: 标准模式。是acitvity默认的启动模式，假如a启动了b，那么b就会运行在a所在的任务栈里，而且每次启动一个新的activity，不管栈里是否存在，都会创建新的实例。而且在非activity类型的context中启动标准模式的activity会报错，因为context没有任务栈，想要启动就必须制定待启动的activity的标志位为Intent.FLAG_ACTIVITY_NEW_TASK,这个时候activity会以singleTask方式启动。</p>
-<p>singleTask:　栈内复用模式。<br>如果任务栈中存在这个activity的实例，就不会重新创建，而是去复用这个实例，并将这个实例上的所有activity移除栈。假如activity_a启动了activity_b,又从activity_b跳转回activity_a，此时会先判断activity_a的taskAffinity属性对应的栈中是否存在activity_a,如果没有设置taskAffinity对应的任务栈，就默认是启动他的栈。如果存在taskAffinity对应的任务栈并且，activity指定的栈中存在activity_a，就不会重新创建，而是复用这个activity_a，并将上边所有的activity销毁，如果不存在这个activity_a，就会创建activity_a，如果不存在taskAffinity对应的任务栈，就会创建任务栈，并且创建实例</p>
-<p>singleTop:　栈顶复用模式。<br>如果这个Activity处于栈顶，那么将复用这个栈顶的activity,不会产生新的activity实例。例如activity_a启动activity_b，就会去先判断activity_a所在的栈的栈顶元素是否存在activity_b的实例，如果是，则不会重新去创建activity_b，而是直接引用栈顶实例，如果不是，则要去创建。</p>
-<p>singleInstantce:　单实例模式。<br>只有一个实例，并且单独位于一个任务栈中，这个任务栈中只有一个activity。一旦这个activity被激活，就会复用这个实例。</p>
-<h6 id="6-Java引用方式"><a href="#6-Java引用方式" class="headerlink" title="6. Java引用方式"></a>6. Java引用方式</h6><p>强引用: 强引用是在程序代码中最普遍存在的,使用方式为Object obj = new Object();或者String str = “strong reference”;<br>即使程序现在内存不足,也不会被回收,只是系统会抛出OOM异常</p>
-<p>软引用:<br>用来描述一些有用但是不是必需的对象.只有在内存不足的时候JVM才会去回收该对象.</p>
-<p>弱引用:<br>也是用来描述非必需的对象.但是只要垃圾回收器扫描到他,他就会被回收.</p>
-<p>虚引用:<br>在任何时候都有可能被垃圾回收.</p>
-<h6 id="7-自定义view的基本流程"><a href="#7-自定义view的基本流程" class="headerlink" title="7. 自定义view的基本流程"></a>7. 自定义view的基本流程</h6><ol>
-<li>编写attr.xml文件定义view的属性</li>
-<li>编写layout文件</li>
-<li>在布局文件中获取自定义属性</li>
-<li>重写onMesure</li>
-<li>重写onDraw</li>
-</ol>
-<h6 id="8-view的绘制流程"><a href="#8-view的绘制流程" class="headerlink" title="8. view的绘制流程"></a>8. view的绘制流程</h6><h6 id="9-view的事件传递机制"><a href="#9-view的事件传递机制" class="headerlink" title="9. view的事件传递机制"></a>9. view的事件传递机制</h6><p>基础知识</p>
-<ul>
-<li>所有的touch事件都被封装称MotionEvent对象,包括触摸的事件位置动作等</li>
-<li>事件类型分为ACTION_DOWN, ACTION_MOVE, ACTION_UP, ACTION_CANCEL,每个动作都是以ACTION_DOWN开始,以ACTION_UP结束</li>
-<li>对事件的处理分为3类,包括传递dispatchTouchEvent,拦截onInterceptTouchEvent,消费onTouchEvent/onTouch</li>
-</ul>
-<p>传递流程</p>
-<ul>
-<li>事件都是从dispatchTouchEvent(),只要没有拦截就会向下传递,子view可以通过onTouchEvent对事件进行消费</li>
-<li>父view可以通过onInterceptTouchEvent对事件进行拦截,阻止其向下传递</li>
-<li>如果事件从上到下的传递过程中一直没有停止,而且最底层的view没有对事件进行消费,则事件会从下向上传递,父view可以对事件进行消费,如果也没有消费,就会传递到activity的onTouch中进行消费</li>
-<li>如果子view没有消费ACTION_DOWN,之后的事件不会传递过来</li>
-<li>onTouchListener优先于onTouchEvent对事件进行消费</li>
-</ul>
-<h6 id="10-Android-IPC机制"><a href="#10-Android-IPC机制" class="headerlink" title="10. Android IPC机制"></a>10. Android IPC机制</h6><p>Android IPC机制是指Android中多进程环境下出现的进程间通信的处理机制.</p>
-<p>多进程会出现的问题</p>
-<ul>
-<li>静态变量失效.</li>
-<li>线程同步机制失效</li>
-<li>Application可能被创建多次</li>
-<li>sharepreference的可靠性降低</li>
-</ul>
-<p>解决IPC的方法</p>
-<ul>
-<li>通过intent传递bundle数据</li>
-<li>通过共享文件</li>
-<li>使用Messenger</li>
-<li>使用AIDL</li>
-<li>使用Socket</li>
-<li>使用ContentProvider</li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/25/【源码解析】 Volly的基本用法和源码解析/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sparky">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/logo_s.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Sparky">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/10/25/【源码解析】 Volly的基本用法和源码解析/" itemprop="url">【源码解析】 Volley的用法及源码解析</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-25T08:12:46+08:00">
-                2017-10-25
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Volley是谷歌在2013年I/O大会上推出的新的网络请求框架，如今已经被废弃，取而代之使用okhttp进行网络请求。虽然现在使用场景不多了，但是技术总有光辉的一面，而且也是面试所遇到的最常见的源码问题之一，所以此篇就作为认识源码的入门之作。</p>
-<h2 id="Volley简介"><a href="#Volley简介" class="headerlink" title="Volley简介"></a>Volley简介</h2><p>Volley是谷歌退出的Android异步网络请求和图片加载库，特别适合网络请求量不大但是请求频繁的场景。</p>
-<p>Volley的优点：</p>
-<ul>
-<li>非常适合进行数据量不大但是通信频发的网络操作(比如加载大量小图片)</li>
-<li>对请求进行了处理，包括服务器ResponseCode(2xx,3xx,…)的处理,请求头的处理，支持重试和取消请求，加入缓存机制，支持自定义请求优先级。</li>
-<li>在api-9以上使用httpURLconnection，在api-9一下使用httpclient。</li>
-<li>提供简便的图片加载工具ImageLoader。</li>
-</ul>
-<p>Volley的缺点:</p>
-<ul>
-<li>使用的是httpurlconnection和httpclient，现在主流使用okhttp。</li>
-<li>只支持http。</li>
-<li>加载图片性能一般。</li>
-<li>对大文件下载表现糟糕。</li>
-</ul>
-<h2 id="Volley的基本用法"><a href="#Volley的基本用法" class="headerlink" title="Volley的基本用法"></a>Volley的基本用法</h2><h4 id="请求结果为JSON字符串-String-xml与此类似"><a href="#请求结果为JSON字符串-String-xml与此类似" class="headerlink" title="请求结果为JSON字符串(String/xml与此类似)"></a>请求结果为JSON字符串(String/xml与此类似)</h4><pre><code>RequestQueue mQueue = Volley.newRequestQueue(this);
-
-String url = null;
-
-JsonObjectRequest jsonRequest = new JsonObjectRequest(url, null, new Response.Listener&lt;JSONObject&gt;() {
-    @Override
-    public void onResponse(JSONObject response) {
-        // TODO
-    }
-}, new Response.ErrorListener() {
-    @Override
-    public void onErrorResponse(VolleyError error) {
-        // TODO
-    }
-});
-mQueue.add(jsonRequest);
-</code></pre><h4 id="图片加载"><a href="#图片加载" class="headerlink" title="图片加载"></a>图片加载</h4><p>1 使用ImageRequest与jsonrequest类似<br>2 使用Volley ImageLoader</p>
-<pre><code>RequestQueue mQueue = Volley.newRequestQueue(this);
-ImageLoader.ImageCache imageCahce = new ImageLoader.ImageCache() {
-    @Override
-    public Bitmap getBitmap(String url) {
-        return null;
-    }
-
-    @Override
-    public void putBitmap(String url, Bitmap bitmap) {
-        // TODO
-    }
-};
-ImageLoader imageLoader = new ImageLoader(mQueue, imageCahce);
-
-String url;
-
-ImageView imageView;
-imageLoader.get(url, ImageLoader.getImageListener(imageView, R.id.defalt_img, R.id.error_img));
-</code></pre><h2 id="Volley源码解析"><a href="#Volley源码解析" class="headerlink" title="Volley源码解析"></a>Volley源码解析</h2><p>分析上边的Volley的基本用法我们可以知道,发送请求，我们会先去创建一个RequestQueue，然后创建一个Request对象，最后把这个Request对象添加到队列里。<br>具体到代码里，分别是：</p>
-<p>创建请求队列:</p>
-<pre><code>RequestQueue mQueue = Volley.newRequestQueue(this);
-</code></pre><p>newRequestQueue()方法如下:</p>
-<pre><code>/**
- * Creates a default instance of the worker pool and calls {@link RequestQueue#start()} on it.
- *
- * @param context A {@link Context} to use for creating the cache dir.
- * @param stack An {@link HttpStack} to use for the network, or null for default.
- * @return A started {@link RequestQueue} instance.
- */
-public static RequestQueue newRequestQueue(Context context, HttpStack stack) {
-
-    // DiskBasedCache的参数
-    // 创建缓存目录
-    File cacheDir = new File(context.getCacheDir(), DEFAULT_CACHE_DIR);
-
-    // Stack的参数
-    // 设置userAgent，userAgent是创建AndroidHttpClient的参数
-    String userAgent = &quot;volley/0&quot;;
-    try {
-        String packageName = context.getPackageName();
-        PackageInfo info = context.getPackageManager().getPackageInfo(packageName, 0);
-        userAgent = packageName + &quot;/&quot; + info.versionCode;
-    } catch (NameNotFoundException e) {
-    }
-
-    // NetWork对象的参数
-    // 判断api等级
-    // 如果sdk &gt;= 9，使用httpurlconnection进行网络请求
-    // 如果sdk &lt; 9，使用httpclient进行网络请求
-    if (stack == null) {
-        if (Build.VERSION.SDK_INT &gt;= 9) {
-            stack = new HurlStack();
-        } else {
-            // Prior to Gingerbread, HttpUrlConnection was unreliable.
-            // See: http://android-developers.blogspot.com/2011/09/androids-http-clients.html
-            stack = new HttpClientStack(AndroidHttpClient.newInstance(userAgent));
-        }
-    }
-
-    // RequestQueue的参数
-    Network network = new BasicNetwork(stack);
-
-    // 创建RequestQueue对象
-    RequestQueue queue = new RequestQueue(new DiskBasedCache(cacheDir), network);
-
-    queue.start();
-
-    return queue;
-}
-</code></pre><p>ReuestQueue方法：</p>
-<pre><code>/**
- * Creates the worker pool. Processing will not begin until {@link #start()} is called.
- *
- * @param cache A Cache to use for persisting responses to disk
- * @param network A Network interface for performing HTTP requests
- * @param threadPoolSize Number of network dispatcher threads to create
- * @param delivery A ResponseDelivery interface for posting responses and errors
- */
-public RequestQueue(Cache cache, Network network, int threadPoolSize,
-        ResponseDelivery delivery) {
-    mCache = cache;
-    mNetwork = network;
-    mDispatchers = new NetworkDispatcher[threadPoolSize];
-    mDelivery = delivery;
-}
-</code></pre><p>start()方法:</p>
-<pre><code>/**
- * Starts the dispatchers in this queue.
- */
-public void start() {
-    // 停止现有的网络请求
-    // 在stop()方法中,中断mCacheDispatcher线程和NetworkDispatcher线程
-    // 下边会分析到这两个线程，缓存线程和网络线程
-    stop();  // Make sure any currently running dispatchers are stopped.
-    // Create the cache dispatcher and start it.
-    // 创建并启动一个缓存线程
-    mCacheDispatcher = new CacheDispatcher(mCacheQueue, mNetworkQueue, mCache, mDelivery);
-    mCacheDispatcher.start();
-
-    // Create network dispatchers (and corresponding threads) up to the pool size.
-    // 创建并启动网络线程，默认是4条
-    for (int i = 0; i &lt; mDispatchers.length; i++) {
-        NetworkDispatcher networkDispatcher = new NetworkDispatcher(mNetworkQueue, mNetwork,
-                mCache, mDelivery);
-        mDispatchers[i] = networkDispatcher;
-        networkDispatcher.start();
-    }
-}
-</code></pre><p>stop()方法源码:</p>
-<pre><code>/**
- * Stops the cache and network dispatchers.
- */
-public void stop() {
-    // 中断网络线程和缓存线程
-    if (mCacheDispatcher != null) {
-        mCacheDispatcher.quit();
-    }
-    for (final NetworkDispatcher mDispatcher : mDispatchers) {
-        if (mDispatcher != null) {
-            mDispatcher.quit();
-        }
-    }
-}
+<li><p>添加lib库。将apk里依赖的so库复制到device/softwinner/lark-common/prebuild/apklib/，修改device/softwinner/lark-common/prebuild/apklib/下的Android.mk文件，</p>
+<pre><code>include $(CLEAR_VARS)
+LOCAL_MODULE_TAGS := optional
+LOCAL_PREBUILT_LIBS := libBugly.so libluajit.so liblzma.so
+include $(BUILD_MULTI_PREBUILT)
+</code></pre></li>
+<li><p>添加apk。将apk包复制到device/softwinner/lark-common/prebuild/apk/,修改device/softwinner/lark-common/prebuild/Android.mk文件，</p>
+<pre><code>include $(CLEAR_VARS)
+LOCAL_MODULE := MuPDF
+LOCAL_MODULE_TAGS := optional
+LOCAL_SRC_FILES := MuPDF.apk
+LOCAL_MODULE_CLASS := APPS
+LOCAL_MODULE_SUFFIX := $(COMMON_ANDROID_PACKAGE_SUFFIX)
+LOCAL_CERTIFICATE := PRESIGNED
+LOCAL_REQUIRED_MODULES := libmupdf_java
+include $(BUILD_PREBUILT)
+</code></pre></li>
+<li><p>添加到配置文件。进入lark-eink-perf1这个我们要编译的设备的目录，修改下边的lark-eink-perf1.mk，</p>
+<pre><code>PRODUCT_PACKAGES += MuPDF
 </code></pre><blockquote>
-<p>在newRequestQueue()方法里只做了两件事:创建了RequestQueue对象，执行了RequestQueue的start方法。</p>
-<ul>
-<li>其中创建RequestQueue对象的两个参数，会被设置为RequestQueue对象的字段，分别对应缓存和网络请求的配置。</li>
-<li>start方法中，先停止网络操作，然后分别创建并启动缓存线程和网络线程。</li>
-</ul>
+<p>注意：apk需要是系统签名的apk</p>
 </blockquote>
-<p>创建一个请求:</p>
-<pre><code>JsonObjectRequest jsonRequest = new JsonObjectRequest();
-</code></pre><blockquote>
-<p>JsonObjectRequest是Request的子子类，包括两个构造方法和一个复写方法parseNetworkResponse()，网络请求时会根据这个方法的返回值判断是否需要使用缓存数据。</p>
-</blockquote>
-<p>将请求添加到队列:</p>
-<pre><code>mQueue.add(jsonRequest);
-</code></pre><p>add()方法的源码:</p>
-<pre><code>/**
- * Adds a Request to the dispatch queue.
- * @param request The request to service
- * @return The passed-in request
- */
-public &lt;T&gt; Request&lt;T&gt; add(Request&lt;T&gt; request) {
-    // Tag the request as belonging to this queue and add it to the set of current requests.
-    // 给request设置requestqueue
-    request.setRequestQueue(this);
-
-    // 添加request到currentrquests集合中
-    synchronized (mCurrentRequests) {
-        mCurrentRequests.add(request);
-    }
-
-    // Process requests in the order they are added.
-    // 设置request
-    request.setSequence(getSequenceNumber());
-    request.addMarker(&quot;add-to-queue&quot;);
-
-    // If the request is uncacheable, skip the cache queue and go straight to the network.
-    // 如果设置过request不能缓存，直接添加到网络队列返回
-    if (!request.shouldCache()) {
-        mNetworkQueue.add(request);
-        return request;
-    }
-
-    // Insert request into stage if there&apos;s already a request with the same cache key in flight.
-    // 默认是可以缓存的
-    synchronized (mWaitingRequests) {
-        String cacheKey = request.getCacheKey();
-        if (mWaitingRequests.containsKey(cacheKey)) {
-            // There is already a request in flight. Queue up.
-            // 如果已经在缓存队列中，加入到相同的等待队列中
-            Queue&lt;Request&lt;?&gt;&gt; stagedRequests = mWaitingRequests.get(cacheKey);
-            if (stagedRequests == null) {
-                stagedRequests = new LinkedList&lt;&gt;();
-            }
-            stagedRequests.add(request);
-            mWaitingRequests.put(cacheKey, stagedRequests);
-            if (VolleyLog.DEBUG) {
-                VolleyLog.v(&quot;Request for cacheKey=%s is in flight, putting on hold.&quot;, cacheKey);
-            }
-        } else {
-            // Insert &apos;null&apos; queue for this cacheKey, indicating there is now a request in
-            // flight.
-            // 添加到等待队列
-            mWaitingRequests.put(cacheKey, null);
-
-            // 添加到缓存队列
-            mCacheQueue.add(request);
-        }
-        return request;
-    }
-}
-</code></pre><blockquote>
-<p>add()方法中，先给request设置队列信息等，然后判断是否允许缓存，如果不允许缓存直接把请求加入网络队列，如果允许或者默认则会判断是否在等待队列中，如果不在等待队列中则添加到等待队列并添加到缓存队列，如果已经在等待对立中，就更新等待队列中该请求的队列信息。</p>
-</blockquote>
-<p>添加到请求队列的时候，最重要的两步就是添加到缓存队列或者添加到网络队列。在创建RequestQueue的时候，会创建一个CacheDispatcher和4个NetworkDispatcher,他们都继承Thread。其中在CacheDispatcher中还持有NetworkDispatcher对象。<br>下边分别分析这两个线程。</p>
-<h4 id="CacheDispatcher"><a href="#CacheDispatcher" class="headerlink" title="CacheDispatcher"></a>CacheDispatcher</h4><p>构造方法 // 正常的构造方法</p>
-<p>成员变量 </p>
-<pre><code>boolean DEBUG // Log的打印级别
-BlockingQueue&lt;Request&lt;?&gt;&gt; mCacheQueue // 缓存请求队列
-BlockingQueue&lt;Request&lt;?&gt;&gt; mNetworkQueue // 网络请求队列
-Cache mCache // 缓存信息，请求结果的缓存
-ResponseDelivery mDelivery // 请求结果的传递类
-boolean mQuit // 结束请求的标志
-</code></pre><p>成员方法</p>
-<pre><code>quit() // 结束线程
-
-run () // 业务逻辑
-</code></pre><p>业务流程图<br><img src="https://raw.githubusercontent.com/android-cn/android-open-project-analysis/master/tool-lib/network/volley/image/CacheDispatcher-run-flow-chart.png" alt="CacheDispatcher流程"></p>
-<h4 id="NetworkDispatcher"><a href="#NetworkDispatcher" class="headerlink" title="NetworkDispatcher"></a>NetworkDispatcher</h4><p>构造方法 // 正常的构造方法</p>
-<p>成员变量</p>
-<pre><code>BlockingQueue&lt;Request&lt;?&gt;&gt; mQueue // 网络请求队列
-Network mNetwork // 网络类，代表了一个可以执行请求的网络
-Cache mCache // 缓存结果数据
-ResponseDelivery mDelivery // 请求结果传递
-boolean mQuit // 取消请求的状态标志
-</code></pre><p>成员方法</p>
-<pre><code>quit()  // 结束网络请求
-addTrafficStatasTag(Request&lt;E&gt; request) // 给请求设置tag
- run() // 业务逻辑
-</code></pre><p>业务流程图</p>
-<p><img src="https://raw.githubusercontent.com/android-cn/android-open-project-analysis/master/tool-lib/network/volley/image/NetworkDispatcher-run-flow-chart.png" alt="NetworkDispatcher流程图"></p>
-<p>我们总结一下流程和代码逻辑:</p>
-<p>1 创建RequestQueue</p>
-<p>首先会创建一个RequestQueue对象,在这个过程中会创建一个缓存目录和一个httpstack，这个httpstack是根据api等级选择httpURLconnection或者httpclient，然后会执行这个RequestQueue对象的start方法，在这个start方法中会首先取消当前请求，之后创建两个线程缓存线程和网络线程。</p>
-<p>2 创建request</p>
-<p>创建Request对象</p>
-<p>3 讲request添加到RequestQueue</p>
-<p>这这个过程中会首先设置request队列标志，然后判断是否需要缓存，如果已经设置过不需要缓存，那就直接添加这个request到网络队列并返回，如果要缓存，会去判断是否已经缓存过，如果没有缓存过，就就添加这个Request到缓存队列和缓存集合中，如果缓存过，需要重新设置这个Request的属性，更新到缓存集合中。</p>
-<p>然后在缓存线程和网络线程都存在一个死循环来处理缓存队列和网络队列。</p>
-<p>在缓存线程的run方法中，首先获取这个Request对象，如果请求已经被取消，需要结束这个请求，继续下一次请求，如果这个请求没有被缓存过，需要添加这个请求到网络请求队列，继续洗一次请求，已经被缓存过，需要判断请求的结果是否过期，如果过期了还是需要添加到网络队列，继续下一次请求，如果没有过期，会从缓存中获取结果，传递结果给回调处理。</p>
-<p>在网络线程的run方法中，首先会获取Request对象，如果请求已经被取消，需要结束这个请求，继续下一次请求，如果没有被取消，就让network对象执行performRequest方法，并得到networkresponse，如果结果没有被修改，并且已经有响应传递，请求结束，继续下一次请求，如果有就需要执行parseNetworkResonse方法，最后判断是否需要缓存，如果需要缓存，就讲缓存结果缓存到mCache中。</p>
-<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p><img src="https://developer.android.com/images/training/volley-request.png" alt="请求的生命周期"></p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="http://a.codekk.com/detail/Android/grumoon/Volley%20%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90" target="_blank" rel="noopener">Volley源码解析</a></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/25/Android NDK开发/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sparky">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/logo_s.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Sparky">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/10/25/Android NDK开发/" itemprop="url">Android NDK开发流程</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-25T08:12:46+08:00">
-                2017-10-25
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="Android-NDK开发流程"><a href="#Android-NDK开发流程" class="headerlink" title="Android NDK开发流程"></a>Android NDK开发流程</h2><p>使用ndk-build方式</p>
-<ul>
-<li>配置环境变量</li>
-<li>编写native代码</li>
-<li>生成与native对应的头文件</li>
-<li>利用头文件编写对应的C/C++代码</li>
-<li>生成so库</li>
-<li>使用so库</li>
-</ul>
-<p>使用cmake方式</p>
-<ul>
-<li>配置环境变量 //下载ndk,cmake,设置NDK_HOME</li>
-<li>创建支持c/c++的项目 // 创建项目时选择c++support</li>
-<li>创建c/c++文件,编写C/C++代码 </li>
-<li>更改cmakelists.txt文件 // add_library/target_link_libraries改为自己的ndk name</li>
-<li>在java代码中调用 </li>
-</ul>
-<p>参考:</p>
-<p><a href="http://www.jianshu.com/p/0261e6cceb3e" target="_blank" rel="noopener">cmake</a></p>
-<p><a href="https://innofang.github.io/2017/04/16/Android-NDK%E5%BC%80%E5%8F%91%E4%BB%8E0%E5%88%B01/" target="_blank" rel="noopener">ndk-build</a></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/25/[SDK开发] 发布library项目到github/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sparky">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/logo_s.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Sparky">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/10/25/[SDK开发] 发布library项目到github/" itemprop="url">给library module添加远程依赖</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-25T08:12:46+08:00">
-                2017-10-25
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="给library-module添加远程依赖"><a href="#给library-module添加远程依赖" class="headerlink" title="给library module添加远程依赖"></a>给library module添加远程依赖</h1><ol>
-<li><p>创建library module项目</p>
-<p> File –&gt; NEW –&gt; New Module –&gt; Library Module</p>
 </li>
-<li><p>修改library module下的build.gradle文件</p>
-<ol>
-<li><p>在library module项目根目录下创建xx.gradle文件</p>
-<pre><code> // 1.maven-插件
-apply plugin: &apos;maven&apos;
-
-// 2.maven-信息
-ext {// ext is a gradle closure allowing the declaration of global properties
-    PUBLISH_GROUP_ID = &apos;com.flame&apos;
-    PUBLISH_ARTIFACT_ID = &apos;mySDK&apos;
-    PUBLISH_VERSION = android.defaultConfig.versionName
+</ol>
+</li>
+<li><p>设置默认launcher，方法：参考<a href="http://blog.csdn.net/fireness/article/details/48177923" target="_blank" rel="noopener">android 开机默认进入指定Launcher@闲庭信步_wwd</a>，1. 修改开机启动的默认launcher。在frameworks/base/services/java/com/android/server/am/ActivityManagerService.java文件下，修改startHomeActivityLocked()方法为如下,</p>
+<pre><code>boolean startHomeActivityLocked(int userId) {
+if (mHeadless) {
+// Added because none of the other calls to ensureBootCompleted seem to fire
+// when running headless.
+ensureBootCompleted();
+return false;
 }
 
-// 3.maven-输出路径
-uploadArchives {
-    repositories.mavenDeployer {
-        //这里就是最后输出地址，在自己电脑上新建个文件夹，把文件夹路径粘贴在此
-        //注意”file://“ + 路径，有三个斜杠，别漏了
-        repository(url: &quot;file:///Users/flame/Documents/sourceTree/mysdk&quot;)
+if (mFactoryTest == SystemServer.FACTORY_TEST_LOW_LEVEL
+    &amp;&amp; mTopAction == null) {
+// We are running in factory test mode, but unable to find
+// the factory test app, so just sit around displaying the
+// error message and don&apos;t try to start anything.
+return false;
+</code></pre><p>  }<br>  Intent intent = getHomeIntent();<br>  ActivityInfo aInfo =</p>
+<pre><code>resolveActivityInfo(intent, STOCK_PM_FLAGS, userId);
+if (aInfo != null) {
+//add wwd start
+PackageManager pm = mContext.getPackageManager();
+Intent newintent = new Intent(Intent.ACTION_MAIN);
+newintent.addCategory(Intent.CATEGORY_HOME);
 
-        pom.project {
-            groupId project.PUBLISH_GROUP_ID
-            artifactId project.PUBLISH_ARTIFACT_ID
-            version project.PUBLISH_VERSION
+List&lt;ResolveInfo&gt; resolveInfoList = pm.queryIntentActivities(newintent, 0);
+//判断带有Intent.CATEGORY_HOME标签的所有activity中如果有你指定的activity则替换
+if(resolveInfoList != null){
+    int size = resolveInfoList.size();
+    for(int i = 0; i &lt; size; i++){
+        ResolveInfo rInfo = resolveInfoList.get(i);
+        if(rInfo.activityInfo.name.equals(&quot;com.android.launcher3.Launcher&quot;)){
+            aInfo = rInfo.activityInfo;
         }
     }
 }
-
-//以下代码会生成jar包源文件，如果是不开源码，请不要输入这段
-//aar包内包含注释
-task androidSourcesJar(type: Jar) {
-    classifier = &apos;sources&apos;
-    from android.sourceSets.main.java.sourceFiles
+//add wwd stop
+intent.setComponent(new ComponentName(
+        aInfo.applicationInfo.packageName, aInfo.name));
+// Don&apos;t do this if the home app is currently being
+// instrumented.
+aInfo = new ActivityInfo(aInfo);
+aInfo.applicationInfo = getAppInfoForUser(aInfo.applicationInfo, userId);
+ProcessRecord app = getProcessRecordLocked(aInfo.processName,
+        aInfo.applicationInfo.uid, true);
+if (app == null || app.instrumentationClass == null) {
+    intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NEW_TASK);
+    //这里启动你已替换过的activity
+    mStackSupervisor.startHomeActivity(intent, aInfo);
+}
 }
 
-artifacts {
-    archives androidSourcesJar
+return true;
+}
+</code></pre><p>  2.修改按home键强制启动的launcher。在frameworks/base/policy/src/com/android/internal/policy/impl/PhoneWindowManager.java文件中，修改init()为：</p>
+<pre><code>public void init(Context context, IWindowManager windowManager,
+    WindowManagerFuncs windowManagerFuncs) {
+    ......
+    mHomeIntent =  new Intent(Intent.ACTION_MAIN, null);
+mHomeIntent.addCategory(Intent.CATEGORY_HOME);
+//add wwd start
+ComponentName mHomecom = new ComponentName(&quot;com.android.launcher3&quot;, &quot;com.android.launcher3.Launcher&quot;); 
+mHomeIntent.setComponent(mHomecom);
+//add wwd stop
+mHomeIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+        | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+    ......
 }
 </code></pre></li>
-<li><p>在build.gradle中apply这个gradle配置</p>
-<pre><code>apply from xx.gradle    
+<li><p>2018/3/8 修改默认参数，</p>
+<pre><code>1. 默认屏幕亮度，在frameworks/base/packages/SettingProvider/res/values/default.xml
+    &lt;!-- Default screen brightness, from 0 to 255.  102 is 40%. --&gt;
+    &lt;integer name=&quot;def_screen_brightness&quot;&gt;102&lt;/integer&gt;
+2. 默认屏幕关闭时间
+    在frameworks/base/packages/SettingProvider/res/values/default.xml，
+    &lt;integer name=&quot;def_screen_off_timeout&quot;&gt;300000&lt;/integer&gt;
+3. 默认字体大小，小/普通/大/很大 分别对应 0.85/1/1.15/1.3
+    在/b288/android/device/softwinner/lark-eink-perf1/lark_eink_perf1.mk
+    PRODUCT_PROPERTY_OVERRIDES += \
+    ro.font.scale=1.15 \            
 </code></pre></li>
-<li><p>在gradle菜单中执行xx.gradle中的编译方法</p>
+<li><p>2018/3/12，预置文件到sdcard.在device.mk文件中添加    </p>
+<pre><code>PRODUCT_COPY_FILES += \
+    ${源文件位置}:${内置到的系统位置}
+
+例如
+PRODUCT_COPY_FILES += \
+    device/softwinner/lark-eink-perf1/media/testbooks/xx.txt:system/media/testbook/xx.txt \
+</code></pre></li>
+<li><p>2018/5/14, 显示屏显示异常. 烧入程序之后,由于之前设备烧入过linux程序,系统中存在以下两个文件private/default.bin,private/default_4.bin,在系统启动时默认先使用private路径下的default.bin文件,导致设置vcom电压不对,所以这里删除default.bin和default_4.bin.在串口或者adb中使用命令 </p>
+<pre><code>mount -o remount,rw /private
+rm default.bin
+rm default_4.bin, reboot
+</code></pre></li>
+<li><p>2018/5/15, 更改开机铃声大小, 修改有两种方式. 第一种是直接用软件修改声音文件的大小,这种可以让客户提供合适的声音文件放在/device/softwinner/lark-eink-perf1/media下,命名为boot.wav即可. 第二种方法通过代码修改,在frameworks/base/cmds/bootanimation/BootAnimation.cpp,在playBootMusic方法中,再mp -&gt; prepare之前添加</p>
+<pre><code>set volume level
+float volume = 0.9;
+mp-&gt;setVolume(volume, volume);
+</code></pre></li>
+<li><p>2018/5/15, 关闭开机启动的log. </p>
+<pre><code>echo 0 &gt; /prop/sys/kernel/printk
+</code></pre></li>
+<li><p>2018/5/15, 修改开机log,开机log是再kernel层修改的.文件是在/lichee/tools/pack/chips/sun8iw10p1/boot-resource/boot-resource下的bootlogo.bmp,直接同名覆盖即可.</p>
 </li>
+<li>2018/5/15, 修改开机动画.开机动画的存放位置是再/device/softwinner/lark-eink-perf1/media下的bootanimation.zip,和开机铃声再同一目录下.</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/06/编译sdk修改日志/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sparky">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/logo_s.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sparky">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/05/06/编译sdk修改日志/" itemprop="url">未命名</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-06T20:11:00+08:00">
+                2019-05-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="编译sdk修改"><a href="#编译sdk修改" class="headerlink" title="编译sdk修改"></a>编译sdk修改</h2><ol>
+<li>~/dou/b288/android/build/target/product/generic_no_telephony.mk  </li>
+<li>~/dou/b288/android/build/target/product/embedded.mk</li>
+<li>./device/softwinner/lark-common/prebuild/tools/tools.mk</li>
+<li>./device/softwinner/lark-common/lark-common.mk 没改</li>
 </ol>
-</li>
-</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/06/vim比较文件的用法/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sparky">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/logo_s.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sparky">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/05/06/vim比较文件的用法/" itemprop="url">未命名</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-06T20:11:00+08:00">
+                2019-05-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="使用vim-d比较两个文件的内容"><a href="#使用vim-d比较两个文件的内容" class="headerlink" title="使用vim -d比较两个文件的内容"></a>使用vim -d比较两个文件的内容</h2><h4 id="1-使用vim的比较模式打开两个文件"><a href="#1-使用vim的比较模式打开两个文件" class="headerlink" title="1. 使用vim的比较模式打开两个文件"></a>1. 使用vim的比较模式打开两个文件</h4><pre><code>vim -d file1 file2
+# 或者
+vimdiff file1 file2
+</code></pre><h4 id="2-如果已经打开一个文件-然后需要对比另外一个文件"><a href="#2-如果已经打开一个文件-然后需要对比另外一个文件" class="headerlink" title="2. 如果已经打开一个文件,然后需要对比另外一个文件"></a>2. 如果已经打开一个文件,然后需要对比另外一个文件</h4><pre><code>:vert diffsplit file2
+</code></pre><h4 id="3-调整窗口位置"><a href="#3-调整窗口位置" class="headerlink" title="3. 调整窗口位置"></a>3. 调整窗口位置</h4><pre><code>ctrl+W L
+ctrl+W H
+ctrl+W J
+ctrl+W K
+</code></pre>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/06/ubuntu使用串口工具/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sparky">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/logo_s.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sparky">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/05/06/ubuntu使用串口工具/" itemprop="url">未命名</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-06T20:11:00+08:00">
+                2019-05-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="ubuntu下使用串口工具"><a href="#ubuntu下使用串口工具" class="headerlink" title="ubuntu下使用串口工具"></a>ubuntu下使用串口工具</h2><p>工具: minicom</p>
+<p>步骤：</p>
 <ol>
-<li><p>创建并上传生成的sdk项目到github</p>
-<p> 使用git命令上传到github目录</p>
-</li>
-<li><p>在应用项目中调用</p>
-<p> 在app module的build.gradle根节点下添加repositories节点</p>
-<pre><code>repositories {
-    jcenter()
-    maven{url &quot;https://github.com/flameandroid/mysdk/raw/master&quot;}
-}
-</code></pre><p>  在dependencies中添加compile</p>
-<pre><code>compile(&apos;com.flame:mySDK:1.0&apos;)
+<li><p>安装。 </p>
+<pre><code>sudo apt-get install minicom
+</code></pre></li>
+<li><p>查看所有串口。</p>
+<pre><code>cd /
+ls dev/tty*
+</code></pre></li>
+<li><p>连接串口线，查看正在使用的串口。</p>
+<pre><code>dmesg | grep tty // usb 3-4: pl2303 converter now attached to ttyUSB0，其中attached to xx表示目前正在使用的串口为xx。
+</code></pre></li>
+<li><p>修改minicom配置。</p>
+<pre><code>sudo minicom -s
+选择Serial port setup
+再按a，修改serial device值为上一步的xx串口
+按回车回到菜单页，在选择save as dfl保存设置
+</code></pre></li>
+<li>打开串口查看日志。<pre><code>sudo minicom 打开串口连接，ctrl+a再按x退出
 </code></pre></li>
 </ol>
 
@@ -2074,7 +1155,7 @@ artifacts {
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/25/【踩坑记录】 android 7.0 签名之INSTALL_PARSE_FAILED_NO_CERTIFICATES/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/06/linux系统标准视图/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Sparky">
@@ -2093,7 +1174,7 @@ artifacts {
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2017/10/25/【踩坑记录】 android 7.0 签名之INSTALL_PARSE_FAILED_NO_CERTIFICATES/" itemprop="url">【踩坑记录】 android 7.0 签名之INSTALL_PARSE_FAILED_NO_CERTIFICATES</a></h1>
+                <a class="post-title-link" href="/2019/05/06/linux系统标准视图/" itemprop="url">未命名</a></h1>
         
 
         <div class="post-meta">
@@ -2105,8 +1186,8 @@ artifacts {
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-25T08:12:46+08:00">
-                2017-10-25
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-06T20:11:00+08:00">
+                2019-05-06
               </time>
             
 
@@ -2145,23 +1226,654 @@ artifacts {
       
         
           
-            <h1 id="【踩坑记录】-android-7-0-签名之INSTALL-PARSE-FAILED-NO-CERTIFICATES"><a href="#【踩坑记录】-android-7-0-签名之INSTALL-PARSE-FAILED-NO-CERTIFICATES" class="headerlink" title="【踩坑记录】 android 7.0 签名之INSTALL_PARSE_FAILED_NO_CERTIFICATES"></a>【踩坑记录】 android 7.0 签名之INSTALL_PARSE_FAILED_NO_CERTIFICATES</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Android更新快，Android studio更新也快，Aradle更新更快</p>
-<p>项目在之前的开发环境上没有一点问题（windows 10 / AS 2.2 / JDK 1.8 / gradle 2.2.0 / 设备HONOR 8(Android 7.0未安装app)），正好换电脑，换了一个开发环境（Ubuntu 16.04 / AS 2.3.1 / JDK 1.8 / gradle 2.3.1 / 设备有7.0也有7.0之前）。</p>
-<p>导入项目之后，因为是最新的as版本，有一个更新提示<br><img src="https://github.com/douyn/Photos/blob/master/res/TIM%E5%9B%BE%E7%89%8720170410172524.jpg?raw=true" alt="罪魁祸首"></p>
-<p>google爸爸推荐更新能不更新吗，果断更新，long long ago之后，更新完了，终于俺的项目可以执行了，编译运行一条龙，木有任何问题，接下来就是给测试妹子打包，仍然是木有问题，打包出来之后，还本着不要打包出错的心态(丢人现眼)的心态安装了一次，perfect，木有问题。然后就等着所有bug都测试通过的喜讯了。然而，第一步就挂了。</p>
-<h2 id="现象"><a href="#现象" class="headerlink" title="现象"></a>现象</h2><p>妹子说安装不上，心想这一定是你的打开方式不对，果断装起逼来，拿过来adb命令走起，果然啊，在我的手机上就可以，在测试的手机上就不行，通过adb报错发现INSTALL_PARSE_FAILED_NO_CERTIFICATES,这啥啊，不懂没关系，google baidu走起来。(网上大多数都是很久之前的过滤掉不要看，关键词不能少)</p>
-<p>还有一个现象，打包的时候没有在意，也是一个关键失误。就是在gradle 2.3.1上打包的时候，最后一步要选择APK signature scheme，当时没在意直接选的v2 full apk,不要问为什么，英语好就是这么吊(脑洞翻译一下嘛v1打包jar，v2打包apk)。事实证明就是google给的提示不够明确啊。</p>
-<h2 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h2><p>Android 7.0 引入一项新的应用签名方案 APK Signature Scheme v2，它能提供更快的应用安装时间和更多针对未授权 APK 文件更改的保护。在默认情况下，Android Studio 2.2 和 Android Plugin for Gradle 2.2 会使用 APK Signature Scheme v2 和传统签名方案来签署您的应用。</p>
-<p>如这里所述，Android 7.0引入了新的签名方案V2。V2方案是对整个APK进行签名，而不是像V1一样只对JAR那样签名。如果您仅使用V2进行登录，并尝试在7.0之前的目标上安装，则会收到此错误，因为JAR本身未签名，并且7.0 之前的PackageManager无法检测V2 APK签名的存在。</p>
-<h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><p>所以方案也就有两种</p>
-<ol>
-<li>降低gradle版本，像我们这样多人开发，每个人的studio版本都不一样，gradle版本也有不一样的，这样就会好一些。就是要把项目目录下的build.gradle中的gradle配置改一下。比如’classpath ‘com.android.tools.build:gradle:2.3.1’’改为’classpath ‘com.android.tools.build:gradle:2.2.3’’</li>
-<li>如果是个人的话，用越新的东西越能装逼，当然推荐用最新的gradle了，只是在打包的时候注意要兼容7.0以前和以后，这就需要注意把Signature Scheme V1和Signature Scheme V2都选上。</li>
+            <h2 id="linux操作系统的标准视图"><a href="#linux操作系统的标准视图" class="headerlink" title="linux操作系统的标准视图"></a>linux操作系统的标准视图</h2><h3 id="上层"><a href="#上层" class="headerlink" title="上层"></a>上层</h3><h4 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h4><h4 id="标准c库"><a href="#标准c库" class="headerlink" title="标准c库"></a>标准c库</h4><h3 id="中层"><a href="#中层" class="headerlink" title="中层"></a>中层</h3><h4 id="系统无关部分"><a href="#系统无关部分" class="headerlink" title="系统无关部分"></a>系统无关部分</h4><h4 id="功能模块"><a href="#功能模块" class="headerlink" title="功能模块"></a>功能模块</h4><h6 id="系统调用接口"><a href="#系统调用接口" class="headerlink" title="系统调用接口"></a>系统调用接口</h6><p>为了与用户应用程序进行交互，内核提供了一组系统调用的接口，通过这些接口可以访问系统硬件和各种操作系统资源。</p>
+<h6 id="进程管理"><a href="#进程管理" class="headerlink" title="进程管理"></a>进程管理</h6><p>进程管理负责创建和销毁进程，并处理他们之间的互相联系，同时调度他们去分享cpu。</p>
+<h6 id="内存管理"><a href="#内存管理" class="headerlink" title="内存管理"></a>内存管理</h6><p>根据不同的需求，提供malloc/free在内的许多简单或者复杂的接口，并为每个进程都提供了一个虚拟的地址空间，基本上实现虚拟内存对进程的按需分配。</p>
+<h6 id="文件系统"><a href="#文件系统" class="headerlink" title="文件系统"></a>文件系统</h6><p>虚拟文件系统为用户控件提供了文件系统接口，同时又为各个具体的文件系统提供了通用的接口抽象。</p>
+<h6 id="网络管理"><a href="#网络管理" class="headerlink" title="网络管理"></a>网络管理</h6><p>网络子系统处理数据包的收集，标识，分发，路由和地址的解析等所有网络相关的操作。</p>
+<h6 id="设备驱动程序"><a href="#设备驱动程序" class="headerlink" title="设备驱动程序"></a>设备驱动程序</h6><p>操作系统的目的是为用户提供一种方便访问硬件的途径。</p>
+<h4 id="系统相关部分"><a href="#系统相关部分" class="headerlink" title="系统相关部分"></a>系统相关部分</h4><h4 id="硬件设备"><a href="#硬件设备" class="headerlink" title="硬件设备"></a>硬件设备</h4>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/06/b300/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sparky">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/logo_s.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sparky">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/05/06/b300/" itemprop="url">未命名</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-06T20:11:00+08:00">
+                2019-05-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="b300问题记录"><a href="#b300问题记录" class="headerlink" title="b300问题记录"></a>b300问题记录</h1><h3 id="1-编译Android报错"><a href="#1-编译Android报错" class="headerlink" title="1. 编译Android报错"></a>1. 编译Android报错</h3><h4 id="1-lex报错"><a href="#1-lex报错" class="headerlink" title="1. lex报错"></a>1. lex报错</h4><h5 id="现象"><a href="#现象" class="headerlink" title="现象"></a>现象</h5><pre><code>Server is already running
+[  0% 23/59782] Lex: applypatch &lt;= bootable/recovery/edify/lexer.ll
+FAILED: out/target/product/virgo-perf1/obj/STATIC_LIBRARIES/libedify_intermediates/lexer.cpp 
+/bin/bash -c &quot;prebuilts/misc/linux-x86/flex/flex-2.5.39 -oout/target/product/virgo-perf1/obj/STATIC_LIBRARIES/libedify_intermediates/lexer.cpp bootable/recovery/edify/lexer.ll&quot;
+flex-2.5.39: loadlocale.c:130:_nl_intern_locale_data: ?? &apos;cnt &lt; (sizeof (_nl_value_type_LC_TIME) / sizeof (_nl_value_type_LC_TIME[0]))&apos; ???
+Aborted (core dumped)
+[  0% 28/59782] //frameworks/base/libs/androidfw:libandroidfw clang++ AssetManager.cpp [linux]
+ninja: build stopped: subcommand failed.
+16:13:39 ninja failed with: exit status 1
+</code></pre><h5 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h5><p>在.bashrc中加变量</p>
+<pre><code>export LC_ALL=C 
+</code></pre><h4 id="2-out-of-memery"><a href="#2-out-of-memery" class="headerlink" title="2. out of memery"></a>2. out of memery</h4><h5 id="现象-1"><a href="#现象-1" class="headerlink" title="现象"></a>现象</h5><pre><code>[ 76% 45967/59739] Building with Jack: out/target/common/obj/JAVA_LIBRARIES/framework_intermediates/with-local/classes.dex
+FAILED: out/target/common/obj/JAVA_LIBRARIES/framework_intermediates/with-local/classes.dex 
+/bin/bash out/target/common/obj/JAVA_LIBRARIES/framework_intermediates/with-local/classes.dex.rsp
+Out of memory error (version 1.3-rc7 &apos;Douarn&apos; (445000 d7be3910514558d6715ce455ce0861ae2f56925a by android-jack-team@google.com)).
+Java heap space.
+Try increasing heap size with java option &apos;-Xmx&lt;size&gt;&apos;.
+Warning: This may have produced partial or corrupted output.
+[ 76% 45972/59739] //art/runtime:libartd clang++ entrypoints/quick/quick_jni_entrypoints.cc [linux]
+ninja: build stopped: subcommand failed.
+</code></pre><h5 id="解决-1"><a href="#解决-1" class="headerlink" title="解决"></a>解决</h5><p>命令行执行以下命令</p>
+<pre><code>export JACK_SERVER_VM_ARGUMENTS=&quot;-Dfile.encoding=UTF-8 -XX:+TieredCompilation -Xmx4g&quot;
+./prebuilts/sdk/tools/jack-admin kill-server
+./prebuilts/sdk/tools/jack-admin start-server
+</code></pre>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/06/b288编译和烧录/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sparky">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/logo_s.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sparky">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/05/06/b288编译和烧录/" itemprop="url">未命名</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-06T20:11:00+08:00">
+                2019-05-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="全志B288编译和烧录"><a href="#全志B288编译和烧录" class="headerlink" title="全志B288编译和烧录"></a>全志B288编译和烧录</h2><h5 id="编译方法"><a href="#编译方法" class="headerlink" title="编译方法"></a>编译方法</h5><ol>
+<li>登录ssh服务。</li>
+<li>进入源码目录。</li>
+<li>修改源码。</li>
+<li><p>编译。</p>
+<pre><code>1. 进入源码根目录
+2. source build/envsetup.sh 
+3. lunch lark-eink-perf1-eng 
+4. extract-bsp 
+5. make -j5 
+6. pack 
+</code></pre></li>
 </ol>
-<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>不要害怕遇到问题，遇到问题就记下来装逼啊。</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://developer.android.google.cn/aboutersionsugat/android-7.0.html#apk_signature_v2" target="_blank" rel="noopener">官方文档</a></p>
-<p><a href="http://stackoverflow.com/a/42377418" target="_blank" rel="noopener">解放方案1</a></p>
-<p><a href="http://stackoverflow.com/a/43097991" target="_blank" rel="noopener">解决方案2</a></p>
+<h5 id="烧录方法"><a href="#烧录方法" class="headerlink" title="烧录方法"></a>烧录方法</h5><ol>
+<li>下载烧录工具phoenixsuit。</li>
+<li>设备关机。</li>
+<li>按住reset键，同时插上usb接口充电，虚拟机上选择usb设备筛选器选择Onda，如果操作正确phoenixsuit就会弹出烧录选项，点击确定。</li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/06/Android系统build/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sparky">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/logo_s.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sparky">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/05/06/Android系统build/" itemprop="url">未命名</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-06T20:11:00+08:00">
+                2019-05-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="Android系统build-prop生成过程"><a href="#Android系统build-prop生成过程" class="headerlink" title="Android系统build.prop生成过程"></a>Android系统build.prop生成过程</h2><p>这个文件类似于windows的注册表文件，定义了系统初始的一些参数属性，功能的开放等，通过调整或增加这些参数可以达到校调系统性能偏重点和附加功能开启的作用。</p>
+<p>我们经常说rom是刷系统的意思，但是rom的愿意是read only memory，只读存储器，正因为是只读了，所以文件系统通常会存储在手机rom中，但是在特殊情况下我们可以对rom进行写操作。</p>
+<pre><code># begin build properties （开始设置系统性能）
+# autogenerated （通过设置形成系统信息）
+ro.=GRI40 (版本ID)
+ro.build.=GRJ22 （版本号）
+ro.build.version.incremental=eng.buildbot.20110619.060228 （版本增量）
+ro.build.version.sdk=10 （sdk版本）
+ro.build.version.codename=REL （版本代号）
+ro.build.version.release=2.3.4 （Android 2.3.4系统）
+ro.build.date=Sun Jun 19 06:02:58 UTC 2011 （制作者及制作时间）
+ro.build.date.utc=0
+ro.build.type=user (编译模式,如user,userdebug,eng,test模式)
+ro.build.user=buildbot (编译账户)
+ro.build.host=bb1 (编译主机系统)
+ro.build.tags=test-keys (编译标签)
+ro.product.model=HTC Wildfire （HTC内部手机代号）
+ro.product.brand=htc_wwe （手机品牌）
+ro.product.name=htc_buzz （手机正式名称）
+ro.product.device=buzz （采用的设备）
+ro.product.board=buzz （采用的处理器）
+ro.product.cpu.abi=armeabi-v6j （cpu的版本）
+ro.product.cpu.abi2=armeabi （cpu的品牌）
+ro.product.manufacturer=HTC （手机制造商）
+ro.product.locale.language=zh （手机默认语言）
+ro.product.locale.region=CN （地区语言）
+ro.wifi.channels= （WIFI连接的渠道）
+ro.board.platform=msm7k （主板平台）
+# ro.build.product is obsolete; use ro.product.device （旧代码ro.build.product，使用代码ro.product.device）
+ro.build.product=buzz （建立产品）
+# Do not try to parse ro.build.description or .fingerprint （不要试图修改description和fingerprint）
+ro.build.description=passion-user 2.3.3 GRI40 102588 release-keys （用户的KEY）
+ro.build.fingerprint=google/passion/passion:2.3.3/GRI40/102588:user/release-keys （系统指纹）
+# end build properties （性能代码完毕）
+#
+# system.prop for buzz （系统技术支持由BUZZ提供）
+#
+# Density in DPI of the LCD of this board. This is used to scale the UI （高密度的液晶的DPI板。这是用来大规模UI的）
+# appropriately. If this property is not defined, the default value is 160 dpi. （appropriately.如果这个属性没有定义,缺省值是160 dpi的分辨率）
+ro.sf.lcd_density=240 （显示屏分辨率，数值越大分辨率越底，240就是800*480的）
+# View configuration for QVGA. （屏幕的设置）
+view.fading_edge_length=8
+view.touch_slop=15 （触摸屏灵敏度，数值越大越灵敏）
+view.minimum_fling_velocity=25 （滑动速度）
+view.scroll_friction=0.008 （滑动误差）
+# RIL specific configuration. （特定设置）
+rild.libpath=/system/lib/libhtc_
+ro.ril.ecc.HTC-WWE=999
+ro.ril.ecc.HTC-ELL=92,93,94
+ro.ril.enable.a52.HTC-ITA=1
+ro.ril.enable.a53.HTC-ITA=1
+ro.ril.enable.a52=0
+ro.ril.enable.a53=1
+ro.ril.vmail.23415=1571,BT
+ro.ril.hsdpa.category=8 （hsdpa全称High Speed Downlink Packet Access中文意思：高速下行分组接入,设置的数越大传输越快）
+ro.ril.htcmaskw1.bitmask=429496
+ro.ril.htcmaskw1=14449
+ro.ril.def.agps.mode=2 （打开AGPS服务支持，可改为ro.ril.def.agps.mode=0 改后能省电但GPS定位速度会变慢）
+ro.ril.gprsclass=12 （GPRS设置）
+# For HSDPA low throughput （HSDPA低输量）
+ro.ril.disable.power.collapse=1 （关闭电源）
+# Modify MMS APN retry timer from 5s to 2s. （修改短信的APN设置5秒为2秒）
+ro.gsm.2nd_data_retry_config=max_retries=3, 2000, 2000, 2000
+# Time between scans in seconds. Keep it high to minimize battery drain.（扫描在几秒之内，可降低用电量）
+# This only affects the case in which there are remembered access points, （这个修改仅能影响此文件）
+# but none are in range.（但是没有一项是在范围内的）
+wifi.interface=eth0 （WIFI界面）
+wifi.supplicant_scan_interval=45 （WIFI扫描间隔时间，这里设置是45秒。把这个时间设置长点能省电）
+# Mobile data interfaces （移动数据的接口）
+mobiledata.interfaces=rmnet0,rmnet1,rmnet2
+# Allow or deny tethering. （允许和拒绝绑定）
+ro.tether.denied=false
+# Default network type. （默认的网络类型）
+# 0 =&gt; WCDMA Preferred. （0=WCDMA优先）
+ro.telephony.default_network=0
+# Enable Google-specific location features, （谷歌特定地点的设置）
+# like NetworkLocationProvider and LocationCollector.（如网络服务器提供商和服务器位置）
+ro.c o m.google.locationfeatures=1
+# The OpenGL ES API level that is natively supported by this device. （开放式绘图介面）
+# This is a 16.16 fixed point number. （界面有16个点，16个不动点数量）
+ro.opengles.version=65536 （开放式绘图介面参数）
+# Disable fs check on boot by default. （开机时默认禁用FS检查）
+sys.checkfs.fat=false
+# Performance settings. （性能设置）
+dalvik.vm.execution-mode=int:jit
+dalvik.vm.heapsize=24m （虚拟内存大小，可设置为16m或24m或32m或48m）
+persist.sys.use_dithering=1
+persist.sys.purgeable_assets=1
+# Increase SKIA decode memory capability for progressive jpg file.
+ro.media.dec.jpeg.memcap=20000000
+#
+# ADDITIONAL_BUILD_PROPERTIES （其他性能设置）
+no_require_sim=true （手机卡保护设置）
+ro.rommanager.developerid=cyanogenmodnightly （固件管理器开发者是CM大神）
+ro.url.legal=http://www./intl/%s/mobile/android/basic/phone-legal.html
+ro.url.legal.android_privacy=http://www]/intl/%s/mobile/android/basic/privacy.html
+ro. com.google.clientidbase=android-google （谷歌客户身份）
+ro. com.android.wifi-watchlist=GoogleGuest （WIFI用户名单）
+ro.setupwizard.enterprise_mode=1 （默认情景模式）
+ro. com.android.dateformat=MM-dd-yyyy （默认时间格式，改为yyyy-MM-dd，显示效果就是XXXX年XX月XX日）
+ro. com.android.dataroaming=false （漫游设置）
+ro.config.ringtone=Playa.ogg （默认铃声设置，文件在/system/media/audio/ringtones 把喜欢的铃声放这里，比如123. MP3放入ringtones文件夹中，这里代码改为ro.config.ringtone=123. mp3）
+ro.config.notification_sound=regulus.ogg （默认提示音，文件在/system/media/audio/notifications 修改方法同上）
+ro.config.alarm_alert=Alarm_Beep_03.ogg （默认闹铃，文件在/system/media/audio/alarms 修改方法同上）
+ro.modversion=CyanogenMod-7-06192011-NIGHTLY-buzz （版本信息，改这个能让你大名出现系统关于中，改为ro.modversion=xxxxx）
+ro.setupwizard.mode=OPTIONAL （安装向导模式）
+net. bt. name=Android （系统名称）
+dalvik.vm.stack-trace-file=/data/anr/traces.txt        
+
+Dalvik虚拟机
+Dalvik虚拟机是Android操作系统的核心，是一切应用程序的基础。所有程序在运行时均有Dalvik虚拟机对其进行解析和执行。
+dalvik.vm.startheapsize：
+本参数控制Dalvik虚拟机在启动一个应用程序之后为其分配的初始堆栈大小，可填写的值为2m~48m。
+例如：dalvik.vm.startheapsize=8m，就表示应用程序启动后为其分配的初始堆栈大小为8兆字节。
+这里分配的内存容量会影响到整个系统对RAM的使用程度，和第一次使用应用程序时的流畅程序。这个值越大，系统消耗RAM则越快，但是应用程序打开后的反应也越快。值越小，系统的RAM剩余则越多，但是程序在启动后会很卡。
+建议值是8m，既可以保持140M左右的RAM，程序的反应速度也会大幅度提高。
+dalvik.vm.heapsize：
+本参数控制Dalvik虚拟机给一个应用程序分配的最大堆栈量，可填写的值为12m~48m。
+例如：dalvik.vm.heapsize=48m，就表示应用程序在任意时刻内可以使用的最大堆栈大小为48兆字节。这里分配的内存容量会影响到整个系统对RAM的使用程序，和程序在运行一段时间后的反应速度。这个值越大，系统消耗RAM则越快，但是程序会运行的非常稳定，尤其是游戏和视频程序的内容加载速度可以大幅度提升。值越小，系统的RAM剩余则越多，但是程序会很卡，尤其是游戏在切换场景Loading的时候会 花费很多的时间。若应用程序需要使用超过这个值的内存时，将会触发系统的垃圾收集器，系统和程序就会卡顿。
+建议值是40~48m。
+dalvik.vm.lockprof.threshold：
+本参数控制Dalvik虚拟机调试记录程序内部锁资源争夺的阈值，默认值是500。多用于程序的数据统计，对性能较调意义不大。
+dalvik.vm.stack-trace-file：
+本参数控制Dalvik虚拟机的堆栈记录调试文件。用于系统调试，一般用户对其调整无意义。
+dalvik.vm.execution-mode：
+本参数控制Dalvik虚拟机的程序执行机制。可填写的值有”int:portable”、”int:fast”和”int:jit”。
+int:portable表示以兼容模式运行(脚本翻译模式)，此模式下程序的兼容性最高，但其执行效率最低(程序优化度依赖于dalvik虚拟机版本)。官方默认此模式。　int:fast表示以快速自优化模式运行(脚本翻译和预优化混合)，此模式下程序的兼容性很高，执行效率也比较高。因为此时dalvik虚拟机允许程序使用自己的预定义优化模式和代码(包括C/C++/汇编代码)。推荐使用。　int:jit表示以Just-In-Time模式运行(JIT模式)，此模式下程序的兼容性最差，但程序一旦加载后其运行效率最高(与C/C++直接编 写的程序效率无异)，因为在此模式下dalvik虚拟机会预先将Java程序翻译成针对机器平台的本地语言(Native)，同时完全允许代码中的所有预 优化和代码，允许所有不安全的非托管代码，同时不严谨的程序如果运行在JIT模式可能会造成内存泄露。但要注意，很多Dalvik虚拟机并不支持此模式 (如官方2.2)。
+dalvik.vm.dexopt-flags：
+本参数控制Dalvik虚拟机的程序代码校验和优化。可填写的值有m、v和o。　m为标准选项，可以是m=y或m=n。若m=y则启用不安全代码的校验和托管代码的优化。兼容性和安全性最高，推荐使用。　v为校验选项，可与o并存。可以是v=a或v=n。若v=a则表示校验所有代码，v=n则关闭代码的校验。　o为优化选项，可与v并存。可以是o=v或o=a。若o=v则表示优化以校验过的代码，o=a则表示优化所有代码。　例如：　dalvik.vm.dexopt-flags=m=y　dalvik.vm.dexopt-flags=v=n,o=v
+注意，这个参数只会影响到安装APK之后或初次使用APK时生成dex文件时有效。若整个系统(包括应用程序)为odex化，则无意义。
+dalvik.vm.verify-bytecode：
+本参数控制Dalvik虚拟机是否验证应用程序的可执行代码。可以与上一个参数配合使用。可填写的值为true和false。　其具体意义与dalvik.vm.dexopt-flags的v=n一模一样。但可以与dalvik.vm.dexopt-flags配合使用以取得更好的效果。
+例如：　dalvik.vm.dexopt-flags=v=n,o=v　dalvik.vm.verify-bytecode=false　这样可以令后来安装的apk文件可以被优化而不被检验。
+dalvik.vm.checkjni：
+本参数控制Dalvik虚拟机在调用外部jni链接库的时候是否对其做安全性检验。可填写的值为true和false。　此参数会覆盖ro.kernel.android.checkjni。　若值为true，会增加程序的兼容性和稳定性，但也会增加其加载和执行的时间。
+推荐为false。
+dalvik.vm.deadlock-predict：
+本参数控制Dalvik虚拟机对程序死锁预测处理。可填写的值有off、warn和err。　off表示关闭死锁预测功能(默认设置)。　warn表示在继续程序运行的同时只记录该死锁预测(如果为真死锁就会出现程序假死现象，然后等N久出现关闭)。　err表示预测到死锁时马上弹出FC。
+注意：有些Dalvik虚拟机版本并不支持此参数。
+总结：　对于本期此处给出三种常用的配置(以Defy为机型)。
+超级急速流畅型：
+dalvik.vm.startheapsize=16m
+dalvik.vm.heapsize=48m
+dalvik.vm.execution-mode=int:jit
+dalvik.vm.dexopt-flags=v=n,o=v
+dalvik.vm.checkjni=false
+常用稳定加流畅型：
+dalvik.vm.startheapsize=8m
+dalvik.vm.heapsize=40m
+dalvik.vm.execution-mode=int:fast
+dalvik.vm.dexopt-flags=m=y
+dalvik.vm.checkjni=false
+超级稳定大内存型：
+dalvik.vm.startheapsize=4m
+dalvik.vm.heapsize=30m
+dalvik.vm.execution-mode=int:portable
+dalvik.vm.dexopt-flags=v=a,o=v
+dalvik.vm.verify-bytecode=true
+dalvik.vm.checkjni=true
+系统版本定义
+本期将介绍系统版本、定义等相关参数。主要用于定义系统版本特征字串，OTA字串等。由于较少用到，因此只粗略介绍。
+本参数定义了系统的版本ID。为系统内部使用，OTA时作为粗略版本比较。更改后可避免OTA提示，但可能会引起预装程序(如Blur)的稳定性。
+本参数定义了设置中显示的系统版本号。主要用于设置中显式出现可读版本，一般用于个性化定制和第三方应用程序对系统版本的判断(如魔趣设置)。更改后可自定义版本显示，但某些第三方应用程序会出现错误(如魔趣设置无法实现机器保修查询)。
+ro.build.version.incremental:
+本参数定义了系统的升级字。主要用于系统OTA精确版本比对，同时与ro.build.description和ro.build.fingerprint相匹配。更改后可以免OTA提示(如避免Miui的升级提示和Blur的升级提示)。
+ro.product.model:
+本参数定义了机器的型号字符串。主要用于机器型号显式定义(如系统设置中的手机型号和Blur、Google设置向导中的机型等)。更改后可自定义手机型号名称。
+ro.product.locale.language:
+本参数定义了系统的初始(默认)语言。此处注意是语言，如中文是zh，英文是en。更改后改变系统初次启动时的语言设置。
+ro.product.locale.region:
+本参数定义了系统的初始(默认)区域。此处注意是区域，如中国大陆为CN，台湾为TW，美国为US。更改后改变系统初次启动时的区域设置。　ro.build.description和ro.build.fingerprint均为ROM的编译综合说明。其中包含了平台硬件、Android版本、源代码分支和标签、OTA详细版本等。　其中的OTA部分，例如：　umts_jordan_china-user 2.3.6 4.5.3-109_DPP-14 123456 release-keys　将此数字与ro.build.version.incremental一同更改可避免OTA升级提醒(如Miui和Blur等)。
+基本性能
+本期将介绍与系统性能(流畅操作体验、功能速度、内存管理等)相关的参数属性和其调整方法。　虽然Defy的CPU只有800MHz，虽然Defy的RAM只有512MB，虽然摩托官方的系统优化很差，但通过本期的参数调整，依然可以获得不俗的性能。
+windowsmgr.max_events_per_sec:
+本参数定义了Android系统的窗体事件管理器在单位时间内可以处理的最大事件数量。通过更改本参数可以获得非常明显的丝滑流畅体验。可填写的值范围为”大于0的正整数”，官方默认为60。建议150、200、260、300这几个值。
+当此值变大时，系统触控平滑度明显提高，但对应的CPU使用率也会升高，最终的结果就是电池续航能力下降。以我个人的经验来说，此值取到240左右时在系统设置中滑动可以得到接近WP7的流畅和平滑度。
+ro.min_pointer_dur:
+本参数定义了两次触摸之间的最短时间间隔，单位是毫秒。默认值为25，推荐值是10。通过调整此参数可以提高系统触控的灵敏度或稳定度。当此值越大时，触控越稳定。此值越小，触控越灵敏。
+mot.proximity.delay：
+本参数定义了手机光纤感应器的抖动消除时间，单位是毫秒。默认值是500，推荐值是250。
+通过调整此参数可以提高在通话结束后屏幕点亮的速度。当此值越大时，通话结束后屏幕点亮所需要的时间越长，但在通话过程中如果手机意外瞬间离开脸部也不会点亮屏幕，可防止通话过程中的误操作(比方说通话时不 小心手机移动了一下，屏幕就会点亮，此时如果脸部触碰到了屏幕就会对通话造成影响)。此值越小，则当手机离开脸部或装入口袋后会立即点亮或关闭屏幕。
+mot.proximity.distance：
+本参数定义了手机屏幕上的两个触摸点之间的最短距离，若距离小于此值则认为是一个触摸点，单位是像素。默认值是60，推荐值是100。为什么推荐100呢？因为Defy的屏幕分辨率为480×854，也就是说横向有480个像素点，对应上去也就相当于是横向并排允许4个触摸点，平均一个手指一个点，这样在类似于杀西瓜等游戏中可以提升游戏操作。
+ro.kernel.android.checkjni：
+本参数定义了Dalvik虚拟机在执行程序的时候是否要做Jni链接库的检查工作。详细见Dalvik参数属性期。若考虑稳定性可使用true，若需要性能可使用false。注意：此参数会被Dalvik参数覆盖。
+ro.media.enc.jpeg.quality：
+本参数定义了JPEG图像编码器所使用的质量因子，可填写的值为1~100，默认为80，推荐为100。想照出更好的照片吗？想让照片的大小轻松上M吗？那就使用100吧。
+debug.sf.hw：本参数定义了系统是否启用GPU来渲染程序的UI，默认为0，推荐为1。　但要注意，如果此值为1，在某些应用程序中可能会出现显示错乱的现象(极少见)。
+persist.sys.use_dithering：本参数定义了系统渲染器对图像的缩放是否启用抖动技术。可填写的值为0或1。　当开启抖动后，图像的显示(指背景、解锁等的图像，并非图库、相机那些的)会很柔和，但会增加CPU负载，最终导致ROM卡顿。
+persist.sys.purgeable_assets：本参数定义了系统是否可以清除暂时不用的数据以释放更多的RAM。可填写的值为0或1。　当值为1时，系统会定期清理不用的数据以释放更多的RAM，同时作为代价就是下次启动程序或游戏加载数据会变慢。
+video.accelerate.hw：本参数定义了系统是否对视频启用硬件加速功能。这里的视频指代屏幕上显示的东西，不仅仅是”电影视频”。可填写的值为0或1。　需要注意的是：摩托官方的2.2与2.3系统对此功能支持的不是很好，开启后有时反而会降低系统流畅度，但CM系统绝对建议开启。
+debug.performance.tuning：本参数定义了系统是否针对性能做较调。可填写的值为0或1。　需要注意的是：摩托官方的2.2和2.3系统对此功能支持的不是很好，开启后有时反而会降低系统流畅度。但CM系统绝对建议开启。
+ro.HOME_APP_ADJ
+ro.FOREGROUND_APP_ADJ
+ro.VISIBLE_APP_ADJ
+ro.PERCEPTIBLE_APP_ADJ
+ro.HEAVY_WEIGHT_APP_ADJ
+ro.SECONDARY_SERVER_ADJ
+ro.BACKUP_APP_ADJ
+ro.HIDDEN_APP_MIN_ADJ
+ro.EMPTY_APP_ADJ
+以上参数定义了各种应用程序的管理机制，这些并非一两句话可以说清楚的，想深究的同学可以Google一下OOM Killer。可填写的值为整数。这里只给出值的规律：
+0代表降低进程的优先级且驻留内存；
+1代表驻留内存；
+4代表缓存较多的内存；
+15代表尽量缓存内存。
+也就是说内存缓存器是按照ADJ从大到小来进行缓存的。
+大家可根据自系统中自己对各种应用程序的要求进行更改。以下给出一个经典用例：
+ro.FOREGROUND_APP_ADJ=0 前台程序驻留内存(不缓存)
+ro.VISIBLE_APP_ADJ=1 可见的程序驻留内存(不缓存)
+ro.PERCEPTIBLE_APP_ADJ=2 缓存的RAM多一些
+ro.HOME_APP_ADJ=3 桌面程序，缓存的RAM稍多一些
+ro.HEAVY_WEIGHT_APP_ADJ=4 缓存的RAM再多一些
+ro.SECONDARY_SERVER_ADJ=5 缓存的RAM再再多一些
+ro.BACKUP_APP_ADJ=6 缓存的RAM再再再多一些
+ro.HIDDEN_APP_MIN_ADJ=7 隐藏的程序，根据程序的类型进行内存管理，最低为缓存的RAM再再再再多一些，最高就是直接缓存内存。
+ro.EMPTY_APP_ADJ=15 已经退出的程序，直接缓存内存
+ro.FOREGROUND_APP_MEM
+ro.VISIBLE_APP_MEM
+ro.PERCEPTIBLE_APP_MEM
+ro.HEAVY_WEIGHT_APP_MEM
+ro.SECONDARY_SERVER_MEM
+ro.BACKUP_APP_MEM
+ro.HOME_APP_MEM
+ro.HIDDEN_APP_MEM
+ro.CONTENT_PROVIDER_MEM
+ro.EMPTY_APP_MEM
+</code></pre><h4 id="系统build-prop文件生成过程"><a href="#系统build-prop文件生成过程" class="headerlink" title="系统build.prop文件生成过程"></a>系统build.prop文件生成过程</h4><p>build.prop文件的生成过程就是系统收集各个配置属性然后合并到build.prop文件的过程。</p>
+<ol>
+<li>执行build/tools/buildinfo.sh</li>
+<li>将system.prop中的内容添加到$(OUT_TARGET_DEVICE)/system/build.prop</li>
+<li>将ADDITIONAL_BUILD_PROPERTIES的值也添加到$(OUT_TARGET_DEVICE)/system/build.prop</li>
+</ol>
+<blockquote>
+<p>注意： 对于b288，可以在device/$(TARGET_DEVICE)/$(TARGET_DEVICE).mk文件中修改配置文件来更改build.prop配置，但是如果直接make不会覆盖build.prop文件，需要删除build.prop文件或者make clean之后再make。</p>
+</blockquote>
+<p>可以直接使用adb对build.prop进行修改，步骤如下：</p>
+<ol>
+<li>adb pull将system/build.prop拷贝出来以备修改。</li>
+<li>修改build.prop中配置文件的属性。例如,ro.sf.lcd_density=167修改为ro.sf.lcd_density=160.</li>
+<li>adb push将文件push到system/build.prop</li>
+<li>设置权限。adb remount， adb shell chmod 0644 system/build.prop给文件设置权限。</li>
+</ol>
 
           
         
@@ -2201,7 +1913,7 @@ artifacts {
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -2251,7 +1963,7 @@ artifacts {
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-count">105</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

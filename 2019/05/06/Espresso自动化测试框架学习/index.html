@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Espresso UI自动化测试框架前言Espresso是谷歌大力推荐的一套测试框架，从Android studio2.2版本开始，google就开始支持在as上espresso自动生成单元测试代码。 Espresso测试运行速度很快，它允许你在应用程序处于静止时操作和断言等。 Espresso面向那些认为自动化测试是开发声明周期的一部分的开发人员，并且虽然它可以被用作黑盒测试，但是熟悉代码库的人">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Sparky">
+<meta property="og:url" content="http://yoursite.com/2019/05/06/Espresso自动化测试框架学习/index.html">
+<meta property="og:site_name" content="Sparky">
+<meta property="og:description" content="Espresso UI自动化测试框架前言Espresso是谷歌大力推荐的一套测试框架，从Android studio2.2版本开始，google就开始支持在as上espresso自动生成单元测试代码。 Espresso测试运行速度很快，它允许你在应用程序处于静止时操作和断言等。 Espresso面向那些认为自动化测试是开发声明周期的一部分的开发人员，并且虽然它可以被用作黑盒测试，但是熟悉代码库的人">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://developer.android.google.cn/images/training/testing/repeated-view.png">
+<meta property="og:updated_time" content="2019-05-06T11:51:47.659Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Sparky">
+<meta name="twitter:description" content="Espresso UI自动化测试框架前言Espresso是谷歌大力推荐的一套测试框架，从Android studio2.2版本开始，google就开始支持在as上espresso自动生成单元测试代码。 Espresso测试运行速度很快，它允许你在应用程序处于静止时操作和断言等。 Espresso面向那些认为自动化测试是开发声明周期的一部分的开发人员，并且虽然它可以被用作黑盒测试，但是熟悉代码库的人">
+<meta name="twitter:image" content="https://developer.android.google.cn/images/training/testing/repeated-view.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/05/06/Espresso自动化测试框架学习/"/>
+
+
+
+
+
+  <title> | Sparky</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?23f2f984b557cd9c31da9a75b4da08e4";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Sparky</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/06/Espresso自动化测试框架学习/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sparky">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/logo_s.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sparky">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline"></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-06T20:09:10+08:00">
+                2019-05-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="Espresso-UI自动化测试框架"><a href="#Espresso-UI自动化测试框架" class="headerlink" title="Espresso UI自动化测试框架"></a>Espresso UI自动化测试框架</h2><h4 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h4><p>Espresso是谷歌大力推荐的一套测试框架，从Android studio2.2版本开始，google就开始支持在as上espresso自动生成单元测试代码。</p>
+<p>Espresso测试运行速度很快，它允许你在应用程序处于静止时操作和断言等。</p>
+<p>Espresso面向那些认为自动化测试是开发声明周期的一部分的开发人员，并且虽然它可以被用作黑盒测试，但是熟悉代码库的人可以解锁Espresso的全部功能。</p>
+<h4 id="简单实例"><a href="#简单实例" class="headerlink" title="简单实例"></a>简单实例</h4><p>Espresso非常简单医用，并且可定制，能清楚的表明期望，交互和断言。</p>
+<pre><code>@Test
+public void test(){
+    onView(withId(R.id.test)).perform(click()).check(matches(withText(&quot;clicked&quot;)));
+}
+</code></pre><p>每次调用onView()时，Espresso都会等待执行相应的操作和断言，知道满足一下条件为止。</p>
+<ul>
+<li>The message queue is empty.</li>
+<li>There are no instances of AsyncTask currently executing a task.</li>
+<li>All developer-defined idling resources are idle.</li>
+</ul>
+<h4 id="依赖的类库"><a href="#依赖的类库" class="headerlink" title="依赖的类库"></a>依赖的类库</h4><ul>
+<li>espresso-core 包含基础的视图匹配器，操作和断言库</li>
+<li>espresso-web 包含webview的测试库</li>
+<li>espresso-idling-resource 包含和后台作业的同步的机制</li>
+<li>espresso-contrib 包括DatePicker, RecyclerView and Drawer actions, accessibility checks, and CountingIdlingResource这些的扩展库</li>
+<li>espresso-intent 包括与意图有关的测试库</li>
+<li>espresso-remote Espresso多处理功能的位置</li>
+</ul>
+<h4 id="设置和使用"><a href="#设置和使用" class="headerlink" title="设置和使用"></a>设置和使用</h4><h5 id="1-设置测试环境"><a href="#1-设置测试环境" class="headerlink" title="1. 设置测试环境"></a>1. 设置测试环境</h5><p>为了避免测试过程出现问题，最好关闭开发者选项中的下边三个设置。</p>
+<ul>
+<li>Window animation scale</li>
+<li>Transition animation scale</li>
+<li>Animator duration scale</li>
+</ul>
+<h5 id="2-配置gradle"><a href="#2-配置gradle" class="headerlink" title="2. 配置gradle"></a>2. 配置gradle</h5><pre><code>dependencies{
+androidTestImplementation &apos;com.android.support.test.espresso:espresso-core:3.0.2&apos;
+androidTestImplementation &apos;com.android.support.test:runner:1.0.2&apos;
+androidTestImplementation &apos;com.android.support.test:rules:1.0.2&apos;
+}
+...
+android{
+    defaultConfig{
+        testInstrumentationRunner &quot;android.support.test.runner.AndroidJUnitRunner&quot;
+    }
+}
+</code></pre><blockquote>
+<p>注意： Android Studio现在新建项目一般都会依赖部分Espresso的库，但是有的仍需要引入部分库，比如我的Android studio 3.0.1需要引入’com.android.support.test:rules:1.0.2’库</p>
+</blockquote>
+<h5 id="3-编写测试代码"><a href="#3-编写测试代码" class="headerlink" title="3. 编写测试代码"></a>3. 编写测试代码</h5><pre><code>@LarggeTest
+@RunWith(AndroidJUnit4.class)
+public class MainActivityTest{
+    @Rule
+    public ActivityTestRule mActivityRule = new ActivityTestRule(MainActivity.class);
+
+    @Test
+    public void runTest(){
+        onView(withId(R.id.test)).perform(click()).check(matches(withText(&quot;2&quot;)));
+    }
+}
+</code></pre><blockquote>
+<p>注意： ActivityTestRule需要导入上一步的一个rules库。<br>如果onView等方法没有代码提示，可以手动先导入相关类库。</p>
+</blockquote>
+<h5 id="4-运行测试用例"><a href="#4-运行测试用例" class="headerlink" title="4. 运行测试用例"></a>4. 运行测试用例</h5><p>可以使用as的运行功能也可以使用命令行方式</p>
+<h6 id="在Android-Studio中："><a href="#在Android-Studio中：" class="headerlink" title="在Android Studio中："></a>在Android Studio中：</h6><ol>
+<li>打开Run -&gt; Edit Configurations</li>
+<li>添加一个新的测试配置</li>
+<li>选择module</li>
+<li>添加一个指定的runner：android.support.test.runner.AndroidJUnitRunner</li>
+<li>运行新配置</li>
+</ol>
+<h6 id="在命令行中"><a href="#在命令行中" class="headerlink" title="在命令行中"></a>在命令行中</h6><p>执行以下代码：</p>
+<pre><code>./gradlew connectedAndroidTest
+</code></pre><h4 id="Espresso-API"><a href="#Espresso-API" class="headerlink" title="Espresso API"></a>Espresso API</h4><p>Espresso API鼓励开发者根据用户与应用程序交互时可能执行的操作进行思考-定位UI元素并与之进行交互，同时框架阻止直接访问应用程序的活动和视图。</p>
+<p>API中主要包括以下的包：</p>
+<ul>
+<li>Espresso 与视图交互的入口(onView(),onData()),同时公开不一定与视图绑定的api，例如pressBack()</li>
+<li>ViewMatchers 一组实现了Matcher&lt; ? super View&gt;接口的对象，你可以将这个作为筛选条件在onView中定位视图</li>
+<li>ViewAction 一组可以被传递给ViewInteraction.perform()的ViewAction对象，比如click()</li>
+<li>ViewAssertions 一组可以被传递给ViewInteraction.check()方法的ViewAssertion对象，大多数情况下，你需要使用这个匹配断言，当一个viewmatcher去断言一个view的状态的时候。</li>
+</ul>
+<p>实例：</p>
+<pre><code>onView(withId(R.id.test)) // withId() is a ViewMatcher
+    .perform(click()) // click() is a ViewAction
+    .check(matches(isDisplayed())); // matches(isDisplayed()) // is a ViewAssertion, isDisplayed() is a ViewMatcher
+</code></pre><h6 id="定位视图"><a href="#定位视图" class="headerlink" title="定位视图"></a>定位视图</h6><p>通常期望的视图具有唯一性，但是有的情况下，通过ViewMater匹配的视图不唯一，此时就会报出异常：</p>
+<pre><code>android.support.test.espresso.AmbiguousViewMatcherException
+此匹配器匹配层次结构中的多个视图:( withId：&lt;123456789&gt;）
+</code></pre><p>所以Espresso提供了组合匹配器来缩小搜索范围：</p>
+<pre><code>onView(allOf(withId(R.id.my_view), withText(&quot;Hello!&quot;)))
+</code></pre><p>也可以使用反转匹配器</p>
+<pre><code>onView(allOf(withId(R.id.test), not(withText(&quot;Hello&quot;))));
+</code></pre><blockquote>
+<p>注意：</p>
+<ol>
+<li>在行为良好的应用程序中，可交互视图都有描述性文本和内容描述文本。如果您无法使用withText()或 缩小搜索范围withContentDescription()，请考虑将其视为可访问性错误 </li>
+<li>通常，一个视图都有唯一的标示。当一个视图有唯一的标示时，就不需要再去指定其他的匹配器去匹配。</li>
+<li>如果一个目标view是adapterview，例如listview，gridview或者spinner，请使用onData()去获取数据</li>
+</ol>
+</blockquote>
+<p>请参阅<a href="https://developer.android.google.cn/reference/android/support/test/espresso/matcher/ViewMatchers.html" target="_blank" rel="noopener">ViewMatchers</a> Espresso提供的视图匹配器。</p>
+<h6 id="操作视图"><a href="#操作视图" class="headerlink" title="操作视图"></a>操作视图</h6><p>当找到目标视图之后，可以使用perform方法对其进行操作.<br>例如要单击视图：</p>
+<pre><code>onView(...).perform(click());
+</code></pre><p>执行多个操作：</p>
+<pre><code>onView(...).perform(typeText(&quot;hello&quot;), click());
+</code></pre><p>如果目标视图位于scrollview内部，需要考虑显示视图之前的操作，比如scrollTo().</p>
+<pre><code>onView(...).perform(scrollTo(), click());
+</code></pre><p>请参阅<a href="https://developer.android.google.cn/reference/android/support/test/espresso/action/ViewActions.html" target="_blank" rel="noopener">ViewActions</a>查看详细API操作。</p>
+<h6 id="断言检查"><a href="#断言检查" class="headerlink" title="断言检查"></a>断言检查</h6><p>可以使用check()将断言应用与当前视图。最常见的断言是matches()断言。</p>
+<p>下边的示例中，SimpleActivity包含a Button和a TextView。单击按钮时，内容TextView将更改为”Hello Espresso!”。</p>
+<pre><code>// 匹配视图button及操作视图
+onView(withId(R.id.button_simple)).perform(click());
+
+// 验证文本
+onView(withId(R.id.text_simple)).check(matches(withText(&quot;Hello Espresso!&quot;)));
+</code></pre><h6 id="检查AdapterView中的数据加载"><a href="#检查AdapterView中的数据加载" class="headerlink" title="检查AdapterView中的数据加载"></a>检查AdapterView中的数据加载</h6><p>AdapterView比较特殊，它只能显示当前数据的一个子集的view，所以onView()不会匹配到那些没有显示的view。</p>
+<p>Espresso单独提供了onData()入口来处理这个问题，该入口能够首先加载所有的item。</p>
+<p>下边是一个使用 onData()的例子。</p>
+<pre><code>// open the item selection
+onView(withId(R.id.spinner_simpke)).perform(click());
+// select an item
+onData(allOf(instanceOf(String.class)), is(&quot;Americano&quot;)).perform(click());
+// verify text correct
+onView(withId(R.id.spiinertext_simple)).check(matches(withText(containsString(&quot;Americano&quot;))))
+</code></pre><h4 id="Espresso-recipes"><a href="#Espresso-recipes" class="headerlink" title="Espresso recipes"></a>Espresso recipes</h4><p>本篇主要介绍Espresso的进阶用法。</p>
+<h5 id="匹配另一个视图旁边的视图"><a href="#匹配另一个视图旁边的视图" class="headerlink" title="匹配另一个视图旁边的视图"></a>匹配另一个视图旁边的视图</h5><p><img src="https://developer.android.google.cn/images/training/testing/repeated-view.png" alt="匹配另一个视图旁边的视图"><br>如上图所示，如果我们要去匹配7旁边的item视图时，因为7是非唯一视图，item是唯一视图，我们可以使用组合匹配器，先去匹配非唯一视图，然后使用hasSibling(0匹配器缩小选择范围。</p>
+<pre><code>onView(allOf(withText(7), hasSibling(withText(&quot;item: 0&quot;)))).perform(click());
+</code></pre><h5 id="匹配Actionbar里边的视图"><a href="#匹配Actionbar里边的视图" class="headerlink" title="匹配Actionbar里边的视图"></a>匹配Actionbar里边的视图</h5><p>主要是指 ActionBar的控件和Option Item<br>如果是在actionbar中可见的的视图，是比较简单的。</p>
+<pre><code>onView(withId(R.id.xxx)).perform(click());
+</code></pre><p>对于option item来说，有的是通过右上角的menu button调出的，有的是通过虚拟菜单键调出的。幸运的是，Espresso为我们处理了额这个问题。</p>
+<p>对于正常的操作栏：</p>
+<pre><code>openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
+onView(withText(&quot;World&quot;)).perform(click());
+</code></pre><p>对于上下文相关的操作栏</p>
+<pre><code>openContexturlActionModeOverflowMenu();
+onView(withText(&quot;Hello&quot;)).perform(click());
+</code></pre><h5 id="断言view是否显示"><a href="#断言view是否显示" class="headerlink" title="断言view是否显示"></a>断言view是否显示</h5><pre><code>onView(withId(R.id.test)).check(matches(not(isDisplayed())));
+</code></pre><h5 id="断言view是否存在"><a href="#断言view是否存在" class="headerlink" title="断言view是否存在"></a>断言view是否存在</h5><pre><code>onView(withId(R.id.test)).check(doesNotExist());
+</code></pre><h5 id="断言数据项不在适配器中"><a href="#断言数据项不在适配器中" class="headerlink" title="断言数据项不在适配器中"></a>断言数据项不在适配器中</h5><p>断言数据想不在适配器中需要我们拿到adapter item，并与数据做匹配。这需要我们自己定义方法去匹配。</p>
+<pre><code>private static Matcher&lt;View&gt; withAdapterData(Matcher&lt;Object&gt; dataMatcher) {
+    @Override
+    public void describeTo(Description description){
+        description.appendText(&quot;with class name: &quot;);
+        dataMatcher.describeTo(description);
+    }
+
+    @Override
+    public boolean matchesSafely(View view) {
+        if (!(view instanceof AdapterView)) {
+            return false;
+        }
+
+        Adapter adapter = view.getAdapter();
+        for (int i = 0; i &lt; adapter.getCount(); i++) {
+        if (dataMatch.matches(adapter.getItem(i))){
+            return true;
+        }
+        }
+
+        return false;
+    }
+}
+
+onView(withId(R.id.list)).check(matches(withAdapterData(withItemContent(&quot;item 1&quot;))));
+</code></pre><blockquote>
+<p>注意： 部分代码详见<a href="https://android.googlesource.com/platform/frameworks/testing/+/android-support-test/espresso/sample/src/androidTest/java/android/support/test/testapp/AdapterViewTest.java" target="_blank" rel="noopener">AdapterViewTest.java</a></p>
+</blockquote>
+<h5 id="自定义故障处理程序"><a href="#自定义故障处理程序" class="headerlink" title="自定义故障处理程序"></a>自定义故障处理程序</h5><p>espresso允许开发者自定义FailureHandler用于错误处理，常见的做法有收集错误信息，截图或者传递额外的调试信息。</p>
+<pre><code>private static class CustomFailureHandler implements FailureHandler {
+    private final FailureHandler delegate;
+    public CustomFailureHandler(Context targetContext) {
+        delegate = new DefaultFailureHandler(targetContext);
+    }
+
+    @Override
+    public void handle(Throwable error, Matcher&lt;View&gt; viewMatcher){
+        try {
+            delegate.handle(error, viewMatcher);
+        } catch (NoMatchingViewException e) {
+            throw new MySpecialException(e);
+        }
+    }
+}
+</code></pre><p>需要自己定义Exception，并且在test中setFailureHandler();一般在setUp()中定义。</p>
+<h5 id="定位非默认窗口"><a href="#定位非默认窗口" class="headerlink" title="定位非默认窗口"></a>定位非默认窗口</h5><pre><code>onView(withText(&quot;south china sea&quot;))
+    .inRoot(withDecorView(not(is(getActivity().getWindow().getDecorView()))))
+    .perform(click());
+</code></pre><h5 id="在列表视图中匹配页眉和页脚"><a href="#在列表视图中匹配页眉和页脚" class="headerlink" title="在列表视图中匹配页眉和页脚"></a>在列表视图中匹配页眉和页脚</h5><p>想要匹配页眉和页脚，必须在listview.addFooter()或者listview.addHeader()中传递第二个参数。这个参数起到关联作用。例如：</p>
+<pre><code>public static final String FOOTER = &quot;FOOTER&quot;;
+...
+View footerView = layoutInflater.inflate(R.layout.list_item, listView, false);
+((TextView) footerView.findViewById(R.id.item_content)).setText(&quot;count:&quot;);
+((TextView) footerView.findViewById(R.id.item_size)).setText(String.valueOf(data.size()));
+listView.addFooterView(footerView, FOOTER, true);
+</code></pre><p>测试代码：</p>
+<pre><code>public static Matcher&lt;Object&gt; isFooter(){
+    return allOf(is(instanceOf(String.class)), is(FOOTER));
+}
+
+public void testFooter(){
+    onData(isFooter()).perform(click());
+}
+</code></pre><h4 id="多进程"><a href="#多进程" class="headerlink" title="多进程"></a>多进程</h4><p>espresso允许跨进程测试，但是只是在Android 8.0及以上版本。所以请注意以下两点：</p>
+<ul>
+<li>应用最低版本为8.0，也就是API 26。</li>
+<li>只能测试应用内的进程，无法测试外部进程。</li>
+</ul>
+<h5 id="使用步骤"><a href="#使用步骤" class="headerlink" title="使用步骤"></a>使用步骤</h5><p>在build.gradle中引用espresso-remote库</p>
+<pre><code>dependencies {
+...
+androidTestImplementation &apos;com.android.support.test.espresso:espresso-remote:3.0.2&apos;
+}
+</code></pre><p>并且需要在androidTest的Manifest文件中添加以下代码：</p>
+<pre><code>&lt;instrumentation android:name=&quot;android.support.test.runner.AndroidJUnitRunner&quot;
+android:targetPackage=&quot;android.support.mytestapp&quot;
+android:targetProcesses=&quot;xxx&quot;/&gt;
+
+&lt;meta-data
+android:name=&quot;remoteMethod&quot;
+android:value=&quot;android.support.test.espresso.remote.EspressoRemote#remoteInit&quot; /&gt;
+</code></pre><h4 id="辅助功能检查"><a href="#辅助功能检查" class="headerlink" title="辅助功能检查"></a>辅助功能检查</h4><p>AccessibilityCheck允许使用现有代码来测试可访问性问题。它会在测试动作方法之前发生。</p>
+<pre><code>import android.support.test.espresso.contrib.AccessibilityChecks;
+
+@RunWith(AndroidJUnit4.class)
+@LargeTest
+public class AccessibilityChecksIntegrationTest {
+    @BeforeClass
+    public static void enableAccessibilityChecks() {
+        AccessibilityChecks.enable();
+    }
+}
+</code></pre><h4 id="list"><a href="#list" class="headerlink" title="list"></a>list</h4><p>list分为两种adapterview和recyclerview。</p>
+<h5 id="与adapterview列表项的交互"><a href="#与adapterview列表项的交互" class="headerlink" title="与adapterview列表项的交互"></a>与adapterview列表项的交互</h5><p>普通写法</p>
+<pre><code>onData(allOf(is(instanceOf(Map.class)), hasEntry(equalTo(&quot;STR&quot;), is(&quot;item: 50&quot;))));
+</code></pre><p>注意，Espresso会根据需要自动滚动列表。</p>
+<p>我们分析上边的代码，首先is(instanceOf(Map.class))会将搜索范围缩小到map集合，然后hasEntry()会去匹配集合里key为“str”和value为”item: 50”的条目。</p>
+<p>因为上述代码较长，我们可以自定义matcher去match</p>
+<pre><code>private static Matcher&lt;Object&gt; withItemContent(String expectedText) {
+    checkNotNull(expectedText);
+    return withItemContent(equalTo(expectedText));
+}
+
+private static Matcher&lt;Object&gt; withItemContent(Matcher&lt;Object&gt; itemTextMatcher) {
+    return new BoundedMatcher&lt;&gt;(Map.class){
+        @Override
+public boolean matchesSafely(Map map) {
+    return hasEntry(equalTo(&quot;STR&quot;), itemTextMatcher).matches(map);
+}
+
+@Override
+public void describeTo(Description description) {
+    description.appendText(&quot;with item content: &quot;);
+    itemTextMatcher.describeTo(description);
+}
+    }
+}
+</code></pre><p>这样就可以简单的调用了</p>
+<pre><code>onData(withItemContent(&quot;xxx&quot;)).perform(click());
+</code></pre><h5 id="操作child-view"><a href="#操作child-view" class="headerlink" title="操作child view"></a>操作child view</h5><pre><code>onData(withItemContent(&quot;xxx&quot;)).onChildView(withId(R.id.tst)).perform(click());
+</code></pre><h4 id="和recyclerview的条目交互"><a href="#和recyclerview的条目交互" class="headerlink" title="和recyclerview的条目交互"></a>和recyclerview的条目交互</h4><p>espresso-contrib库中包含一系列recyclerviewactions。</p>
+<ul>
+<li>scrollTo 滚动到匹配的view</li>
+<li>scrollToHolder 滚动到匹配的viewholder</li>
+<li>scrollToPosition 滚动到指定的position</li>
+<li>actionOnHolderItem 在匹配到的view holder中进行操作</li>
+<li>actionOnItem 在匹配到的item view上进行操作</li>
+<li>actionOnItemAtPosition 在指定位置的view上进行操作</li>
+</ul>
+<p>实例：</p>
+<pre><code>@Test
+public void scrollToItemBelowFold_checkItsText() {
+    // First, scroll to the position that needs to be matched and click on it.
+    onView(ViewMatchers.withId(R.id.recyclerView))
+            .perform(RecyclerViewActions.actionOnItemAtPosition(ITEM_BELOW_THE_FOLD,
+            click()));
+
+    // Match the text in an item below the fold and check that it&apos;s displayed.
+    String itemElementText = mActivityRule.getActivity().getResources()
+            .getString(R.string.item_element_text)
+            + String.valueOf(ITEM_BELOW_THE_FOLD);
+    onView(withText(itemElementText)).check(matches(isDisplayed()));
+}
+@Test
+public void itemInMiddleOfList_hasSpecialText() {
+    // First, scroll to the view holder using the isInTheMiddle() matcher.
+    onView(ViewMatchers.withId(R.id.recyclerView))
+            .perform(RecyclerViewActions.scrollToHolder(isInTheMiddle()));
+
+    // Check that the item has the special text.
+    String middleElementText =
+            mActivityRule.getActivity().getResources()
+            .getString(R.string.middle);
+    onView(withText(middleElementText)).check(matches(isDisplayed()));
+}
+</code></pre><h4 id="意图"><a href="#意图" class="headerlink" title="意图"></a>意图</h4><p>Espresso-intents库是对espresso的扩展，可以对被测应用程序发出的意图进行验证和存根。</p>
+<h5 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h5><ol>
+<li>该功能需要 Android Support Repository</li>
+<li><p>build.gradle的dependencies中添加</p>
+<pre><code>androidTestImplementation &apos;com.android.support.test.espresso:espresso-intents:3.0.2&apos;
+</code></pre></li>
+<li><p>add intent test rule</p>
+<pre><code>@Rule
+public IntentsTestRule&lt;MyActivity&gt; intentsTestRule = new IntentTestRule&lt;&gt;(MyActivity.class);
+</code></pre></li>
+<li><p>match</p>
+<p> Hamcrest的匹配的条件是使用Hamcrest Matchers定义的，Hamcrest允许使用一下两种意图匹配器：</p>
+<ul>
+<li>使用现有的意图匹配器</li>
+<li><p>使用自己的意图匹配器</p>
+<p>Espresso-intents分别提供了意图验证和存根的方法intented()和intending().</p>
+<p>以下代码展示了使用启动浏览器的意图匹配的方式：</p>
+<pre><code>intented(allOf(
+    hasActoin(equalTo(Intent.ACTION_VIEW)),
+    hasCategories(hasItem(qualTo(Intent.CATEGORY_BROWSABLE))),
+    hasData(hasHost(equalTo(&quot;www.google.com&quot;))),
+    hasExtras(allOf(hasEntry(equalTo(&quot;key1&quot;), equalTo(&quot;value1&quot;)),
+    toPackage(&quot;com.android.browser&quot;)))));    
+</code></pre></li>
+</ul>
+</li>
+<li><p>validate intents</p>
+<pre><code>intented(toPackage(&quot;com.android.phone&quot;));
+</code></pre></li>
+<li><p>stubbing</p>
+<pre><code>1. 构建结果以在启动特定活动时返回。
+2. 指示存根结果以响应意图
+3. 验证是否产生了预期的目标
+
+完整代码如下：
+
+    // Build the result to return when the activity is launched.
+    Intent resultData = new Intent();
+    String phoneNumber = &quot;123-345-6789&quot;;
+    resultData.putExtra(&quot;phone&quot;, phoneNumber);
+    ActivityResult result =
+        new ActivityResult(Activity.RESULT_OK, resultData);
+
+    // Set up result stubbing when an intent sent to &quot;contacts&quot; is seen.
+    intending(toPackage(&quot;com.android.contacts&quot;)).respondWith(result);
+
+    // User action that results in &quot;contacts&quot; activity being launched.
+    // Launching activity expects phoneNumber to be returned and displayed.
+    onView(withId(R.id.pickButton)).perform(click());
+
+    // Assert that the data we set up above is shown.
+    onView(withId(R.id.phoneNumber)).check(matches(withText(phoneNumber)));
+</code></pre></li>
+</ol>
+<h4 id="webview"><a href="#webview" class="headerlink" title="webview"></a>webview</h4><p><a href="https://developer.android.google.cn/training/testing/espresso/web" target="_blank" rel="noopener"><br>Espresso Web</a></p>
+<p>应该用不到吧，跳过了</p>
+<h4 id="idling-resource"><a href="#idling-resource" class="headerlink" title="idling resource"></a>idling resource</h4><p><a href="https://developer.android.google.cn/training/testing/espresso/idling-resource" target="_blank" rel="noopener">闲置资源</a></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p><a href="https://android.github.io/android-test/downloads/espresso-cheat-sheet-2.1.0.pdf" target="_blank" rel="noopener">Espresso小结备忘.pdf</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/05/06/Effective Java 2/" rel="next" title="">
+                <i class="fa fa-chevron-left"></i> 
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/05/06/ffmpeg视频压缩/" rel="prev" title="">
+                 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/logo_s.jpg"
+                alt="Sparky" />
+            
+              <p class="site-author-name" itemprop="name">Sparky</p>
+              <p class="site-description motion-element" itemprop="description">我是谁？我在做什么？我为什么要这么做？我想做什么？我要怎么做？</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">105</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Espresso-UI自动化测试框架"><span class="nav-number">1.</span> <span class="nav-text">Espresso UI自动化测试框架</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#前言"><span class="nav-number">1.0.1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#简单实例"><span class="nav-number">1.0.2.</span> <span class="nav-text">简单实例</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#依赖的类库"><span class="nav-number">1.0.3.</span> <span class="nav-text">依赖的类库</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#设置和使用"><span class="nav-number">1.0.4.</span> <span class="nav-text">设置和使用</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-设置测试环境"><span class="nav-number">1.0.4.1.</span> <span class="nav-text">1. 设置测试环境</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-配置gradle"><span class="nav-number">1.0.4.2.</span> <span class="nav-text">2. 配置gradle</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-编写测试代码"><span class="nav-number">1.0.4.3.</span> <span class="nav-text">3. 编写测试代码</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4-运行测试用例"><span class="nav-number">1.0.4.4.</span> <span class="nav-text">4. 运行测试用例</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#在Android-Studio中："><span class="nav-number">1.0.4.4.1.</span> <span class="nav-text">在Android Studio中：</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#在命令行中"><span class="nav-number">1.0.4.4.2.</span> <span class="nav-text">在命令行中</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Espresso-API"><span class="nav-number">1.0.5.</span> <span class="nav-text">Espresso API</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#定位视图"><span class="nav-number">1.0.5.0.1.</span> <span class="nav-text">定位视图</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#操作视图"><span class="nav-number">1.0.5.0.2.</span> <span class="nav-text">操作视图</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#断言检查"><span class="nav-number">1.0.5.0.3.</span> <span class="nav-text">断言检查</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#检查AdapterView中的数据加载"><span class="nav-number">1.0.5.0.4.</span> <span class="nav-text">检查AdapterView中的数据加载</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Espresso-recipes"><span class="nav-number">1.0.6.</span> <span class="nav-text">Espresso recipes</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#匹配另一个视图旁边的视图"><span class="nav-number">1.0.6.1.</span> <span class="nav-text">匹配另一个视图旁边的视图</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#匹配Actionbar里边的视图"><span class="nav-number">1.0.6.2.</span> <span class="nav-text">匹配Actionbar里边的视图</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#断言view是否显示"><span class="nav-number">1.0.6.3.</span> <span class="nav-text">断言view是否显示</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#断言view是否存在"><span class="nav-number">1.0.6.4.</span> <span class="nav-text">断言view是否存在</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#断言数据项不在适配器中"><span class="nav-number">1.0.6.5.</span> <span class="nav-text">断言数据项不在适配器中</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#自定义故障处理程序"><span class="nav-number">1.0.6.6.</span> <span class="nav-text">自定义故障处理程序</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#定位非默认窗口"><span class="nav-number">1.0.6.7.</span> <span class="nav-text">定位非默认窗口</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#在列表视图中匹配页眉和页脚"><span class="nav-number">1.0.6.8.</span> <span class="nav-text">在列表视图中匹配页眉和页脚</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#多进程"><span class="nav-number">1.0.7.</span> <span class="nav-text">多进程</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#使用步骤"><span class="nav-number">1.0.7.1.</span> <span class="nav-text">使用步骤</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#辅助功能检查"><span class="nav-number">1.0.8.</span> <span class="nav-text">辅助功能检查</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#list"><span class="nav-number">1.0.9.</span> <span class="nav-text">list</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#与adapterview列表项的交互"><span class="nav-number">1.0.9.1.</span> <span class="nav-text">与adapterview列表项的交互</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#操作child-view"><span class="nav-number">1.0.9.2.</span> <span class="nav-text">操作child view</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#和recyclerview的条目交互"><span class="nav-number">1.0.10.</span> <span class="nav-text">和recyclerview的条目交互</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#意图"><span class="nav-number">1.0.11.</span> <span class="nav-text">意图</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#配置"><span class="nav-number">1.0.11.1.</span> <span class="nav-text">配置</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#webview"><span class="nav-number">1.0.12.</span> <span class="nav-text">webview</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#idling-resource"><span class="nav-number">1.0.13.</span> <span class="nav-text">idling resource</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">2.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Sparky</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

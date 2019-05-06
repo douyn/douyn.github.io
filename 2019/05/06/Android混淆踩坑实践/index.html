@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Android混淆踩坑实践一般情况下，网上的大多数模板都是可用的，如果出错通常需要特殊的指定要不去混淆的类或方法等。 两种混淆错误，一种是编译时报错，一种是运行时报错。编译时错误一般是某些类需要混淆。运行时错误一般是库调用java代码出错。 1. 耐心看log，一般根据log就可以定位到错误的地方。跟Android项目中的warning不一样这里的warning也会导致编译不过去 Warning:">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Sparky">
+<meta property="og:url" content="http://yoursite.com/2019/05/06/Android混淆踩坑实践/index.html">
+<meta property="og:site_name" content="Sparky">
+<meta property="og:description" content="Android混淆踩坑实践一般情况下，网上的大多数模板都是可用的，如果出错通常需要特殊的指定要不去混淆的类或方法等。 两种混淆错误，一种是编译时报错，一种是运行时报错。编译时错误一般是某些类需要混淆。运行时错误一般是库调用java代码出错。 1. 耐心看log，一般根据log就可以定位到错误的地方。跟Android项目中的warning不一样这里的warning也会导致编译不过去 Warning:">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-05-06T11:51:47.648Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Sparky">
+<meta name="twitter:description" content="Android混淆踩坑实践一般情况下，网上的大多数模板都是可用的，如果出错通常需要特殊的指定要不去混淆的类或方法等。 两种混淆错误，一种是编译时报错，一种是运行时报错。编译时错误一般是某些类需要混淆。运行时错误一般是库调用java代码出错。 1. 耐心看log，一般根据log就可以定位到错误的地方。跟Android项目中的warning不一样这里的warning也会导致编译不过去 Warning:">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/05/06/Android混淆踩坑实践/"/>
+
+
+
+
+
+  <title> | Sparky</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?23f2f984b557cd9c31da9a75b4da08e4";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Sparky</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/06/Android混淆踩坑实践/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sparky">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/logo_s.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sparky">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline"></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-06T20:09:10+08:00">
+                2019-05-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="Android混淆踩坑实践"><a href="#Android混淆踩坑实践" class="headerlink" title="Android混淆踩坑实践"></a>Android混淆踩坑实践</h2><p>一般情况下，网上的大多数模板都是可用的，如果出错通常需要特殊的指定要不去混淆的类或方法等。</p>
+<p>两种混淆错误，一种是编译时报错，一种是运行时报错。<br>编译时错误一般是某些类需要混淆。<br>运行时错误一般是库调用java代码出错。</p>
+<h4 id="1-耐心看log，一般根据log就可以定位到错误的地方。"><a href="#1-耐心看log，一般根据log就可以定位到错误的地方。" class="headerlink" title="1. 耐心看log，一般根据log就可以定位到错误的地方。"></a>1. 耐心看log，一般根据log就可以定位到错误的地方。</h4><p>跟Android项目中的warning不一样这里的warning也会导致编译不过去</p>
+<pre><code>Warning: Exception while processing task java.io.IOException: Please correct the above warnings first.
+:fBReader:transformClassesAndResourcesWithProguardForRelease FAILED
+
+FAILURE: Build failed with an exception.
+
+
+遇到这种情况就滑到上边看log里的最上边的出现的warning
+
+Note: the configuration refers to the unknown class &apos;android.webkit.webViewClient&apos;
+Note: the configuration refers to the unknown class &apos;android.webkit.webViewClient&apos;
+Note: the configuration refers to the unknown class &apos;android.webkit.webView&apos;
+Note: the configuration refers to the unknown class &apos;jav.lang.String&apos;
+      Maybe you meant the fully qualified name &apos;java.lang.String&apos;?
+Note: the configuration refers to the unknown class &apos;org.greenrobot.greendao.AbstractDao&apos;
+Warning: com.xxx.xxx: can&apos;t find superclass or interface android.xxx.xxx
+
+说明com.xxx.xxx这个类出现了warning，在proguard.pro文件中添加
+
+    -dontwarn com.xx.xx即可
+</code></pre><h4 id="2-如果混淆之后打包编译都正常，千万不要以为万事大吉，一定要安装查看运行时基本功能是否正常"><a href="#2-如果混淆之后打包编译都正常，千万不要以为万事大吉，一定要安装查看运行时基本功能是否正常" class="headerlink" title="2. 如果混淆之后打包编译都正常，千万不要以为万事大吉，一定要安装查看运行时基本功能是否正常"></a>2. 如果混淆之后打包编译都正常，千万不要以为万事大吉，一定要安装查看运行时基本功能是否正常</h4><p>混淆之后经常出现运行时错误，也是需要去看应用crash的log，一行一行分析定位，实在不行就去google。</p>
+<h5 id="1、ClassNotFoundException，NoSuchMethodError"><a href="#1、ClassNotFoundException，NoSuchMethodError" class="headerlink" title="1、ClassNotFoundException，NoSuchMethodError"></a>1、ClassNotFoundException，NoSuchMethodError</h5><p>找不到类和方法的原因很多，需要根据log去定位。</p>
+<pre><code>Didn&apos;t find class &quot;xxx&quot; on path: DexPathList[[zip file &quot;/data/app/xxx/base.apk&quot;],nativeLibraryDirectories=[/data/app/xxx/lib/arm, /vendor/lib, /system/lib]]
+
+然后java的loadLibrary方法会报错，这个问题乍一看可能以为是so库的问题，你可能回去不混淆so等，但是其实不用，因为so默认就是不混淆的，问题在于jni调用java类时，java类的路径因为混淆而发生变化，所以你需要去不去混淆这个类。
+
+-keep class xxx{*;}
+
+除了这种jni调用java会出现classnotfoundexception之外，本地代码通过反射调用其他的类等也会出现上述问题，只要分析log找到对应的类不混淆即可
+</code></pre><h4 id="2、ExceptionInInitializerError"><a href="#2、ExceptionInInitializerError" class="headerlink" title="2、ExceptionInInitializerError"></a>2、ExceptionInInitializerError</h4><pre><code>原因：这是由于类初始化的时候发生了异常。
+
+解决办法：找到具体是哪里的类哪个方法哪个类初始化的时候发生的异常，然后解决问题。
+
+注：遇到这个错误，首先要确认是不是因为第三方的jar包导致的。如果不是的话，就找本地代码，看是不是写的有问题。如果确实是因为第三方jar包的代码导致的，尽量找到源码或者反编译，查看问题到底是什么引起的，然后找到相应的配置在proguard里面配置。
+
+例如：我们项目中碰到过一个问题，就是因为第三方的jar包里面有一个字段初始化的时候报了空指针，然后导致我们的代码报了上面的错。当时很奇怪，为什么第三方的jar包还能报错，最后调查了之后才发现，是因为人家用到了类的注解，而proguard在混淆优化的时候把注解去掉了，所以报了空指针，只需要在proguard里面加上保护注解就可以了-keepattributes *Annotation*
+</code></pre><h4 id="3、-ClassCastException"><a href="#3、-ClassCastException" class="headerlink" title="3、 ClassCastException"></a>3、 ClassCastException</h4><pre><code>原因：类强制转换的时候出错。
+
+解决办法：找到代码，看是代码写的问题，还是混淆后的问题。如果没有混淆正常运行的话，一般都是因为混淆后遇到了各种问题才报的错。我们项目中遇到的问题是因为没有让proguard保持泛型，所以强转的时候报错。只需要在proguard文件里面加上泛型即可-keepattributes Signature
+</code></pre><h4 id="4、Resources-NotFoundException-resource-not-found"><a href="#4、Resources-NotFoundException-resource-not-found" class="headerlink" title="4、Resources$NotFoundException(resource not found)"></a>4、Resources$NotFoundException(resource not found)</h4><p>资源没有找到，是因为第三方jar包或者自己的代码是通过反射获得R文件中的资源，所以需要将R文件屏蔽掉</p>
+<pre><code>原因：代码进行了混淆，R文件没有了，所以通过反射获取的R文件找不到
+
+解决办法：在proguard文件里设置不混淆R文件    -keep class **.R$* { *; }
+</code></pre>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/05/06/Android高级进阶知识点/" rel="next" title="">
+                <i class="fa fa-chevron-left"></i> 
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/05/06/Android开发感悟/" rel="prev" title="">
+                 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/logo_s.jpg"
+                alt="Sparky" />
+            
+              <p class="site-author-name" itemprop="name">Sparky</p>
+              <p class="site-description motion-element" itemprop="description">我是谁？我在做什么？我为什么要这么做？我想做什么？我要怎么做？</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">105</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Android混淆踩坑实践"><span class="nav-number">1.</span> <span class="nav-text">Android混淆踩坑实践</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-耐心看log，一般根据log就可以定位到错误的地方。"><span class="nav-number">1.0.1.</span> <span class="nav-text">1. 耐心看log，一般根据log就可以定位到错误的地方。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-如果混淆之后打包编译都正常，千万不要以为万事大吉，一定要安装查看运行时基本功能是否正常"><span class="nav-number">1.0.2.</span> <span class="nav-text">2. 如果混淆之后打包编译都正常，千万不要以为万事大吉，一定要安装查看运行时基本功能是否正常</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1、ClassNotFoundException，NoSuchMethodError"><span class="nav-number">1.0.2.1.</span> <span class="nav-text">1、ClassNotFoundException，NoSuchMethodError</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2、ExceptionInInitializerError"><span class="nav-number">1.0.3.</span> <span class="nav-text">2、ExceptionInInitializerError</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3、-ClassCastException"><span class="nav-number">1.0.4.</span> <span class="nav-text">3、 ClassCastException</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4、Resources-NotFoundException-resource-not-found"><span class="nav-number">1.0.5.</span> <span class="nav-text">4、Resources$NotFoundException(resource not found)</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Sparky</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

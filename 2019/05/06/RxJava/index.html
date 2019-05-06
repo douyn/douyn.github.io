@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="RxJava简介RxJava是RectiveX的java VM实现，用来使用可观察序列来编写异步和基于事件的程序的库。 主要是用来实现异步任务，和事件总线的功能 使用 创建观察者,有两种实现方式  创建Observer Observer&amp;lt;String&amp;gt; observer = new Observer&amp;lt;String&amp;gt;() {     @Override     public">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Sparky">
+<meta property="og:url" content="http://yoursite.com/2019/05/06/RxJava/index.html">
+<meta property="og:site_name" content="Sparky">
+<meta property="og:description" content="RxJava简介RxJava是RectiveX的java VM实现，用来使用可观察序列来编写异步和基于事件的程序的库。 主要是用来实现异步任务，和事件总线的功能 使用 创建观察者,有两种实现方式  创建Observer Observer&amp;lt;String&amp;gt; observer = new Observer&amp;lt;String&amp;gt;() {     @Override     public">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-05-06T11:51:47.617Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Sparky">
+<meta name="twitter:description" content="RxJava简介RxJava是RectiveX的java VM实现，用来使用可观察序列来编写异步和基于事件的程序的库。 主要是用来实现异步任务，和事件总线的功能 使用 创建观察者,有两种实现方式  创建Observer Observer&amp;lt;String&amp;gt; observer = new Observer&amp;lt;String&amp;gt;() {     @Override     public">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/05/06/RxJava/"/>
+
+
+
+
+
+  <title> | Sparky</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?23f2f984b557cd9c31da9a75b4da08e4";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Sparky</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/06/RxJava/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sparky">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/logo_s.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sparky">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline"></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-06T20:10:43+08:00">
+                2019-05-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="RxJava"><a href="#RxJava" class="headerlink" title="RxJava"></a>RxJava</h1><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>RxJava是RectiveX的java VM实现，用来使用可观察序列来编写异步和基于事件的程序的库。</p>
+<p>主要是用来实现异步任务，和事件总线的功能</p>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><ol>
+<li><p>创建观察者,有两种实现方式</p>
+<ol>
+<li><p>创建Observer</p>
+<pre><code>Observer&lt;String&gt; observer = new Observer&lt;String&gt;() {
+    @Override
+    public void onSubscribe(Disposable d) {
+        Log.i(TAG, &quot;onSubscribe: &quot;);
+    }
+
+    @Override
+    public void onNext(String s) {
+        Log.i(TAG, &quot;onNext: &quot;);
+    }
+
+    @Override
+    public void onError(Throwable e) {
+        Log.i(TAG, &quot;onError: &quot;);
+    }
+
+    @Override
+    public void onComplete() {
+        Log.i(TAG, &quot;onComplete: &quot;);
+    }
+};
+</code></pre></li>
+<li><p>创建Subscriber</p>
+<pre><code>Subscriber subscriber = new Subscriber() {
+    @Override
+    public void onSubscribe(Subscription s) {
+        Log.i(TAG, &quot;onSubscribe: &quot;);
+    }
+
+    @Override
+    public void onNext(Object o) {
+        Log.i(TAG, &quot;onNext: &quot;);
+    }
+
+    @Override
+    public void onError(Throwable t) {
+        Log.i(TAG, &quot;onError: &quot;);
+    }
+
+    @Override
+    public void onComplete() {
+        Log.i(TAG, &quot;onComplete: &quot;);
+    }
+    };
+</code></pre></li>
+</ol>
+</li>
+<li><p>创建被观察者，有三种实现方式</p>
+<ol>
+<li>Observable.create</li>
+</ol>
+</li>
+</ol>
+<pre><code>        Observable.create(new ObservableOnSubscribe&lt;String&gt;() {
+            @Override
+            public void subscribe(ObservableEmitter&lt;String&gt; e) throws Exception {
+                // 使用该方法创建observable，需要手动调用onNext, onError, onComplete方法，而onSubscribe是自动调用的
+                e.onNext(&quot;observable.create&quot;);
+            }
+        }).subscribe(observer);
+2. Observable.just
+
+
+         // 使用该方法创建observable，会自动调用onSubscribe，onNext，onError，onComplete
+        Observable.just(&quot;observable.just&quot;).subscribe(observer);
+3. Observable.fromArray
+
+
+        // 使用该方法创建的observable，会自动调用onSubscribe，onNext，onError，onComplete
+        String[] quotations = {&quot;observable.fromArray&quot;};
+        Observable.fromArray(quotations).subscribe(observer);
+</code></pre><ol>
+<li><p>创建被观察之后，通过subscribe方法关联观察者</p>
+<p> observable.subscribe(observer)</p>
+</li>
+<li><p>观察者的方法</p>
+<p> onError: 表示事件队列异常，队列终止，下一步会回调onComplete</p>
+<p> onSubscribe: 当观察者订阅被观察者的时候，会回调该方法</p>
+<p> onNext: 普通事件，可以在该方法中做一些业务逻辑</p>
+<p> onComplete: 表示事件队列完结</p>
+</li>
+<li><p>操作符，包括普通操作符，变换操作符，过滤操作符，组合操作符，辅助操作符，辅助处理操作符，条件操作符，布尔操作符，转换操作符</p>
+</li>
+</ol>
+<ol>
+<li>普通操作符，例如，interval，intervalRange</li>
+</ol>
+<pre><code> // 普通操作符
+// 用于周期执行
+Observable.interval(3, TimeUnit.SECONDS).just(&quot;observable.interval&quot;).subscribe(observer);
+
+// 用于延迟执行并且定期执行
+Observable.intervalRange(0, 6, 0, 3, TimeUnit.SECONDS).create(new ObservableOnSubscribe&lt;String&gt;() {
+    @Override
+    public void subscribe(ObservableEmitter&lt;String&gt; e) throws Exception {
+        Log.i(TAG, &quot;subscribe: &quot;);
+    }
+}).subscribe(observer);
+</code></pre><ol>
+<li>变换操作符，例如，map，flatmap，cast，concatmap</li>
+</ol>
+<pre><code>// 变换操作符
+// map，指定一个Function对象，将一个Observable转换成另一个Observable对象。
+Observable.just(&quot;observable.map&quot;).map(new Function&lt;String, String&gt;() {
+    @Override
+    public String apply(String s) throws Exception {
+        return s + &quot;[map]&quot;;
+    }
+}).subscribe(observer);
+
+// flatmap，将一个observable对象转换成另一个observable集合，然后将这些observable对象发射的数据平坦的放进一个单独的observable。
+Student[] students = {};
+Observable.fromArray(students).flatMap(new Function&lt;Student, ObservableSource&lt;String&gt;&gt;() {
+    @Override
+    public ObservableSource&lt;String&gt; apply(Student student) throws Exception {
+        return Observable.fromArray(student.classes);
+    }
+}).subscribe(observer);
+
+// cast负责将observable中的所有数据转换成指定类型
+Student[] stus = {};
+Observable.fromArray(stus).flatMap(new Function&lt;Student, ObservableSource&lt;?&gt;&gt;() {
+    @Override
+    public ObservableSource&lt;?&gt; apply(Student student) throws Exception {
+        return null;
+    }
+}).cast(String.class).subscribe(observer);
+</code></pre><ol>
+<li>过滤操作符，包括，skip，take，element，fileter等</li>
+</ol>
+<pre><code>// 过滤操作符
+// filter,对Observable产生的结果自定义规则进行过滤，只有满足条件的结果才提交给订阅者。
+Observable.just(&quot;你好&quot;, &quot;中国&quot;, &quot;世界&quot;).filter(new Predicate&lt;String&gt;() {
+    @Override
+    public boolean test(String s) throws Exception {
+        return s.equals(&quot;你好&quot;);
+    }
+}).subscribe(new Observer&lt;String&gt;() {
+    @Override
+    public void onSubscribe(Disposable d) {
+
+    }
+
+    @Override
+    public void onNext(String s) {
+
+    }
+
+    @Override
+    public void onError(Throwable e) {
+
+    }
+
+    @Override
+    public void onComplete() {
+
+    }
+});
+
+// skip，过滤掉前n项
+Observable.range(0,10).skip(2).subscribe(new Observer&lt;Integer&gt;() {
+    @Override
+    public void onSubscribe(Disposable d) {
+
+    }
+
+    @Override
+    public void onNext(Integer integer) {
+        Log.i(TAG, &quot;onNext: &quot; + integer);
+    }
+
+    @Override
+    public void onError(Throwable e) {
+
+    }
+
+    @Override
+    public void onComplete() {
+
+    }
+});
+
+// take, 取前n项
+Observable.range(0, 10).take(5).subscribe(new Observer&lt;Integer&gt;() {
+    @Override
+    public void onSubscribe(Disposable d) {
+
+    }
+
+    @Override
+    public void onNext(Integer integer) {
+        Log.i(TAG, &quot;onNext: &quot; + integer);
+    }
+
+    @Override
+    public void onError(Throwable e) {
+
+    }
+
+    @Override
+    public void onComplete() {
+
+    }
+});
+
+// throttleWithTimeout：如果在限定的时间内，源Observable有新的数据发射出来，该数据就会被丢弃，同时throttleWithTimeout重新开始计时，如果每次都是在计时结束前发射数据，那么这个限流就会走向极端（只会发射最后一个数据）
+Observable.just(&quot;hell&quot;, &quot;o,&quot; &quot;worl&quot;, &quot;d&quot;).throttleWithTimeout(200, TimeUnit.MILLISECONDS).subscribe(observer);
+
+
+// ditinct, 去重
+Observable.just(&quot;hh&quot;, &quot;hh&quot;, &quot;hhh&quot;, &quot;h&quot;).distinct().subscribe(new Observer&lt;String&gt;() {
+    @Override
+    public void onSubscribe(Disposable d) {
+
+    }
+
+    @Override
+    public void onNext(String s) {
+        Log.i(TAG, &quot;onNext: &quot; + s);
+    }
+
+    @Override
+    public void onError(Throwable e) {
+
+    }
+
+    @Override
+    public void onComplete() {
+
+    }
+});
+</code></pre><ol>
+<li>组合操作符， merge，startWidth，concat，jion，switch，zip</li>
+</ol>
+<pre><code>// 组合操作符
+// merge将多个observable合并到一个observable中进行发射
+Observable&lt;String&gt; observable1 = Observable.just(&quot;1&quot;, &quot;2&quot;);
+Observable&lt;String&gt; observable2 = Observable.just(&quot;3&quot;, &quot;4&quot;);
+Observable.merge(observable1, observable2).subscribe(observer);
+
+// concat将多个observable合并并按队列顺序发射，前一个没发射完无法进行下一个发射
+Observable.concat(observable1, observable2).subscribe(observer);
+
+// zip, 合并两个或者多个Obserable发射出的数据项，根据指定的函数变换它们，并发射一个新值。    
+</code></pre><ol>
+<li>辅助操作符，DO、delay、observeOn、timeout、timeInterval、timestamp、subscribeOn、meterialize和to等。</li>
+</ol>
+<pre><code>// delay：延迟执行发射数据
+Observable&lt;String&gt; observable1 = Observable.just(&quot;你好&quot;, &quot;hello World&quot;);
+Observable&lt;String&gt; observable2 = Observable.just(&quot;new obj&quot;, &quot;mergeobj&quot;);
+Observable.concat(observable1, observable2).delay(5, TimeUnit.SECONDS).subscribe(observer);
+
+// subscribeOn：指定Obserable自身在那个线程上运行。
+// observeOn：指定Obserable发射出的数据在那个线程运行。
+</code></pre><ol>
+<li><p>错误操作符，包括catch和retry</p>
+<p>catch能够拦截原始Observable的onError通知，将它替换为其他数据项或者数据序列，让产生的Observable能够正常终止或者根本不终止。</p>
+<p>catch实现分为三个不同的操作符：</p>
+<p>1、onErrorReturn：返回原有Observable行为的备用Observable， 备用的Observable忽略原有的Observable的onError调用，即不会将错误传递给观察者，而是发射一个特殊的项，以及调用观察者的onCompleted。</p>
+<p>2、onErrorResumeNext：跟onErrorReturn一样返回备用的Observable，不会调用原有的Observable的onError，它会发射备用的Observable数据。</p>
+<p>3、onExceptionResumeNext：如果onError收到的Throwable不是一个Exception，它会将错误传递给观察者的onError方法，不会使用备用的Observable。</p>
+<p>retry：不会将原有的Observable的onError通知传递给观察者，这会订阅这个Observable，再给它一次机会无错误地完成其数据序列，而它总会传递onNext通知给观察者。该操作符有可能造成数据重复，因为重新订阅。如果超过了重新订阅的次数，就不会再次订阅了，而是把最新的一个onError通知传递给观察者。</p>
+</li>
+<li><p>条件操作符,包括：defaultEmpty、skipUntil、amb、skipWhile、takeUtil、takeWhile</p>
+</li>
+</ol>
+<pre><code>defaultEmpty：如果原有的Observable没有发射数据，就发射一个默认的数据。
+
+skipUntil：订阅原始的Observable，但是忽略它的发射物，直到第二个Observable发射了一项数据那一刻，它开始发射原始Observable。
+</code></pre><ol>
+<li><p>布尔操作符,包括：all、isEmpty、contains、exists和sequenceEqual。</p>
+<p>关于条件操作符和布尔操作符，读者可以关注<a href="https://link.juejin.im/?target=http%3A%2F%2Fblog.csdn.net%2Fxmxkf%2Farticle%2Fdetails%2F51671826" target="_blank" rel="noopener">《RxJava操作符(08-条件和布尔操作) 》</a>这篇文章，文章地址：</p>
+</li>
+<li><p>转换操作符,转换操作符能够将Observable转换为另一个对象或者数据结构，其中转换操作符包括：toMap、toMultiMap、toList、toSortedList、nest和getIterator等。</p>
+<pre><code>// toMap：将原始的Observable发射的所有数据项集合到一个Map中，然后发射该Map。
+String s1 = &quot;你好&quot;;
+String s2 = &quot;hello world&quot;;
+String s3 = &quot;lalala&quot;;
+
+Observable.just(s1,s2,s3).toMap(new Function&lt;String, String&gt;() {
+    @Override
+    public String apply(@NonNull String s) throws Exception {
+        return s;
+    }
+}).subscribe(new SingleObserver&lt;Map&lt;String, String&gt;&gt;() {
+    @Override
+    public void onSubscribe(@NonNull Disposable d) {
+
+    }
+
+    @Override
+    public void onSuccess(@NonNull Map&lt;String, String&gt; stringStringMap) {
+        Log.i(&quot;test&quot;,&quot;&quot;+stringStringMap);
+    }
+
+    @Override
+    public void onError(@NonNull Throwable e) {
+
+    }
+});
+
+// toMultiMap：类似于toMap，不同的地方在于map的value是一个集合。
+
+// toList：将发射的数据组成一个List。
+String s1 = &quot;你好&quot;;
+String s2 = &quot;hello world&quot;;
+String s3 = &quot;lalala&quot;;
+
+Observable.just(s1,s2,s3).toList().subscribe(new SingleObserver&lt;List&lt;String&gt;&gt;() {
+    @Override
+    public void onSubscribe(@NonNull Disposable d) {
+
+    }
+
+    @Override
+    public void onSuccess(@NonNull List&lt;String&gt; strings) {
+        Log.i(&quot;test&quot;,&quot;&quot;+strings);
+    }
+
+    @Override
+    public void onError(@NonNull Throwable e) {
+
+    }
+});
+</code></pre><p>关于其他操作符，读者可以参考<a href="http://blog.csdn.net/maplejaw_/article/details/52396175" target="_blank" rel="noopener">《RxJava操作符大全》</a>这篇文章。</p>
+</li>
+<li><p>buffer操作符 </p>
+</li>
+</ol>
+<pre><code>// buffer操作符能收集多个结果到列表中，订阅后会自动清空结果，也可以周期性收集结果
+Observable.range(0, 5).buffer(2).subscribe(new Observer&lt;List&lt;Integer&gt;&gt;() {
+    @Override
+    public void onSubscribe(Disposable d) {
+
+    }
+
+    @Override
+    public void onNext(List&lt;Integer&gt; integers) {
+        Log.i(TAG, &quot;onNext: &quot; + integers);
+    }
+
+    @Override
+    public void onError(Throwable e) {
+
+    }
+
+    @Override
+    public void onComplete() {
+
+    }
+});
+
+Observable.just(&quot;你好&quot;, &quot;中国&quot;, &quot;我爱&quot;, &quot;我家&quot;).buffer(3).subscribe(new Observer&lt;List&lt;String&gt;&gt;() {
+    @Override
+    public void onSubscribe(Disposable d) {
+
+    }
+
+    @Override
+    public void onNext(List&lt;String&gt; strings) {
+        Log.i(TAG, &quot;onNext: &quot; + strings);
+    }
+
+    @Override
+    public void onError(Throwable e) {
+
+    }
+
+    @Override
+    public void onComplete() {
+
+    }
+});
+</code></pre><ol>
+<li><p>线程调度</p>
+<p>前面讲解辅助操作符的时候，我们知道使用subscribeOn可以指定Obserable自身在那个线程上运行。使用observeOn可以指定Obserable发射出的数据在那个线程运行。RxJava默认线程是在调用subcribe方法的线程上进行回调，但是如果想切换线程，就需要使用Scheduler。</p>
+<p>在RxJava中内置了以下几个Scheduler：</p>
+<p>1、Scheduler.immediate()：运行在当前线程，是timeout、timestamp和timeInterval操作符的默认调度器。</p>
+<p>2、Scheduler.io()：I/O操作使用的Scheduler。</p>
+<p>3、Scheduler.newThread()：开启一个新的线程执行操作。</p>
+<blockquote>
+<p>2和3的区别就是：2的内部实现了一个无数量上限的线程池，重用空闲的线程，因此2具有更高的效率</p>
+</blockquote>
+<p>4、Scheduler.trampoline()：可以将任务通过trampoline方法加入队列，该调度器会按顺序处理队列的任务，是repeat和retry操作符的默认调度器。</p>
+<p>5、Scheduler.computation()：计算所使用的调度器，它具有固定的线程池，大小为cpu核数，注意不要将io操作放到computation中，否则io操作的等待时间会浪费cpu。该调度器是buffer、delay、sample、debounce、interval和skip的默认调度器。</p>
+<p>6、AndroidSchedulers.mainThread()：表示在主线程中运行，该调度器是RxAndroid提供的。</p>
+<pre><code>Observable.just(&quot;你好&quot;,&quot;hello world&quot;)
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(observer);
+</code></pre></li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/05/06/java并发编程实战/" rel="next" title="">
+                <i class="fa fa-chevron-left"></i> 
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/05/06/SQLite数据类型/" rel="prev" title="">
+                 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/logo_s.jpg"
+                alt="Sparky" />
+            
+              <p class="site-author-name" itemprop="name">Sparky</p>
+              <p class="site-description motion-element" itemprop="description">我是谁？我在做什么？我为什么要这么做？我想做什么？我要怎么做？</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">105</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#RxJava"><span class="nav-number">1.</span> <span class="nav-text">RxJava</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#简介"><span class="nav-number">1.1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用"><span class="nav-number">1.2.</span> <span class="nav-text">使用</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Sparky</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

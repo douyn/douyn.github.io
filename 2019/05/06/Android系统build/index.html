@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Android系统build.prop生成过程这个文件类似于windows的注册表文件，定义了系统初始的一些参数属性，功能的开放等，通过调整或增加这些参数可以达到校调系统性能偏重点和附加功能开启的作用。 我们经常说rom是刷系统的意思，但是rom的愿意是read only memory，只读存储器，正因为是只读了，所以文件系统通常会存储在手机rom中，但是在特殊情况下我们可以对rom进行写操作。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Sparky">
+<meta property="og:url" content="http://yoursite.com/2019/05/06/Android系统build/index.html">
+<meta property="og:site_name" content="Sparky">
+<meta property="og:description" content="Android系统build.prop生成过程这个文件类似于windows的注册表文件，定义了系统初始的一些参数属性，功能的开放等，通过调整或增加这些参数可以达到校调系统性能偏重点和附加功能开启的作用。 我们经常说rom是刷系统的意思，但是rom的愿意是read only memory，只读存储器，正因为是只读了，所以文件系统通常会存储在手机rom中，但是在特殊情况下我们可以对rom进行写操作。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-05-06T11:51:47.612Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Sparky">
+<meta name="twitter:description" content="Android系统build.prop生成过程这个文件类似于windows的注册表文件，定义了系统初始的一些参数属性，功能的开放等，通过调整或增加这些参数可以达到校调系统性能偏重点和附加功能开启的作用。 我们经常说rom是刷系统的意思，但是rom的愿意是read only memory，只读存储器，正因为是只读了，所以文件系统通常会存储在手机rom中，但是在特殊情况下我们可以对rom进行写操作。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/05/06/Android系统build/"/>
+
+
+
+
+
+  <title> | Sparky</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?23f2f984b557cd9c31da9a75b4da08e4";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Sparky</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/06/Android系统build/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sparky">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/logo_s.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sparky">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline"></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-06T20:11:00+08:00">
+                2019-05-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="Android系统build-prop生成过程"><a href="#Android系统build-prop生成过程" class="headerlink" title="Android系统build.prop生成过程"></a>Android系统build.prop生成过程</h2><p>这个文件类似于windows的注册表文件，定义了系统初始的一些参数属性，功能的开放等，通过调整或增加这些参数可以达到校调系统性能偏重点和附加功能开启的作用。</p>
+<p>我们经常说rom是刷系统的意思，但是rom的愿意是read only memory，只读存储器，正因为是只读了，所以文件系统通常会存储在手机rom中，但是在特殊情况下我们可以对rom进行写操作。</p>
+<pre><code># begin build properties （开始设置系统性能）
+# autogenerated （通过设置形成系统信息）
+ro.=GRI40 (版本ID)
+ro.build.=GRJ22 （版本号）
+ro.build.version.incremental=eng.buildbot.20110619.060228 （版本增量）
+ro.build.version.sdk=10 （sdk版本）
+ro.build.version.codename=REL （版本代号）
+ro.build.version.release=2.3.4 （Android 2.3.4系统）
+ro.build.date=Sun Jun 19 06:02:58 UTC 2011 （制作者及制作时间）
+ro.build.date.utc=0
+ro.build.type=user (编译模式,如user,userdebug,eng,test模式)
+ro.build.user=buildbot (编译账户)
+ro.build.host=bb1 (编译主机系统)
+ro.build.tags=test-keys (编译标签)
+ro.product.model=HTC Wildfire （HTC内部手机代号）
+ro.product.brand=htc_wwe （手机品牌）
+ro.product.name=htc_buzz （手机正式名称）
+ro.product.device=buzz （采用的设备）
+ro.product.board=buzz （采用的处理器）
+ro.product.cpu.abi=armeabi-v6j （cpu的版本）
+ro.product.cpu.abi2=armeabi （cpu的品牌）
+ro.product.manufacturer=HTC （手机制造商）
+ro.product.locale.language=zh （手机默认语言）
+ro.product.locale.region=CN （地区语言）
+ro.wifi.channels= （WIFI连接的渠道）
+ro.board.platform=msm7k （主板平台）
+# ro.build.product is obsolete; use ro.product.device （旧代码ro.build.product，使用代码ro.product.device）
+ro.build.product=buzz （建立产品）
+# Do not try to parse ro.build.description or .fingerprint （不要试图修改description和fingerprint）
+ro.build.description=passion-user 2.3.3 GRI40 102588 release-keys （用户的KEY）
+ro.build.fingerprint=google/passion/passion:2.3.3/GRI40/102588:user/release-keys （系统指纹）
+# end build properties （性能代码完毕）
+#
+# system.prop for buzz （系统技术支持由BUZZ提供）
+#
+# Density in DPI of the LCD of this board. This is used to scale the UI （高密度的液晶的DPI板。这是用来大规模UI的）
+# appropriately. If this property is not defined, the default value is 160 dpi. （appropriately.如果这个属性没有定义,缺省值是160 dpi的分辨率）
+ro.sf.lcd_density=240 （显示屏分辨率，数值越大分辨率越底，240就是800*480的）
+# View configuration for QVGA. （屏幕的设置）
+view.fading_edge_length=8
+view.touch_slop=15 （触摸屏灵敏度，数值越大越灵敏）
+view.minimum_fling_velocity=25 （滑动速度）
+view.scroll_friction=0.008 （滑动误差）
+# RIL specific configuration. （特定设置）
+rild.libpath=/system/lib/libhtc_
+ro.ril.ecc.HTC-WWE=999
+ro.ril.ecc.HTC-ELL=92,93,94
+ro.ril.enable.a52.HTC-ITA=1
+ro.ril.enable.a53.HTC-ITA=1
+ro.ril.enable.a52=0
+ro.ril.enable.a53=1
+ro.ril.vmail.23415=1571,BT
+ro.ril.hsdpa.category=8 （hsdpa全称High Speed Downlink Packet Access中文意思：高速下行分组接入,设置的数越大传输越快）
+ro.ril.htcmaskw1.bitmask=429496
+ro.ril.htcmaskw1=14449
+ro.ril.def.agps.mode=2 （打开AGPS服务支持，可改为ro.ril.def.agps.mode=0 改后能省电但GPS定位速度会变慢）
+ro.ril.gprsclass=12 （GPRS设置）
+# For HSDPA low throughput （HSDPA低输量）
+ro.ril.disable.power.collapse=1 （关闭电源）
+# Modify MMS APN retry timer from 5s to 2s. （修改短信的APN设置5秒为2秒）
+ro.gsm.2nd_data_retry_config=max_retries=3, 2000, 2000, 2000
+# Time between scans in seconds. Keep it high to minimize battery drain.（扫描在几秒之内，可降低用电量）
+# This only affects the case in which there are remembered access points, （这个修改仅能影响此文件）
+# but none are in range.（但是没有一项是在范围内的）
+wifi.interface=eth0 （WIFI界面）
+wifi.supplicant_scan_interval=45 （WIFI扫描间隔时间，这里设置是45秒。把这个时间设置长点能省电）
+# Mobile data interfaces （移动数据的接口）
+mobiledata.interfaces=rmnet0,rmnet1,rmnet2
+# Allow or deny tethering. （允许和拒绝绑定）
+ro.tether.denied=false
+# Default network type. （默认的网络类型）
+# 0 =&gt; WCDMA Preferred. （0=WCDMA优先）
+ro.telephony.default_network=0
+# Enable Google-specific location features, （谷歌特定地点的设置）
+# like NetworkLocationProvider and LocationCollector.（如网络服务器提供商和服务器位置）
+ro.c o m.google.locationfeatures=1
+# The OpenGL ES API level that is natively supported by this device. （开放式绘图介面）
+# This is a 16.16 fixed point number. （界面有16个点，16个不动点数量）
+ro.opengles.version=65536 （开放式绘图介面参数）
+# Disable fs check on boot by default. （开机时默认禁用FS检查）
+sys.checkfs.fat=false
+# Performance settings. （性能设置）
+dalvik.vm.execution-mode=int:jit
+dalvik.vm.heapsize=24m （虚拟内存大小，可设置为16m或24m或32m或48m）
+persist.sys.use_dithering=1
+persist.sys.purgeable_assets=1
+# Increase SKIA decode memory capability for progressive jpg file.
+ro.media.dec.jpeg.memcap=20000000
+#
+# ADDITIONAL_BUILD_PROPERTIES （其他性能设置）
+no_require_sim=true （手机卡保护设置）
+ro.rommanager.developerid=cyanogenmodnightly （固件管理器开发者是CM大神）
+ro.url.legal=http://www./intl/%s/mobile/android/basic/phone-legal.html
+ro.url.legal.android_privacy=http://www]/intl/%s/mobile/android/basic/privacy.html
+ro. com.google.clientidbase=android-google （谷歌客户身份）
+ro. com.android.wifi-watchlist=GoogleGuest （WIFI用户名单）
+ro.setupwizard.enterprise_mode=1 （默认情景模式）
+ro. com.android.dateformat=MM-dd-yyyy （默认时间格式，改为yyyy-MM-dd，显示效果就是XXXX年XX月XX日）
+ro. com.android.dataroaming=false （漫游设置）
+ro.config.ringtone=Playa.ogg （默认铃声设置，文件在/system/media/audio/ringtones 把喜欢的铃声放这里，比如123. MP3放入ringtones文件夹中，这里代码改为ro.config.ringtone=123. mp3）
+ro.config.notification_sound=regulus.ogg （默认提示音，文件在/system/media/audio/notifications 修改方法同上）
+ro.config.alarm_alert=Alarm_Beep_03.ogg （默认闹铃，文件在/system/media/audio/alarms 修改方法同上）
+ro.modversion=CyanogenMod-7-06192011-NIGHTLY-buzz （版本信息，改这个能让你大名出现系统关于中，改为ro.modversion=xxxxx）
+ro.setupwizard.mode=OPTIONAL （安装向导模式）
+net. bt. name=Android （系统名称）
+dalvik.vm.stack-trace-file=/data/anr/traces.txt        
+
+Dalvik虚拟机
+Dalvik虚拟机是Android操作系统的核心，是一切应用程序的基础。所有程序在运行时均有Dalvik虚拟机对其进行解析和执行。
+dalvik.vm.startheapsize：
+本参数控制Dalvik虚拟机在启动一个应用程序之后为其分配的初始堆栈大小，可填写的值为2m~48m。
+例如：dalvik.vm.startheapsize=8m，就表示应用程序启动后为其分配的初始堆栈大小为8兆字节。
+这里分配的内存容量会影响到整个系统对RAM的使用程度，和第一次使用应用程序时的流畅程序。这个值越大，系统消耗RAM则越快，但是应用程序打开后的反应也越快。值越小，系统的RAM剩余则越多，但是程序在启动后会很卡。
+建议值是8m，既可以保持140M左右的RAM，程序的反应速度也会大幅度提高。
+dalvik.vm.heapsize：
+本参数控制Dalvik虚拟机给一个应用程序分配的最大堆栈量，可填写的值为12m~48m。
+例如：dalvik.vm.heapsize=48m，就表示应用程序在任意时刻内可以使用的最大堆栈大小为48兆字节。这里分配的内存容量会影响到整个系统对RAM的使用程序，和程序在运行一段时间后的反应速度。这个值越大，系统消耗RAM则越快，但是程序会运行的非常稳定，尤其是游戏和视频程序的内容加载速度可以大幅度提升。值越小，系统的RAM剩余则越多，但是程序会很卡，尤其是游戏在切换场景Loading的时候会 花费很多的时间。若应用程序需要使用超过这个值的内存时，将会触发系统的垃圾收集器，系统和程序就会卡顿。
+建议值是40~48m。
+dalvik.vm.lockprof.threshold：
+本参数控制Dalvik虚拟机调试记录程序内部锁资源争夺的阈值，默认值是500。多用于程序的数据统计，对性能较调意义不大。
+dalvik.vm.stack-trace-file：
+本参数控制Dalvik虚拟机的堆栈记录调试文件。用于系统调试，一般用户对其调整无意义。
+dalvik.vm.execution-mode：
+本参数控制Dalvik虚拟机的程序执行机制。可填写的值有”int:portable”、”int:fast”和”int:jit”。
+int:portable表示以兼容模式运行(脚本翻译模式)，此模式下程序的兼容性最高，但其执行效率最低(程序优化度依赖于dalvik虚拟机版本)。官方默认此模式。　int:fast表示以快速自优化模式运行(脚本翻译和预优化混合)，此模式下程序的兼容性很高，执行效率也比较高。因为此时dalvik虚拟机允许程序使用自己的预定义优化模式和代码(包括C/C++/汇编代码)。推荐使用。　int:jit表示以Just-In-Time模式运行(JIT模式)，此模式下程序的兼容性最差，但程序一旦加载后其运行效率最高(与C/C++直接编 写的程序效率无异)，因为在此模式下dalvik虚拟机会预先将Java程序翻译成针对机器平台的本地语言(Native)，同时完全允许代码中的所有预 优化和代码，允许所有不安全的非托管代码，同时不严谨的程序如果运行在JIT模式可能会造成内存泄露。但要注意，很多Dalvik虚拟机并不支持此模式 (如官方2.2)。
+dalvik.vm.dexopt-flags：
+本参数控制Dalvik虚拟机的程序代码校验和优化。可填写的值有m、v和o。　m为标准选项，可以是m=y或m=n。若m=y则启用不安全代码的校验和托管代码的优化。兼容性和安全性最高，推荐使用。　v为校验选项，可与o并存。可以是v=a或v=n。若v=a则表示校验所有代码，v=n则关闭代码的校验。　o为优化选项，可与v并存。可以是o=v或o=a。若o=v则表示优化以校验过的代码，o=a则表示优化所有代码。　例如：　dalvik.vm.dexopt-flags=m=y　dalvik.vm.dexopt-flags=v=n,o=v
+注意，这个参数只会影响到安装APK之后或初次使用APK时生成dex文件时有效。若整个系统(包括应用程序)为odex化，则无意义。
+dalvik.vm.verify-bytecode：
+本参数控制Dalvik虚拟机是否验证应用程序的可执行代码。可以与上一个参数配合使用。可填写的值为true和false。　其具体意义与dalvik.vm.dexopt-flags的v=n一模一样。但可以与dalvik.vm.dexopt-flags配合使用以取得更好的效果。
+例如：　dalvik.vm.dexopt-flags=v=n,o=v　dalvik.vm.verify-bytecode=false　这样可以令后来安装的apk文件可以被优化而不被检验。
+dalvik.vm.checkjni：
+本参数控制Dalvik虚拟机在调用外部jni链接库的时候是否对其做安全性检验。可填写的值为true和false。　此参数会覆盖ro.kernel.android.checkjni。　若值为true，会增加程序的兼容性和稳定性，但也会增加其加载和执行的时间。
+推荐为false。
+dalvik.vm.deadlock-predict：
+本参数控制Dalvik虚拟机对程序死锁预测处理。可填写的值有off、warn和err。　off表示关闭死锁预测功能(默认设置)。　warn表示在继续程序运行的同时只记录该死锁预测(如果为真死锁就会出现程序假死现象，然后等N久出现关闭)。　err表示预测到死锁时马上弹出FC。
+注意：有些Dalvik虚拟机版本并不支持此参数。
+总结：　对于本期此处给出三种常用的配置(以Defy为机型)。
+超级急速流畅型：
+dalvik.vm.startheapsize=16m
+dalvik.vm.heapsize=48m
+dalvik.vm.execution-mode=int:jit
+dalvik.vm.dexopt-flags=v=n,o=v
+dalvik.vm.checkjni=false
+常用稳定加流畅型：
+dalvik.vm.startheapsize=8m
+dalvik.vm.heapsize=40m
+dalvik.vm.execution-mode=int:fast
+dalvik.vm.dexopt-flags=m=y
+dalvik.vm.checkjni=false
+超级稳定大内存型：
+dalvik.vm.startheapsize=4m
+dalvik.vm.heapsize=30m
+dalvik.vm.execution-mode=int:portable
+dalvik.vm.dexopt-flags=v=a,o=v
+dalvik.vm.verify-bytecode=true
+dalvik.vm.checkjni=true
+系统版本定义
+本期将介绍系统版本、定义等相关参数。主要用于定义系统版本特征字串，OTA字串等。由于较少用到，因此只粗略介绍。
+本参数定义了系统的版本ID。为系统内部使用，OTA时作为粗略版本比较。更改后可避免OTA提示，但可能会引起预装程序(如Blur)的稳定性。
+本参数定义了设置中显示的系统版本号。主要用于设置中显式出现可读版本，一般用于个性化定制和第三方应用程序对系统版本的判断(如魔趣设置)。更改后可自定义版本显示，但某些第三方应用程序会出现错误(如魔趣设置无法实现机器保修查询)。
+ro.build.version.incremental:
+本参数定义了系统的升级字。主要用于系统OTA精确版本比对，同时与ro.build.description和ro.build.fingerprint相匹配。更改后可以免OTA提示(如避免Miui的升级提示和Blur的升级提示)。
+ro.product.model:
+本参数定义了机器的型号字符串。主要用于机器型号显式定义(如系统设置中的手机型号和Blur、Google设置向导中的机型等)。更改后可自定义手机型号名称。
+ro.product.locale.language:
+本参数定义了系统的初始(默认)语言。此处注意是语言，如中文是zh，英文是en。更改后改变系统初次启动时的语言设置。
+ro.product.locale.region:
+本参数定义了系统的初始(默认)区域。此处注意是区域，如中国大陆为CN，台湾为TW，美国为US。更改后改变系统初次启动时的区域设置。　ro.build.description和ro.build.fingerprint均为ROM的编译综合说明。其中包含了平台硬件、Android版本、源代码分支和标签、OTA详细版本等。　其中的OTA部分，例如：　umts_jordan_china-user 2.3.6 4.5.3-109_DPP-14 123456 release-keys　将此数字与ro.build.version.incremental一同更改可避免OTA升级提醒(如Miui和Blur等)。
+基本性能
+本期将介绍与系统性能(流畅操作体验、功能速度、内存管理等)相关的参数属性和其调整方法。　虽然Defy的CPU只有800MHz，虽然Defy的RAM只有512MB，虽然摩托官方的系统优化很差，但通过本期的参数调整，依然可以获得不俗的性能。
+windowsmgr.max_events_per_sec:
+本参数定义了Android系统的窗体事件管理器在单位时间内可以处理的最大事件数量。通过更改本参数可以获得非常明显的丝滑流畅体验。可填写的值范围为”大于0的正整数”，官方默认为60。建议150、200、260、300这几个值。
+当此值变大时，系统触控平滑度明显提高，但对应的CPU使用率也会升高，最终的结果就是电池续航能力下降。以我个人的经验来说，此值取到240左右时在系统设置中滑动可以得到接近WP7的流畅和平滑度。
+ro.min_pointer_dur:
+本参数定义了两次触摸之间的最短时间间隔，单位是毫秒。默认值为25，推荐值是10。通过调整此参数可以提高系统触控的灵敏度或稳定度。当此值越大时，触控越稳定。此值越小，触控越灵敏。
+mot.proximity.delay：
+本参数定义了手机光纤感应器的抖动消除时间，单位是毫秒。默认值是500，推荐值是250。
+通过调整此参数可以提高在通话结束后屏幕点亮的速度。当此值越大时，通话结束后屏幕点亮所需要的时间越长，但在通话过程中如果手机意外瞬间离开脸部也不会点亮屏幕，可防止通话过程中的误操作(比方说通话时不 小心手机移动了一下，屏幕就会点亮，此时如果脸部触碰到了屏幕就会对通话造成影响)。此值越小，则当手机离开脸部或装入口袋后会立即点亮或关闭屏幕。
+mot.proximity.distance：
+本参数定义了手机屏幕上的两个触摸点之间的最短距离，若距离小于此值则认为是一个触摸点，单位是像素。默认值是60，推荐值是100。为什么推荐100呢？因为Defy的屏幕分辨率为480×854，也就是说横向有480个像素点，对应上去也就相当于是横向并排允许4个触摸点，平均一个手指一个点，这样在类似于杀西瓜等游戏中可以提升游戏操作。
+ro.kernel.android.checkjni：
+本参数定义了Dalvik虚拟机在执行程序的时候是否要做Jni链接库的检查工作。详细见Dalvik参数属性期。若考虑稳定性可使用true，若需要性能可使用false。注意：此参数会被Dalvik参数覆盖。
+ro.media.enc.jpeg.quality：
+本参数定义了JPEG图像编码器所使用的质量因子，可填写的值为1~100，默认为80，推荐为100。想照出更好的照片吗？想让照片的大小轻松上M吗？那就使用100吧。
+debug.sf.hw：本参数定义了系统是否启用GPU来渲染程序的UI，默认为0，推荐为1。　但要注意，如果此值为1，在某些应用程序中可能会出现显示错乱的现象(极少见)。
+persist.sys.use_dithering：本参数定义了系统渲染器对图像的缩放是否启用抖动技术。可填写的值为0或1。　当开启抖动后，图像的显示(指背景、解锁等的图像，并非图库、相机那些的)会很柔和，但会增加CPU负载，最终导致ROM卡顿。
+persist.sys.purgeable_assets：本参数定义了系统是否可以清除暂时不用的数据以释放更多的RAM。可填写的值为0或1。　当值为1时，系统会定期清理不用的数据以释放更多的RAM，同时作为代价就是下次启动程序或游戏加载数据会变慢。
+video.accelerate.hw：本参数定义了系统是否对视频启用硬件加速功能。这里的视频指代屏幕上显示的东西，不仅仅是”电影视频”。可填写的值为0或1。　需要注意的是：摩托官方的2.2与2.3系统对此功能支持的不是很好，开启后有时反而会降低系统流畅度，但CM系统绝对建议开启。
+debug.performance.tuning：本参数定义了系统是否针对性能做较调。可填写的值为0或1。　需要注意的是：摩托官方的2.2和2.3系统对此功能支持的不是很好，开启后有时反而会降低系统流畅度。但CM系统绝对建议开启。
+ro.HOME_APP_ADJ
+ro.FOREGROUND_APP_ADJ
+ro.VISIBLE_APP_ADJ
+ro.PERCEPTIBLE_APP_ADJ
+ro.HEAVY_WEIGHT_APP_ADJ
+ro.SECONDARY_SERVER_ADJ
+ro.BACKUP_APP_ADJ
+ro.HIDDEN_APP_MIN_ADJ
+ro.EMPTY_APP_ADJ
+以上参数定义了各种应用程序的管理机制，这些并非一两句话可以说清楚的，想深究的同学可以Google一下OOM Killer。可填写的值为整数。这里只给出值的规律：
+0代表降低进程的优先级且驻留内存；
+1代表驻留内存；
+4代表缓存较多的内存；
+15代表尽量缓存内存。
+也就是说内存缓存器是按照ADJ从大到小来进行缓存的。
+大家可根据自系统中自己对各种应用程序的要求进行更改。以下给出一个经典用例：
+ro.FOREGROUND_APP_ADJ=0 前台程序驻留内存(不缓存)
+ro.VISIBLE_APP_ADJ=1 可见的程序驻留内存(不缓存)
+ro.PERCEPTIBLE_APP_ADJ=2 缓存的RAM多一些
+ro.HOME_APP_ADJ=3 桌面程序，缓存的RAM稍多一些
+ro.HEAVY_WEIGHT_APP_ADJ=4 缓存的RAM再多一些
+ro.SECONDARY_SERVER_ADJ=5 缓存的RAM再再多一些
+ro.BACKUP_APP_ADJ=6 缓存的RAM再再再多一些
+ro.HIDDEN_APP_MIN_ADJ=7 隐藏的程序，根据程序的类型进行内存管理，最低为缓存的RAM再再再再多一些，最高就是直接缓存内存。
+ro.EMPTY_APP_ADJ=15 已经退出的程序，直接缓存内存
+ro.FOREGROUND_APP_MEM
+ro.VISIBLE_APP_MEM
+ro.PERCEPTIBLE_APP_MEM
+ro.HEAVY_WEIGHT_APP_MEM
+ro.SECONDARY_SERVER_MEM
+ro.BACKUP_APP_MEM
+ro.HOME_APP_MEM
+ro.HIDDEN_APP_MEM
+ro.CONTENT_PROVIDER_MEM
+ro.EMPTY_APP_MEM
+</code></pre><h4 id="系统build-prop文件生成过程"><a href="#系统build-prop文件生成过程" class="headerlink" title="系统build.prop文件生成过程"></a>系统build.prop文件生成过程</h4><p>build.prop文件的生成过程就是系统收集各个配置属性然后合并到build.prop文件的过程。</p>
+<ol>
+<li>执行build/tools/buildinfo.sh</li>
+<li>将system.prop中的内容添加到$(OUT_TARGET_DEVICE)/system/build.prop</li>
+<li>将ADDITIONAL_BUILD_PROPERTIES的值也添加到$(OUT_TARGET_DEVICE)/system/build.prop</li>
+</ol>
+<blockquote>
+<p>注意： 对于b288，可以在device/$(TARGET_DEVICE)/$(TARGET_DEVICE).mk文件中修改配置文件来更改build.prop配置，但是如果直接make不会覆盖build.prop文件，需要删除build.prop文件或者make clean之后再make。</p>
+</blockquote>
+<p>可以直接使用adb对build.prop进行修改，步骤如下：</p>
+<ol>
+<li>adb pull将system/build.prop拷贝出来以备修改。</li>
+<li>修改build.prop中配置文件的属性。例如,ro.sf.lcd_density=167修改为ro.sf.lcd_density=160.</li>
+<li>adb push将文件push到system/build.prop</li>
+<li>设置权限。adb remount， adb shell chmod 0644 system/build.prop给文件设置权限。</li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/05/06/Android镜像文件/" rel="next" title="">
+                <i class="fa fa-chevron-left"></i> 
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/05/06/b288编译和烧录/" rel="prev" title="">
+                 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/logo_s.jpg"
+                alt="Sparky" />
+            
+              <p class="site-author-name" itemprop="name">Sparky</p>
+              <p class="site-description motion-element" itemprop="description">我是谁？我在做什么？我为什么要这么做？我想做什么？我要怎么做？</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">105</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Android系统build-prop生成过程"><span class="nav-number">1.</span> <span class="nav-text">Android系统build.prop生成过程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#系统build-prop文件生成过程"><span class="nav-number">1.0.1.</span> <span class="nav-text">系统build.prop文件生成过程</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Sparky</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
