@@ -242,6 +242,871 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/02/01/增量更新/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sparky">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/logo_s.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sparky">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/02/01/增量更新/" itemprop="url">未命名</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-01T10:00:58+08:00">
+                2018-02-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="apk更新的技术："><a href="#apk更新的技术：" class="headerlink" title="apk更新的技术："></a>apk更新的技术：</h3><ul>
+<li>增量更新：</li>
+<li>热更新</li>
+<li>插件化</li>
+<li>rn的js脚本修复apk</li>
+<li>静默安装</li>
+</ul>
+<h4 id="增量更新的流程"><a href="#增量更新的流程" class="headerlink" title="增量更新的流程"></a>增量更新的流程</h4><ol>
+<li>APP检测最新版本，把版本号告诉服务器，服务器进行版本校验</li>
+<li>如果有新版本，服务器需要对当前版本和新版本apk进行一次差分，产生patch差分文件，或者在新版本上传到服务器的时候已经差分好</li>
+<li>app在后台下载好差分文件，进行md5校验，在本地进行合并（跟/data目录下的apk文件进行合并），合并成新的apk后，提示用户安装。</li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/12/Retrofit配置HTTPS请求踩坑记/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sparky">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/logo_s.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sparky">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/01/12/Retrofit配置HTTPS请求踩坑记/" itemprop="url">Retrofit Https踩坑记录</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-12T10:01:23+08:00">
+                2018-01-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="Retrofit-Https踩坑记录"><a href="#Retrofit-Https踩坑记录" class="headerlink" title="Retrofit Https踩坑记录"></a>Retrofit Https踩坑记录</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>新司机上路，坑多,本文重点是踩坑，不详细讲retrofit用法，本文不推荐使用信任所有证书的做法。</p>
+<h2 id="证书"><a href="#证书" class="headerlink" title="证书"></a>证书</h2><p>分为多种格式, bks cer jks等，这里使用的是bks格式证书。</p>
+<h2 id="BKS-做法"><a href="#BKS-做法" class="headerlink" title="BKS 做法"></a>BKS 做法</h2><h3 id="1-获取BKS证书，将证书放到项目raw目录下"><a href="#1-获取BKS证书，将证书放到项目raw目录下" class="headerlink" title="1.获取BKS证书，将证书放到项目raw目录下"></a>1.获取BKS证书，将证书放到项目raw目录下</h3><h4 id="准备-cer文件"><a href="#准备-cer文件" class="headerlink" title="准备.cer文件"></a>准备.cer文件</h4><p>点击网站网址栏前的小锁按钮，选择详细信息，选择view certificate。<br>显示证书之后，点击详细信息，然后一直下一步，直到导出.cer文件。<br><img src="https://github.com/douyn/Photos/blob/master/res/20170301100223.png?raw=true" alt="1"><br><img src="https://github.com/douyn/Photos/blob/master/res/20170301101115.png?raw=true" alt="2"><br><img src="https://github.com/douyn/Photos/blob/master/res/20170301101333.png?raw=true" alt="3"><br><img src="https://github.com/douyn/Photos/blob/master/res/20170301101625.png?raw=true" alt="4"><br><img src="https://github.com/douyn/Photos/blob/master/res/20170301101705.png?raw=true" alt="5"><br><img src="https://github.com/douyn/Photos/blob/master/res/20170301101806.png?raw=true" alt="6"><br><img src="https://github.com/douyn/Photos/blob/master/res/20170301101638.png?raw=true" alt="7"></p>
+<h4 id="将-cer转换为-bks"><a href="#将-cer转换为-bks" class="headerlink" title="将.cer转换为.bks"></a>将.cer转换为.bks</h4><p><a href="http://blog.csdn.net/u010314594/article/details/50765534" target="_blank" rel="noopener">在Android应用中使用自定义证书,CER转BKS</a></p>
+<p>做法：1，下载特定版本的JCE Provider包</p>
+<p><a href="http://pan.baidu.com/s/1c1ur13y" target="_blank" rel="noopener">http://pan.baidu.com/s/1c1ur13y</a> </p>
+<p>or </p>
+<p><a href="http://www.bouncycastle.org/download/bcprov-jdk15on-146.jar" target="_blank" rel="noopener">http://www.bouncycastle.org/download/bcprov-jdk15on-146.jar</a> (<em>现在连接失效</em>)</p>
+<p>2，命令行输入以下命令</p>
+<pre><code>keytool -importcert -v -trustcacerts -alias 位置1 \
+-file 位置2 \
+-keystore 位置3 -storetype BKS \
+-providerclass org.bouncycastle.jce.provider.BouncyCastleProvider \
+-providerpath 位置4 -storepass 位置5
+</code></pre><p>位置1:是个随便取的别名<br>位置2:cer或crt证书的全地址<br>位置3:生成后bks文件的位置,建议写全地址<br>位置4:上面下载JCE Provider包的位置<br>位置5:生成后证书的密码。下边获取sslsocketfactory中会用到密码</p>
+<p>以下例子:</p>
+<pre><code>keytool -importcert -v -trustcacerts -alias xx -file E:\bks\xx.cer -keystore E:\bks\xx.bks -storetype BKS -providerclass org.bouncycastle.jce.provider.BouncyCastleProvider -providerpath E:\bks\bcprov-jdk15on-146.jar -storepass xxxxxx
+</code></pre><p>成功之后会在你指定的位置生成bks文件.然后将文件放到项目raw目录下。</p>
+<h3 id="2-获取SSLSocketFactory"><a href="#2-获取SSLSocketFactory" class="headerlink" title="2.获取SSLSocketFactory"></a>2.获取SSLSocketFactory</h3><p>这里是https证书认证最关键的代码，一定要仔细查看。password和设置keystore的bks类型一定不要搞错。</p>
+<pre><code>/**
+ * 获取bks文件的sslsocketfactory
+ * @param context
+ * @return
+ */
+public static SSLSocketFactory getSSLSocketFactory(Context context) {
+    final String CLIENT_TRUST_PASSWORD = &quot;123456&quot;;//信任证书密码，该证书默认密码是123456
+    final String CLIENT_AGREEMENT = &quot;TLS&quot;;//使用协议
+    final String CLIENT_TRUST_KEYSTORE = &quot;BKS&quot;;
+    SSLContext sslContext = null;
+    try {
+        //取得SSL的SSLContext实例
+        sslContext = SSLContext.getInstance(CLIENT_AGREEMENT);
+        //取得TrustManagerFactory的X509密钥管理器实例
+        TrustManagerFactory trustManager = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+        //取得BKS密库实例
+        KeyStore tks = KeyStore.getInstance(CLIENT_TRUST_KEYSTORE);
+        InputStream is = context.getResources().openRawResource(R.raw.traint);
+        try {
+            tks.load(is, CLIENT_TRUST_PASSWORD.toCharArray());
+        } finally {
+            is.close();
+        }
+        //初始化密钥管理器
+        trustManager.init(tks);
+        //初始化SSLContext
+        sslContext.init(null, trustManager.getTrustManagers(), null);
+    } catch (Exception e) {
+        e.printStackTrace();
+        Log.e(&quot;SslContextFactory&quot;, e.getMessage());
+    }
+    return sslContext.getSocketFactory();
+}
+</code></pre><h3 id="3-配置retrofit"><a href="#3-配置retrofit" class="headerlink" title="3.配置retrofit"></a>3.配置retrofit</h3><pre><code>String baseUrl = &quot;https://skyish-test.yunext.com&quot;;
+int[] certificates = {R.raw.traint};
+    String[] hostUrls = {baseUrl};
+    OkHttpClient client = new okhttp3.OkHttpClient.Builder()
+            .addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
+            .sslSocketFactory(HTTPSUtils.getSSLSocketFactory(context))
+            //.hostnameVerifier(HTTPSUtils.getHostNameVerifier(hostUrls)) 
+            .readTimeout(10, TimeUnit.SECONDS)
+            .connectTimeout(10, TimeUnit.SECONDS)
+            .build();
+
+    Retrofit retrofit = new Retrofit.Builder().baseUrl(baseUrl)
+            .addConverterFactory(GsonConverterFactory.create())
+            .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+            .client(client)
+            .build();
+</code></pre><p>配置好retrofit之后就可以使用了。</p>
+<h2 id="坑1：SSLContext-is-not-initialized"><a href="#坑1：SSLContext-is-not-initialized" class="headerlink" title="坑1：SSLContext is not initialized"></a>坑1：SSLContext is not initialized</h2><pre><code>03-08 15:17:26.804 21672-21672/com.qiwo.enumlistdemo E/AndroidRuntime: FATAL EXCEPTION: main
+                                                                       Process: com.qiwo.enumlistdemo, PID: 21672
+                                                                       java.lang.RuntimeException: Unable to start activity ComponentInfo{com.qiwo.enumlistdemo/com.qiwo.enumlistdemo.RetrofitHttpsDemoActivity}: java.lang.IllegalStateException: SSLContext is not initialized.
+                                                                           at android.app.ActivityThread.performLaunchActivity(ActivityThread.java:2650)
+                                                                           at android.app.ActivityThread.handleLaunchActivity(ActivityThread.java:2720)
+                                                                           at android.app.ActivityThread.-wrap12(ActivityThread.java)
+                                                                           at android.app.ActivityThread$H.handleMessage(ActivityThread.java:1567)
+                                                                           at android.os.Handler.dispatchMessage(Handler.java:111)
+                                                                           at android.os.Looper.loop(Looper.java:207)
+                                                                           at android.app.ActivityThread.main(ActivityThread.java:5917)
+                                                                           at java.lang.reflect.Method.invoke(Native Method)
+                                                                           at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:789)
+                                                                           at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:679)
+                                                                        Caused by: java.lang.IllegalStateException: SSLContext is not initialized.
+                                                                           at com.android.org.conscrypt.OpenSSLContextImpl.engineGetSocketFactory(OpenSSLContextImpl.java:107)
+                                                                           at javax.net.ssl.SSLContext.getSocketFactory(SSLContext.java:358)
+                                                                           at com.qiwo.api.HTTPSUtils.getSSLSocketFactory(HTTPSUtils.java:158)
+                                                                           at com.qiwo.api.DemoHttpsApi.&lt;init&gt;(DemoHttpsApi.java:40)
+                                                                           at com.qiwo.enumlistdemo.RetrofitHttpsDemoActivity.initViewAndListener(RetrofitHttpsDemoActivity.java:37)
+                                                                           at com.doudou.common.base.BaseSwipeBackAppcompatActivity.onCreate(BaseSwipeBackAppcompatActivity.java:68)
+                                                                           at android.app.Activity.performCreate(Activity.java:6307)
+                                                                           at android.app.Instrumentation.callActivityOnCreate(Instrumentation.java:1113)
+                                                                           at android.app.ActivityThread.performLaunchActivity(ActivityThread.java:2603)
+                                                                           at android.app.ActivityThread.handleLaunchActivity(ActivityThread.java:2720) 
+                                                                           at android.app.ActivityThread.-wrap12(ActivityThread.java) 
+                                                                           at android.app.ActivityThread$H.handleMessage(ActivityThread.java:1567) 
+                                                                           at android.os.Handler.dispatchMessage(Handler.java:111) 
+                                                                           at android.os.Looper.loop(Looper.java:207) 
+                                                                           at android.app.ActivityThread.main(ActivityThread.java:5917) 
+                                                                           at java.lang.reflect.Method.invoke(Native Method) 
+                                                                           at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:789) 
+                                                                           at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:679) 
+</code></pre><h3 id="原因："><a href="#原因：" class="headerlink" title="原因："></a>原因：</h3><ol>
+<li>证书和证书密码不匹配。</li>
+<li>使用了错误的证书。证书类型不对。应该使用bks类型证书加载的确实cer类型的</li>
+</ol>
+<h3 id="解决方法："><a href="#解决方法：" class="headerlink" title="解决方法："></a>解决方法：</h3><p>CLIENT_TRUST_PASSWORD是证书的密码，必须与生成证书步骤里的设置的证书密码一致。如下：</p>
+<pre><code>public static SSLSocketFactory getSSLSocketFactory(Context context) {
+    final String CLIENT_TRUST_PASSWORD = &quot;123456&quot;;//信任证书密码，该证书默认密码是changeit
+    final String CLIENT_AGREEMENT = &quot;TLS&quot;;//使用协议
+    final String CLIENT_TRUST_KEYSTORE = &quot;BKS&quot;;
+    SSLContext sslContext = null;
+    // ...
+}
+</code></pre><p>如果是cer类型证书，需要使用生成bks方法重新生成bsk类型证书。</p>
+<h2 id="坑2：java-io-IOException-Hostname-‘xx-com’-was-not-verified"><a href="#坑2：java-io-IOException-Hostname-‘xx-com’-was-not-verified" class="headerlink" title="坑2：java.io.IOException: Hostname ‘xx.com’ was not verified"></a>坑2：java.io.IOException: Hostname ‘xx.com’ was not verified</h2><h3 id="原因：-1"><a href="#原因：-1" class="headerlink" title="原因："></a>原因：</h3><p>服务器主机名认证失败</p>
+<h3 id="解决方法：-1"><a href="#解决方法：-1" class="headerlink" title="解决方法："></a>解决方法：</h3><h4 id="1-如果okhttpclient中有hostnameverify的配置，加上一个自定义的HostNameVerify-如下"><a href="#1-如果okhttpclient中有hostnameverify的配置，加上一个自定义的HostNameVerify-如下" class="headerlink" title="1. 如果okhttpclient中有hostnameverify的配置，加上一个自定义的HostNameVerify,如下"></a>1. 如果okhttpclient中有hostnameverify的配置，加上一个自定义的HostNameVerify,如下</h4><pre><code>((HttpsURLConnection) urlConnection).setHostnameVerifier(new HostnameVerifier() {
+  @Override
+  public boolean verify(String hostname, SSLSession session) {
+    return true;
+  }
+});
+</code></pre><h4 id="2-如果不需要HostNameVerify直接不设置就可以。"><a href="#2-如果不需要HostNameVerify直接不设置就可以。" class="headerlink" title="2. 如果不需要HostNameVerify直接不设置就可以。"></a>2. 如果不需要HostNameVerify直接不设置就可以。</h4><pre><code>//.hostnameVerifier(HTTPSUtils.getHostNameVerifier(hostUrls)) 注释掉这句代码
+</code></pre><h2 id="坑3：javax-net-ssl-SSLPeerUnverifiedException"><a href="#坑3：javax-net-ssl-SSLPeerUnverifiedException" class="headerlink" title="坑3：javax.net.ssl.SSLPeerUnverifiedException"></a>坑3：javax.net.ssl.SSLPeerUnverifiedException</h2><h3 id="原因：-2"><a href="#原因：-2" class="headerlink" title="原因："></a>原因：</h3><p>SSL链接时主机名验证失败</p>
+<h3 id="解决方法：-2"><a href="#解决方法：-2" class="headerlink" title="解决方法："></a>解决方法：</h3><pre><code>//.hostnameVerifier(HTTPSUtils.getHostNameVerifier(hostUrls)) 注释掉这句代码
+</code></pre><h2 id="坑4：javax-net-ssl-SSLHandshakeException-java-security-cert-CertPathValidatorException-Trust-anchor-for-cert"><a href="#坑4：javax-net-ssl-SSLHandshakeException-java-security-cert-CertPathValidatorException-Trust-anchor-for-cert" class="headerlink" title="坑4：javax.net.ssl.SSLHandshakeException: java.security.cert.CertPathValidatorException: Trust anchor for cert"></a>坑4：javax.net.ssl.SSLHandshakeException: java.security.cert.CertPathValidatorException: Trust anchor for cert</h2><pre><code>javax.net.ssl.SSLHandshakeException: java.security.cert.CertPathValidatorException: Trust anchor for cert
+at com.android.org.conscrypt.OpenSSLSocketImpl.startHandshake(OpenSSLSocketImpl.java:333)
+at okhttp3.internal.io.RealConnection.connectTls(RealConnection.java:239)
+at okhttp3.internal.io.RealConnection.establishProtocol(RealConnection.java:196)
+at okhttp3.internal.io.RealConnection.buildConnection(RealConnection.java:171)
+at okhttp3.internal.io.RealConnection.connect(RealConnection.java:111)
+at okhttp3.internal.http.StreamAllocation.findConnection(StreamAllocation.java:187)
+at okhttp3.internal.http.StreamAllocation.findHealthyConnection(StreamAllocation.java:123)
+at okhttp3.internal.http.StreamAllocation.newStream(StreamAllocation.java:93)
+at okhttp3.internal.http.HttpEngine.connect(HttpEngine.java:296)
+at okhttp3.internal.http.HttpEngine.sendRequest(HttpEngine.java:248)
+at okhttp3.RealCall.getResponse(RealCall.java:243)
+at okhttp3.RealCall$ApplicationInterceptorChain.proceed(RealCall.java:201)
+at okhttp3.logging.HttpLoggingInterceptor.intercept(HttpLoggingInterceptor.java:212)
+at okhttp3.RealCall$ApplicationInterceptorChain.proceed(RealCall.java:190)
+at okhttp3.RealCall.getResponseWithInterceptorChain(RealCall.java:163)
+at okhttp3.RealCall.execute(RealCall.java:57)
+at retrofit2.OkHttpCall.execute(OkHttpCall.java:174)
+at retrofit2.adapter.rxjava.RxJavaCallAdapterFactory$RequestArbiter.request(RxJavaCallAdapterFactory.
+at rx.internal.operators.OperatorSubscribeOn$1$1$1.request(OperatorSubscribeOn.java:80)
+at rx.Subscriber.setProducer(Subscriber.java:211)
+at rx.internal.operators.OperatorSubscribeOn$1$1.setProducer(OperatorSubscribeOn.java:76)
+at rx.Subscriber.setProducer(Subscriber.java:205)
+at retrofit2.adapter.rxjava.RxJavaCallAdapterFactory$CallOnSubscribe.call(RxJavaCallAdapterFactory.ja
+at retrofit2.adapter.rxjava.RxJavaCallAdapterFactory$CallOnSubscribe.call(RxJavaCallAdapterFactory.ja
+at rx.internal.operators.OnSubscribeLift.call(OnSubscribeLift.java:50)
+at rx.internal.operators.OnSubscribeLift.call(OnSubscribeLift.java:30)
+at rx.Observable.unsafeSubscribe(Observable.java:8666)
+at rx.internal.operators.OperatorSubscribeOn$1.call(OperatorSubscribeOn.java:94)
+at rx.internal.schedulers.CachedThreadScheduler$EventLoopWorker$1.call(CachedThreadScheduler.java:220
+at rx.internal.schedulers.ScheduledAction.run(ScheduledAction.java:55)
+at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:423)
+at java.util.concurrent.FutureTask.run(FutureTask.java:237)
+at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecut
+at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1113)
+at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:588)
+at java.lang.Thread.run(Thread.java:818)
+Caused by: java.security.cert.CertificateException: java.security.cert.CertPathValidatorException: Trust 
+at com.android.org.conscrypt.TrustManagerImpl.checkTrusted(TrustManagerImpl.java:324)
+at com.android.org.conscrypt.TrustManagerImpl.checkServerTrusted(TrustManagerImpl.java:225)
+at com.android.org.conscrypt.Platform.checkServerTrusted(Platform.java:115)
+at com.android.org.conscrypt.OpenSSLSocketImpl.verifyCertificateChain(OpenSSLSocketImpl.java:571)
+at com.android.org.conscrypt.NativeCrypto.SSL_do_handshake(Native Method)
+at com.android.org.conscrypt.OpenSSLSocketImpl.startHandshake(OpenSSLSocketImpl.java:329)
+... 35 more
+Caused by: java.security.cert.CertPathValidatorException: Trust anchor for certification path not found.
+</code></pre><h3 id="原因：-3"><a href="#原因：-3" class="headerlink" title="原因："></a>原因：</h3><p>使用了错误的证书。证书验证失败。</p>
+<h3 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h3><p>重新生成证书</p>
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>之前我是看的Tamic的做法，不能走通，不推荐使用它的那种做法。如果是使用它的那种做法，出现错误，请按照本文的做法，使用HTTPS。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="http://www.cnblogs.com/lancer-ryn/p/5869696.html" target="_blank" rel="noopener">http://www.cnblogs.com/lancer-ryn/p/5869696.html</a></p>
+<p><a href="http://www.jianshu.com/p/9a6c204616d2" target="_blank" rel="noopener">http://www.jianshu.com/p/9a6c204616d2</a></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/12/WebView和H5交互/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sparky">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/logo_s.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sparky">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/01/12/WebView和H5交互/" itemprop="url">Android webview和H5交互</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-12T09:59:19+08:00">
+                2018-01-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="Android-webview和H5交互"><a href="#Android-webview和H5交互" class="headerlink" title="Android webview和H5交互"></a>Android webview和H5交互</h1><h2 id="1-WebView加载页面"><a href="#1-WebView加载页面" class="headerlink" title="1. WebView加载页面"></a>1. WebView加载页面</h2><p>webview可以加载本地和网络页面,根据html的文件位置,有不同的写法.</p>
+<pre><code>mWebView.loadUrl(&quot;www.baidu.com&quot;);
+mWebView.loadUrl(&quot;file:///android_res/test.html&quot;);
+</code></pre><p>通常情况下,webview会重新设置webchromeclient,以便在本应用内实现页面跳转.</p>
+<pre><code>mWebView.setWebViewClient(new WebViewClient() {
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            mWebView.loadUrl(url);
+            return true;
+        }
+    });
+</code></pre><p>另外,要实现本文的与h5交互必须允许使用js接口,在实际开发中,一般都要加上这一句.</p>
+<pre><code>WebSettings settings = mWebView.getSettings();
+settings.setJavaScriptEnabled(true);
+</code></pre><h2 id="2-WebView调用js方法"><a href="#2-WebView调用js方法" class="headerlink" title="2. WebView调用js方法"></a>2. WebView调用js方法</h2><p>调用js方法有两种情况: 如果调用js的无返回值方法, 可以直接使用load方法</p>
+<pre><code>mWebView.loadUrl(&quot;javascript:do()&quot;);
+</code></pre><p>如果要调用有返回值方法,需要调用evaluatjavascript方法</p>
+<pre><code>mWebView.evaluateJavascript(&quot;sum(1,2)&quot;, new ValueCallback&lt;String&gt;() {
+        @Override
+        public void onReceiveValue(String value) {
+            Toast.makeText(ViewPagerGalleryDemoActivity.this, &quot;value = &quot; + value, Toast.LENGTH_SHORT).show();
+        }
+    });
+</code></pre><p> js代码如下:</p>
+<pre><code> &lt;script type=&quot;text/javascript&quot;&gt;
+    function sum(a,b){
+    return a+b;
+    }
+    function do(){
+    document.getElementById(&quot;p&quot;).innerHTML=&quot;hello world&quot;;
+    }
+&lt;/script&gt;
+</code></pre><h2 id="3-js调用Android方法"><a href="#3-js调用Android方法" class="headerlink" title="3. js调用Android方法"></a>3. js调用Android方法</h2><p>需要在Android中定义javascriptinterface接口和声明</p>
+<ol>
+<li><p>首先要添加一个类和方法,并且用javascriptinterface</p>
+<p> public class TestJavaScriptInterface {</p>
+<pre><code>@JavascriptInterface
+private String testJavaScriptInterface () {
+    return &quot;hello javascript&quot;
+}
+</code></pre><p> }</p>
+</li>
+<li><p>打开javascriptinterface给h5的开关</p>
+<pre><code>mWebView.addJavascriptInterface(new TestJavaScriptInterface(), &quot;android&quot;);
+</code></pre></li>
+<li><p>js代码如下:</p>
+</li>
+</ol>
+<pre><code>&lt;script type=&quot;text/javascript&quot;&gt;
+function s(){
+    //调用Java的back()方法
+    var result =window.android.testJavaScriptInterface();
+    document.getElementById(&quot;p&quot;).innerHTML=result;
+}
+&lt;/script&gt;
+</code></pre>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/02/adb/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sparky">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/logo_s.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sparky">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/01/02/adb/" itemprop="url">ADB总结</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-02T14:17:15+08:00">
+                2018-01-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="adb总结"><a href="#adb总结" class="headerlink" title="adb总结"></a>adb总结</h2><blockquote>
+<p>什么是adb，c/s架构，adb命令分为3种</p>
+</blockquote>
+<p>adb命令是程序自带的一些命令，adb shell是调用Android系统中的命令，这些系统是放在system/bin目录下</p>
+<h4 id="adb命令"><a href="#adb命令" class="headerlink" title="adb命令"></a>adb命令</h4><h6 id="adb-devices"><a href="#adb-devices" class="headerlink" title="adb devices"></a>adb devices</h6><h6 id="adb-get-state-device-offline-unknown"><a href="#adb-get-state-device-offline-unknown" class="headerlink" title="adb get-state:device,offline,unknown"></a><em>adb get-state:device,offline,unknown</em></h6><h6 id="adb-kill-server-adb-start-srevre"><a href="#adb-kill-server-adb-start-srevre" class="headerlink" title="adb kill-server,adb start-srevre"></a>adb kill-server,adb start-srevre</h6><h6 id="adb-bugreport-打印dumpsys-dumpstate-logcat的输出，分析错误-可以和logcat一样重定向到文件中"><a href="#adb-bugreport-打印dumpsys-dumpstate-logcat的输出，分析错误-可以和logcat一样重定向到文件中" class="headerlink" title="adb bugreport 打印dumpsys,dumpstate,logcat的输出，分析错误,可以和logcat一样重定向到文件中"></a><em>adb bugreport 打印dumpsys,dumpstate,logcat的输出，分析错误,可以和logcat一样重定向到文件中</em></h6><h6 id="adb-pull-adb-push"><a href="#adb-pull-adb-push" class="headerlink" title="adb pull,adb push"></a>adb pull,adb push</h6><h6 id="adb-install-adb-uninstall"><a href="#adb-install-adb-uninstall" class="headerlink" title="adb install, adb uninstall"></a>adb install, adb uninstall</h6><h6 id="adb-root-adb-remount-获取-root-权限，并挂载系统文件系统为可读写状态"><a href="#adb-root-adb-remount-获取-root-权限，并挂载系统文件系统为可读写状态" class="headerlink" title="adb root, adb remount 获取 root 权限，并挂载系统文件系统为可读写状态"></a><em>adb root, adb remount</em> 获取 root 权限，并挂载系统文件系统为可读写状态</h6><h6 id="adb-reboot-bootloader-重启设备，进入-fastboot-模式，同-adb-reboot-bootloader-命令"><a href="#adb-reboot-bootloader-重启设备，进入-fastboot-模式，同-adb-reboot-bootloader-命令" class="headerlink" title="adb reboot bootloader , 重启设备，进入 fastboot 模式，同 adb reboot-bootloader 命令"></a><em>adb reboot</em> bootloader , 重启设备，进入 fastboot 模式，同 adb reboot-bootloader 命令</h6><h6 id="recovery-重启设备，进入-recovery-模式，经常刷机的同学比较熟悉这个模式"><a href="#recovery-重启设备，进入-recovery-模式，经常刷机的同学比较熟悉这个模式" class="headerlink" title="recovery , 重启设备，进入 recovery 模式，经常刷机的同学比较熟悉这个模式"></a>recovery , 重启设备，进入 recovery 模式，经常刷机的同学比较熟悉这个模式</h6><h6 id="adb-forward-将-宿主机上的某个端口重定向到设备的某个端口"><a href="#adb-forward-将-宿主机上的某个端口重定向到设备的某个端口" class="headerlink" title="adb forward 将 宿主机上的某个端口重定向到设备的某个端口"></a><em>adb forward</em> 将 宿主机上的某个端口重定向到设备的某个端口</h6><h6 id="adb-connect-连接远程Android设备"><a href="#adb-connect-连接远程Android设备" class="headerlink" title="adb connect 连接远程Android设备"></a><em>adb connect</em> 连接远程Android设备</h6><p>// 根据TAG和级别过滤日志输出</p>
+<h6 id="adb-logcat"><a href="#adb-logcat" class="headerlink" title="adb logcat"></a><em>adb logcat</em></h6><p>adb logcat [-s] [ClassName:[PREVISOUS]] [*:[PREVIOUS]]</p>
+<pre><code>adb logcat // 直接输出的终端
+adb logcat &gt; c:/log.txt // 保存到文件
+adb logcat ActivityManager:I PowerManager:D *:S
+adb logcat *:W // 显示所有优先级大于等于“warning”的日志
+ adb logcat -s ActivityManager
+</code></pre><p>logcat命令列表:</p>
+<pre><code>-d 将日志显示到控制台后退出
+-c 清理已经存在的目录
+-f &lt;filename&gt; 将日志输出到文件
+-v &lt;format&gt; 设置日志输出格式控制输出字段，格式如下，默认是brief格式
+    brief--显示优先级/标记和原始进程PID
+    process--仅显示进程PID
+    tag--仅显示优先级/标记
+    thread--仅显示进程：线程和优先级/标记
+    raw--显示原始的日志信息，调用时间，优先级/标记，PID
+    time--显示日期，调用时间，优先级标记/pid
+    long--显示所有的元数据并用空行分割消息内容
+-b &lt;buffer&gt; 加载一个可使用的日志缓冲区供查看，默认是main
+    radio--查看包含在无线/电话相关的缓冲区信息
+    events--查看事件相关的消息
+    main--查看主缓冲区
+
+adb logcat -f c:/log.txt
+adb logcat -v thread // 使用thread输出格式
+adblogcat -b radio
+</code></pre><h4 id="adb-shell命令"><a href="#adb-shell命令" class="headerlink" title="adb shell命令"></a>adb shell命令</h4><p>/system/bin下或者sdk sources/android-20/com/android/commands</p>
+<h5 id="pm"><a href="#pm" class="headerlink" title="[pm]"></a>[pm]</h5><h6 id="adb-shell-pm-list-package-s-3-f-i-FILTER"><a href="#adb-shell-pm-list-package-s-3-f-i-FILTER" class="headerlink" title="adb shell pm list package [-s|-3|-f|-i] FILTER"></a>adb shell pm list package [-s|-3|-f|-i] FILTER</h6><pre><code>adb shell pm list package -i
+</code></pre><h6 id="adb-shell-pm-path-PATH"><a href="#adb-shell-pm-path-PATH" class="headerlink" title="adb shell pm path PATH"></a>adb shell pm path PATH</h6><pre><code>adb shell pm path com.tencent.mobileqq
+</code></pre><h6 id="adb-shell-pm-list-instrumentation"><a href="#adb-shell-pm-list-instrumentation" class="headerlink" title="adb shell pm list instrumentation"></a>adb shell pm list instrumentation</h6><h6 id="adb-shell-pm-dump"><a href="#adb-shell-pm-dump" class="headerlink" title="adb shell pm dump"></a>adb shell pm dump</h6><pre><code>adb shell pm dump com.tencent.mobileqq
+</code></pre><h6 id="adb-shell-pm-install-uninstall"><a href="#adb-shell-pm-install-uninstall" class="headerlink" title="adb shell pm install/uninstall"></a>adb shell pm install/uninstall</h6><h6 id="adb-shell-pm-clear"><a href="#adb-shell-pm-clear" class="headerlink" title="adb shell pm clear"></a>adb shell pm clear</h6><h6 id="adb-shell-pm-set-install-location-get-install-location"><a href="#adb-shell-pm-set-install-location-get-install-location" class="headerlink" title="adb shell pm set-install-location/get-install-location"></a>adb shell pm set-install-location/get-install-location</h6><h5 id="am"><a href="#am" class="headerlink" title="[am]"></a>[am]</h5><h6 id="adb-shell-am-start-n-S-W-a-PACKAGENAME"><a href="#adb-shell-am-start-n-S-W-a-PACKAGENAME" class="headerlink" title="adb shell am start [-n|-S|-W|-a] PACKAGENAME"></a>adb shell am start [-n|-S|-W|-a] PACKAGENAME</h6><pre><code>adb shell am start -n com.android.camera/.Camera
+</code></pre><h6 id="adb-shell-am-force-stop-PACKAGENAME"><a href="#adb-shell-am-force-stop-PACKAGENAME" class="headerlink" title="adb shell am force-stop [PACKAGENAME]"></a>adb shell am force-stop [PACKAGENAME]</h6><h6 id="adb-shell-am-startservice-CLASSNAME"><a href="#adb-shell-am-startservice-CLASSNAME" class="headerlink" title="adb shell am startservice [CLASSNAME]"></a>adb shell am startservice [CLASSNAME]</h6><h6 id="adb-shell-am-broadcast-CLASSNAME"><a href="#adb-shell-am-broadcast-CLASSNAME" class="headerlink" title="adb shell am broadcast [CLASSNAME]"></a>adb shell am broadcast [CLASSNAME]</h6><h6 id="adb-shell-am-monitor"><a href="#adb-shell-am-monitor" class="headerlink" title="adb shell am monitor"></a>adb shell am monitor</h6><h6 id="adb-shell-am-instrument"><a href="#adb-shell-am-instrument" class="headerlink" title="adb shell am instrument"></a>adb shell am instrument</h6><h5 id="input"><a href="#input" class="headerlink" title="[input]"></a>[input]</h5><h6 id="adb-shell-input-text-TEXT"><a href="#adb-shell-input-text-TEXT" class="headerlink" title="adb shell input text [TEXT]"></a>adb shell input text [TEXT]</h6><h6 id="adb-shell-input-keyevent-KEYCODE"><a href="#adb-shell-input-keyevent-KEYCODE" class="headerlink" title="adb shell input keyevent [KEYCODE]"></a>adb shell input keyevent [KEYCODE]</h6><h6 id="adb-shell-input-tap-X-Y"><a href="#adb-shell-input-tap-X-Y" class="headerlink" title="adb shell input tap [X Y]"></a>adb shell input tap [X Y]</h6><h6 id="adb-shell-input-swipe-X0-Y0-X1-Y1"><a href="#adb-shell-input-swipe-X0-Y0-X1-Y1" class="headerlink" title="adb shell input swipe [X0 Y0 X1 Y1]"></a>adb shell input swipe [X0 Y0 X1 Y1]</h6><h5 id="screencap-screenrecord"><a href="#screencap-screenrecord" class="headerlink" title="[screencap|screenrecord]"></a>[screencap|screenrecord]</h5><h6 id="adb-shell-screencap-p-PATH"><a href="#adb-shell-screencap-p-PATH" class="headerlink" title="adb shell screencap -p [PATH]"></a>adb shell screencap -p [PATH]</h6><h6 id="adb-shell-screenrecord-PATH"><a href="#adb-shell-screenrecord-PATH" class="headerlink" title="adb shell screenrecord [PATH]"></a>adb shell screenrecord [PATH]</h6><h5 id="UI-automator"><a href="#UI-automator" class="headerlink" title="[UI automator]"></a>[UI automator]</h5><h6 id="adb-shell-uiautomator-runtest-dump"><a href="#adb-shell-uiautomator-runtest-dump" class="headerlink" title="adb shell uiautomator [runtest|dump]"></a>adb shell uiautomator [runtest|dump]</h6><h5 id="ime"><a href="#ime" class="headerlink" title="[ime]"></a>[ime]</h5><h6 id="adb-shell-ime-list-s"><a href="#adb-shell-ime-list-s" class="headerlink" title="adb shell ime list -s"></a>adb shell ime list -s</h6><h6 id="adb-shell-ime-set-INPUTMETHOD"><a href="#adb-shell-ime-set-INPUTMETHOD" class="headerlink" title="adb shell ime set [INPUTMETHOD]"></a>adb shell ime set [INPUTMETHOD]</h6><h5 id="wm"><a href="#wm" class="headerlink" title="[wm]"></a>[wm]</h5><h6 id="adb-shell-wm-size"><a href="#adb-shell-wm-size" class="headerlink" title="adb shell wm size"></a>adb shell wm size</h6><h5 id="monkey"><a href="#monkey" class="headerlink" title="[monkey]"></a>[monkey]</h5><p><a href="http://xuxu1988.com/2015/05/14/2015-05-02-Monkey/" target="_blank" rel="noopener">Android Monkey的用法</a></p>
+<h5 id="settings"><a href="#settings" class="headerlink" title="[settings]"></a>[settings]</h5><p>修改系统设置<br><a href="http://testerhome.com/topics/1993" target="_blank" rel="noopener">探究下 Android4.2 中新增的 settings 命令</a></p>
+<h5 id="dumpsys"><a href="#dumpsys" class="headerlink" title="[dumpsys]"></a>[dumpsys]</h5><p><a href="http://blog.csdn.net/zhoumushui/article/details/49175097" target="_blank" rel="noopener">参考1</a></p>
+<p><a href="https://www.cnblogs.com/JianXu/p/5376642.html" target="_blank" rel="noopener">参考2</a></p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>package</td>
+<td>包查询</td>
+</tr>
+<tr>
+<td>activity</td>
+<td>所有activity信息</td>
+</tr>
+<tr>
+<td>connectivity</td>
+<td>网络连接</td>
+</tr>
+<tr>
+<td>netpolicy</td>
+<td>网络策略</td>
+</tr>
+<tr>
+<td>netstats</td>
+<td>网络状态</td>
+</tr>
+<tr>
+<td>wifi</td>
+<td>wifi信息</td>
+</tr>
+<tr>
+<td>network_manager</td>
+<td>网络管理</td>
+</tr>
+<tr>
+<td>account</td>
+<td>账号信息</td>
+</tr>
+<tr>
+<td>alarm</td>
+<td>闹钟信息</td>
+</tr>
+<tr>
+<td>meminfo</td>
+<td>内存信息</td>
+</tr>
+<tr>
+<td>cpuinfo</td>
+<td>cpu使用情况</td>
+</tr>
+<tr>
+<td>gfxinfo</td>
+<td>帧率信息</td>
+</tr>
+<tr>
+<td>display</td>
+<td>显示</td>
+</tr>
+<tr>
+<td>power</td>
+<td>电源</td>
+</tr>
+<tr>
+<td>batterystats</td>
+<td>电池状态</td>
+</tr>
+<tr>
+<td>battery</td>
+<td>电池</td>
+</tr>
+<tr>
+<td>batteryinfo $package_name</td>
+<td>电量信息及CPU使用时长</td>
+</tr>
+<tr>
+<td>diskstats</td>
+<td>磁盘相关信息</td>
+</tr>
+<tr>
+<td>usagestats</td>
+<td>每个界面的启动时间</td>
+</tr>
+<tr>
+<td>statusbar</td>
+<td>状态栏</td>
+</tr>
+<tr>
+<td>alarm</td>
+<td>闹钟</td>
+</tr>
+<tr>
+<td>location</td>
+<td>位置</td>
+</tr>
+<tr>
+<td>window</td>
+<td>窗口</td>
+</tr>
+</tbody>
+</table>
+<h5 id="log"><a href="#log" class="headerlink" title="[log]"></a>[log]</h5><pre><code>adb shell log [-p PREVIOUS] [-t TAG] [MESSAGE]
+</code></pre><h5 id="getprop"><a href="#getprop" class="headerlink" title="[getprop]"></a>[getprop]</h5><p>查看Android设备的参数信息</p>
+<pre><code>adb shell getprop [key]
+</code></pre><h4 id="linux命令"><a href="#linux命令" class="headerlink" title="linux命令"></a>linux命令</h4><pre><code>// 常用命令
+cat,cd,chmod,cp,data,df,du,grep,kill,ln,ls,lsof,netstat,ping,ps,rm,rmdir,top,touch,&gt;,&gt;&gt;,|
+</code></pre>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/27/EPUB/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1687,518 +2552,6 @@ public static WifiConfiguration getWifiConfig (Context context, String ssid) {
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/25/如何阅读开源项目/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sparky">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/logo_s.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Sparky">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/10/25/如何阅读开源项目/" itemprop="url">Android如何阅读开源项目源代码</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-25T08:12:46+08:00">
-                2017-10-25
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="Android如何阅读开源项目源代码"><a href="#Android如何阅读开源项目源代码" class="headerlink" title="Android如何阅读开源项目源代码"></a>Android如何阅读开源项目源代码</h1><p>开源项目一般分为完整项目和第三方类库，对于完整项目主要分析项目架构，引用第三方类库，总体代码风格等，分析第三方类库主要集中在功能和实现思路，设计思想等。</p>
-<p>// 了解功能，考虑实现方式</p>
-<h4 id="1-总-—-功能了解"><a href="#1-总-—-功能了解" class="headerlink" title="1 总 —- 功能了解"></a>1 总 —- 功能了解</h4><p>了解项目功能(Sample 和文档)以及主要分为几个大块。另外明白你的需求，比如 PullToRefresh 的下拉实现。<br>PS：<br>（1）大家可以自己先想想如果是自己会怎么去实现这个项目，或许看源码过程中会发现思想碰撞。<br>（2）如果时间比较紧，可以先 Google 一些该项目相关的文档结合代码看看，帮助快速掌握，不过网上分析文章参差不齐，需谨慎。</p>
-<p>// 分析项目代码目录结构 –&gt; 核心类 –&gt; 核心方法 –&gt; 找到分析重心</p>
-<h4 id="2-分-—-详细设计"><a href="#2-分-—-详细设计" class="headerlink" title="2 分 —- 详细设计"></a>2 分 —- 详细设计</h4><p>这里正式开始代码分析，分析过程中如果脑子记不住，多动手记下主要类、函数等作用<br>(1) 入口对完整 App 来说就是 Manifest 找到入口 Activity，对于工具库从调用接口中判断入口类。然后在 IDE 中一步步深入即可。PS：一般不错的开源项目规范都比较好，类、函数、变量从名字上就可以了解作用，所以如果需要快速掌握原理的话看觉得是重点的函数即可。<br>(2) 核心类在上面的一步步深入过程中已经接触了不少类，大致了解各个类的主要作用</p>
-<p>// 分析重心，分析流程</p>
-<h4 id="3-总-—-总体设计"><a href="#3-总-—-总体设计" class="headerlink" title="3 总 —- 总体设计"></a>3 总 —- 总体设计</h4><p>(1) 功能流程图上面 2-(1) 的过程完成后已经大致了解项目的流程，不费事的话可以简单画下流程及相关类、函数。如 Retrofit、Volley 的请求处理流程，Android-Universal-Image-Loader 的图片处理流程图。<br>(2) 总体设计整个库分为哪些模块及模块之间的调用关系。如大多数图片缓存会分为 Loader 和 Processer 等模块。</p>
-<p>// 顺序分析</p>
-<h4 id="4-回顾"><a href="#4-回顾" class="headerlink" title="4 回顾"></a>4 回顾</h4><p>这时候从 3-2-1（总体设计-&gt;流程图-&gt;详细设计-&gt;功能介绍）<br>反序看，大致就能了解作者最初是怎么设计的了对于快速分析可以走 1-2(1)-2(2)-3(1) 的步骤。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/25/View 事件传递/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sparky">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/logo_s.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Sparky">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/10/25/View 事件传递/" itemprop="url">View事件传递</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-25T08:12:46+08:00">
-                2017-10-25
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="View事件传递机制"><a href="#View事件传递机制" class="headerlink" title="View事件传递机制"></a>View事件传递机制</h1><h4 id="基础概念"><a href="#基础概念" class="headerlink" title="基础概念"></a>基础概念</h4><ol>
-<li>Android中的touch事件都被封装到TouchEvent对象中，包括触摸的时间，位置，动作等</li>
-<li>Touch事件的类型有ACTION_DOWN,ACTION_MOVE,ACTION_UP,ACTION_CANCEL等。每个事件都是以ACTION_DOWN开始，以ACTION_UP结束。</li>
-<li>对事件的处理有三种，传递，拦截，消费，分别是dispatchTouchEvent(), onInterceptTouchEvent(),onTouchEvent()和onTouchListener</li>
-</ol>
-<h4 id="传递流程"><a href="#传递流程" class="headerlink" title="传递流程"></a>传递流程</h4><ol>
-<li>事件都是从activity.dispatchTouchEvent()开始的，如果没有被拦截就会一直走view的diapathTouchEvent(),从最上层的ViewGroup一直向下传递到最下层的子View,最后子View可以通过onTouch()消费掉事件。如果子View没有消费掉事件，那么事件就会向上传递，这时ViewGroup可以消费事件，如果也没有消费的话，最后会走activity.onTouchEvent();</li>
-<li>事件可以被拦截。ViewGroup可以通过onInterceptTouchEvent()阻止其向下传递。</li>
-<li>如果view没有对ACTION_DOWN进行消费，则其他事件不会传递过来。</li>
-<li>onTouchListener优先与onTouchEvent进行消费.</li>
-</ol>
-<p><img src="https://raw.githubusercontent.com/android-cn/android-open-project-analysis/master/tech/touch-event/image/ignorant-view-example.jpg" alt="View不处理事件流程"></p>
-<p><img src="https://raw.githubusercontent.com/android-cn/android-open-project-analysis/master/tech/touch-event/image/interested-view-example.jpg" alt="View处理事件流程"></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/25/Java_多线程/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sparky">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/logo_s.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Sparky">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/10/25/Java_多线程/" itemprop="url">Java 多线程</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-25T08:12:46+08:00">
-                2017-10-25
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="Java-多线程"><a href="#Java-多线程" class="headerlink" title="Java 多线程"></a>Java 多线程</h1><p>线程状态<br><img src="http://upload-images.jianshu.io/upload_images/1689841-383f7101e6588094.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240&amp;_=5479442" alt=""></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/25/Eclipse项目迁移到Android Studio/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sparky">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/logo_s.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Sparky">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/10/25/Eclipse项目迁移到Android Studio/" itemprop="url">Eclipse项目导入Android Studio注意事项</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-25T08:12:46+08:00">
-                2017-10-25
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="Eclipse项目导入Android-Studio注意事项"><a href="#Eclipse项目导入Android-Studio注意事项" class="headerlink" title="Eclipse项目导入Android Studio注意事项:"></a>Eclipse项目导入Android Studio注意事项:</h2><ol>
-<li>如果以前把项目从eclipse导入Android Studio失败过,最好要先删除掉gradle文件(包括build.gradle, gradle文件夹,以及gradlew, gradlew.bat文件)</li>
-<li>如果项目中使用了butterknife,需要删除某些文件,不然会报错:error: duplicate class: class_name$$ViewInjector$$.处理步骤如下:    1：删除eclipse项目中的.apt_generated文件夹和.factorypath文件 2：删除.classpath文件中的节点 3：重新导入到android studio中</li>
-<li>android studio右下角的Gradle Console很重要,如果有gradle编译报错什么的,分析里边的日志基本上都可以得到答案.比如有的文件非法,你扔了一个.key文件到drawable文件夹中,在新版Android Studio中是会报错的,但是Messenges中的log可能是很片面的说检测到文件非法,但是在gradle console中可以看到具体哪一个文件出错,去修改.</li>
-<li>如果有.9图片,最好在这个项目级别的build.gradle文件的android{}中添加节点, 因为有很多时候在eclipse上能用的.9图片在as上不能用,如果不能用,是可以在gradle console中显示log的.Error:Execution failed for task ‘:app:mergeDebugResources’. &gt; Some file crunching failed, see logs for details build gradle issues    <pre><code>aaptOptions {
-    cruncherEnabled false
-    useNewCruncher false
-}
-</code></pre></li>
-<li>如果用到google-play-service,导入到Android Studio后会自动添加远程依赖compile ‘com.google.android.gms:play-services:+’,但是最新的google-play-sercice使用到了appcompat-v7中的属性,可能与项目中的某些value值冲突,报值非法的错误,建议改为compile ‘com.google.android.gms:play-services:7.0.0’</li>
-<li>去掉project.property中的项目依赖,单独去添加module依赖</li>
-<li>文件格式转换,可能运行时报非法字符的错误,只需要在右下角点击UTF-8,选择一个其他格式,弹出窗选择convert,完毕后再次点击XX(编码格式),选择utf-8,弹出窗选择convert,保存,重新编译.</li>
-</ol>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2253,7 +2606,7 @@ public static WifiConfiguration getWifiConfig (Context context, String ssid) {
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">105</span>
+                  <span class="site-state-item-count">109</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

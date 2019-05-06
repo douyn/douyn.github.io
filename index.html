@@ -242,6 +242,782 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/06/注解及aop小结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sparky">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/logo_s.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sparky">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/05/06/注解及aop小结/" itemprop="url">未命名</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-06T20:46:48+08:00">
+                2019-05-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="注解及aop小结"><a href="#注解及aop小结" class="headerlink" title="注解及aop小结"></a>注解及aop小结</h2><p>主要包括三方面的知识</p>
+<ul>
+<li>自定义注解</li>
+<li>aop</li>
+<li>gradle插件开发</li>
+</ul>
+<p>注解主要是了解如何使用元注解定义注解，如何解析注解</p>
+<p>aop的概述及AspectJ的基本用法</p>
+<p>gradle插件开发指的是如何利用gradle自定义plugin在项目中引用</p>
+<p>我们将利用以上三点知识，模仿hugo做一个实战项目</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/06/gradle插件扩展/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sparky">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/logo_s.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sparky">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/05/06/gradle插件扩展/" itemprop="url">未命名</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-06T20:46:48+08:00">
+                2019-05-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="gradle插件扩展"><a href="#gradle插件扩展" class="headerlink" title="gradle插件扩展"></a>gradle插件扩展</h2><p>我们已经学会了定义自定义gradle插件，但是我们还需要定义一些gradle插件里的属性，就像logger一样定义一个enable属性控制是否输出日志    </p>
+<pre><code>logger {
+    enable false
+}
+</code></pre><h4 id="基础用法"><a href="#基础用法" class="headerlink" title="基础用法"></a>基础用法</h4><p>像这样logger就是一个自定义的属性，其实是很简单的</p>
+<pre><code>// 首先需要定义一个类，定义好属性和方法
+class LoogerExtension {
+    def enable = true
+
+    def setMessage(String text) {
+        System.out.println(text)
+    }
+}
+
+class HugoPlugin implements Plugin&lt;Project&gt; {
+    @Override
+    void apply(Project project) {
+        ...
+
+        project.extensions.create(&quot;logger&quot;, LoggerExtension)
+    }
+}
+
+// 然后就可以在gradle中使用了
+logger {
+    enable false 或者 enable = false
+    setMessage &apos;disable&apos; 或者 message &apos;disable&apos;
+}
+</code></pre><h4 id="多个属性"><a href="#多个属性" class="headerlink" title="多个属性"></a>多个属性</h4><p>如果要定义多个属性，例如要发布多平台就需要定义多个类似的属性</p>
+<pre><code>platforms {
+    wandoujia {
+        name = &apos;xxx&apos;
+        api_key = &apos;xxx&apos;
+    }
+
+    xiaomi {
+        name = &apos;xxx&apos;
+        api_key = &apos;xxx&apos;
+    }
+}
+</code></pre><p>首先需要定义属性类</p>
+<pre><code>class PlatformExtension {
+    def name
+    def api_key
+
+    /*
+    需要string的构造函数，否则报错：
+    A problem occurred evaluating project &apos;:aop&apos;.
+    &gt; Could not create an instance of type org.cmdmac.aopplugin.ListExtention.
+       &gt; Could not find any public constructor for class org.cmdmac.aopplugin.ListExtention which accepts parameters [java.lang.String].
+    public PlatformExtension(String n) {
+        this.name = n
+    }
+}
+</code></pre><p>然后在Plugin中添加</p>
+<pre><code>class PlatformPlugin implements Plugin&lt;Project&gt; {
+    @Override
+    void apply(Project porject) {
+        ...
+
+        def platforms = project.container(PlatformExtension)
+        project.extensions.platform = platforms
+    }
+}
+</code></pre><p>使用：</p>
+<pre><code>platforms {
+        wandoujia {
+            name = &apos;xxx&apos;
+            api_key = &apos;xxx&apos;
+        }
+
+        xiaomi {
+            name = &apos;xxx&apos;
+            api_key = &apos;xxx&apos;
+        }
+    }
+</code></pre><h4 id="属性嵌套"><a href="#属性嵌套" class="headerlink" title="属性嵌套"></a>属性嵌套</h4><p>类似这样：</p>
+<pre><code>android{
+    compileSdkVersion 19
+    defaultConfig {
+        applicationId &apos;xxx&apos;
+    }
+}
+</code></pre><p>首先定义Extension</p>
+<pre><code>class AndroidExtension {
+    def Integer compileSdkVerion
+
+    def DefaultConfigExtension defaultConfig
+
+    public AndroidExtension (org.gradle.internal.impldep.org.sonatype.maven.polyglot.groovy.builder.factory.ObjectFactory objectFactory){
+        defaultConfig = objectFactory.newInstance(DefaultConfigExtension)
+    }
+
+    void defaultConfig(Action&lt;? super DefaulConfigExtension&gt; action){
+        action.execute(defaultConfig)
+    }
+
+    class DefaultConfigExtension {
+        def String applicationId
+    }
+}
+</code></pre><p>在Plugin中创建extension</p>
+<pre><code>...
+project.extensions.create(&quot;android&quot;, AndroidExtension, project.objects)
+</code></pre>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/06/aop进阶-gradle插件/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sparky">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/logo_s.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sparky">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/05/06/aop进阶-gradle插件/" itemprop="url">未命名</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-06T20:46:48+08:00">
+                2019-05-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <ol>
+<li><p>variants分两种分别是libraryVariants和applicationVariants</p>
+<pre><code>final def variants = project.android.libraryVariants
+final def variants = project.android.applicationVariants
+</code></pre></li>
+<li><p>如果aop的代码在另外一个module中，那么你的app module也需要添加aspectj的相关依赖，并且aop module的依赖和app module的依赖只有variants不同。</p>
+</li>
+<li>我们要像引用第三方插件那样引用这个包，如果要添加这么多配置的话会很麻烦，所以我们可以开发一个gradle插件，引用插件来配置这些依赖。</li>
+</ol>
+<p>创建groovy项目：(如果是idea的话直接创建groovy项目即可)</p>
+<ol>
+<li>创建module，类型为Android library</li>
+<li>修改module下的java目录为groovy目录</li>
+<li>删除res目录下的所有子文件和目录，并修改res目录名为resources</li>
+<li>在resources下创建META-INF/gradle-plugins/$(plugin-name).properties。例如我们要创建的插件名为com.sparky.plugin,那么在app module下引用就是 apply plugin: ‘com.sparky.plugin’,这里需要定义的文件名就是com.sparky.plugin.properties</li>
+<li>在xx.properties文件下注册plugin文件，对应groovy包下的全包路径类名。例如定义plugin的类为com.dou.plugin.TestPlugin.groovy,则这里要添加implementation-class=com.dou.plugin.TestPlugin</li>
+<li><p>创建plugin文件并编辑，要实现Plugin<project>接口，这些依赖包需要导入</project></p>
+<pre><code>compile gradleApi()
+compile localGroovy()
+implementation &apos;com.android.tools.build:gradle:3.1.2&apos;
+//aspectj需要到的类
+implementation &apos;org.aspectj:aspectjtools:1.8.5&apos;
+</code></pre><blockquote>
+<p>注意: 如果出错一定要仔细看log，例如我plugin文件用到AppPlugin和LibraryPlugin,没有自动导包,上传到maven仓库的时候不会报错，apply plugin之后编译的时候会报错，有日志</p>
+</blockquote>
+</li>
+<li><p>定义maven仓库的task</p>
+<pre><code>apply plugin: &quot;maven&quot;
+group = &apos;com.dou.aopplugin&apos;
+version = &apos;1.0.0&apos;
+
+uploadArchives{
+    repositories{
+        mavenDeployer{
+            repository(url:uri(&quot;../repo&quot;))
+        }
+    }
+}
+</code></pre></li>
+<li><p>项目中引用，注意添加 mavenLocal</p>
+<pre><code>project build.gradle下:
+buildscript{
+    repositories{
+        ...
+        mavenLocal() // 本地maven需要这行，非本地要删除
+        maven{
+            url &quot;/home/dou/work/workspace/demos/aopdemo/repo&quot;
+        }
+    }
+}
+
+dependencies{
+    ...
+    classpath &apos;com.dou.aopplugin:aopplugin:1.0.0&apos;
+}
+</code></pre></li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/06/android aop基础/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sparky">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/logo_s.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sparky">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/05/06/android aop基础/" itemprop="url">未命名</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-06T20:46:48+08:00">
+                2019-05-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="Android-AOP基础"><a href="#Android-AOP基础" class="headerlink" title="Android AOP基础"></a>Android AOP基础</h2><h3 id="AOP和AspectJ"><a href="#AOP和AspectJ" class="headerlink" title="AOP和AspectJ"></a>AOP和AspectJ</h3><p>通过预编译方式或者运行期动态代理实现程序功能的统一维护的一种技术。</p>
+<p>面向对象编程主要用于为同一对象层面的公用行为建模。弱点是不能将公共行为用在多个无关对象之间。而面向切片编程最大的优点就是将公共行为用在不同的对象模块上。</p>
+<p>AspectJ是一种语言来支持aop的，但是他也提供了java的方式使用AspectJ。</p>
+<p><a href="https://blog.csdn.net/vonnie_jade/article/details/68955248" target="_blank" rel="noopener">AspectJ的基本用法</a></p>
+<ul>
+<li>joinpoint </li>
+<li>pointcut</li>
+<li>advice</li>
+</ul>
+<h3 id="使用aop的步骤"><a href="#使用aop的步骤" class="headerlink" title="使用aop的步骤"></a>使用aop的步骤</h3><h4 id="1-添加配置"><a href="#1-添加配置" class="headerlink" title="1. 添加配置"></a>1. 添加配置</h4><p>在module下的build.gradle文件中添加：</p>
+<pre><code>buildscript{
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies{
+        classpath &apos;org.aspectj:aspectjtools:1.8.9&apos;
+        classpath &apos;org.aspectj:aspectjweaver:1.8.9&apos;
+    }
+}
+
+... // 省略
+
+dependencies {
+    ...
+    implementation &apos;org.aspectj:aspectjrt:1.8.9&apos;
+}
+
+... // 省略
+
+import org.aspectj.bridge.IMessage
+import org.aspectj.bridge.MessageHandler
+import org.aspectj.tools.ajc.Main
+final def log = project.logger
+final def variants = project.android.applicationVariants
+
+variants.all { variant -&gt;
+    if (!variant.buildType.isDebuggable()) {
+        log.debug(&quot;Skipping non-debuggable build type &apos;${variant.buildType.name}&apos;.&quot;)
+        return;
+    }
+
+    JavaCompile javaCompile = variant.javaCompile
+    javaCompile.doLast {
+        String[] args = [&quot;-showWeaveInfo&quot;,
+                         &quot;-1.8&quot;,
+                         &quot;-inpath&quot;, javaCompile.destinationDir.toString(),
+                         &quot;-aspectpath&quot;, javaCompile.classpath.asPath,
+                         &quot;-d&quot;, javaCompile.destinationDir.toString(),
+                         &quot;-classpath&quot;, javaCompile.classpath.asPath,
+                         &quot;-bootclasspath&quot;, project.android.bootClasspath.join(File.pathSeparator)]
+        log.debug &quot;ajc args: &quot; + Arrays.toString(args)
+
+        MessageHandler handler = new MessageHandler(true);
+        new Main().run(args, handler);
+        for (IMessage message : handler.getMessages(null, true)) {
+            switch (message.getKind()) {
+                case IMessage.ABORT:
+                case IMessage.ERROR:
+                case IMessage.FAIL:
+                    log.error message.message, message.thrown
+                    break;
+                case IMessage.WARNING:
+                    log.warn message.message, message.thrown
+                    break;
+                case IMessage.INFO:
+                    log.info message.message, message.thrown
+                    break;
+                case IMessage.DEBUG:
+                    log.debug message.message, message.thrown
+                    break;
+            }
+        }
+    }
+}
+</code></pre><h4 id="2-创建切片类"><a href="#2-创建切片类" class="headerlink" title="2. 创建切片类"></a>2. 创建切片类</h4><pre><code>@Aspect
+public class TestAspect {
+
+    @Pointcut(&quot;execution(* com.dou.demo.aop_demo.MainActivity.test(..))&quot;)
+    public void pointcut(){}
+
+    @Around(&quot;pointcut()&quot;)
+    public void test(ProceedingJoinPoint point) throws Throwable{
+        System.out.println(&quot;@test start&quot;);
+        point.proceed();
+        System.out.println(&quot;@test end&quot;);
+    }
+}
+</code></pre><h3 id="实践-对方法进行耗时计算-权限检查"><a href="#实践-对方法进行耗时计算-权限检查" class="headerlink" title="实践(对方法进行耗时计算/权限检查)"></a>实践(对方法进行耗时计算/权限检查)</h3><p>定义annotation</p>
+<pre><code>@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.CLASS)
+public @interface Hugo {
+}
+</code></pre><p>使用注解</p>
+<pre><code>@Hugo
+ private void time_consumer() {
+     for (int i = 0; i &lt; 100; i++){
+         try {
+             Thread.sleep(10);
+         } catch (InterruptedException e) {
+             e.printStackTrace();
+         }
+     }
+ }
+</code></pre><p>定义切片</p>
+<pre><code>@Aspect
+public class HugoAspect {
+    @Pointcut(&quot;execution(@com.dou.demo.aop_demo.Hugo * *(..))&quot;)
+    public void hugo(){}
+
+    @Around(&quot;hugo()&quot;)
+    public void timer(ProceedingJoinPoint point) throws Throwable{
+        System.out.println(&quot;@hugo start&quot;);
+        MethodSignature signature = (MethodSignature) point.getSignature();
+        long starttime = System.currentTimeMillis();
+        point.proceed();
+        long endtime = System.currentTimeMillis();
+        System.out.println(signature.getMethod().getName() + &quot; 方法耗时： &quot; + (endtime - starttime) + &quot; ms&quot;);
+        System.out.println(&quot;@hugo end&quot;);
+    }
+}
+</code></pre><p>重新clean,run</p>
+<p>其它一个实例见源码</p>
+<h3 id="源码"><a href="#源码" class="headerlink" title="源码"></a>源码</h3><p><a href="https://github.com/douyn/aop-demo.git" target="_blank" rel="noopener">aop-demo</a></p>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p><a href="https://blog.csdn.net/innost/article/details/49387395" target="_blank" rel="noopener">深入理解Android之AOP</a></p>
+<p><a href="https://www.jianshu.com/nb/1529181" target="_blank" rel="noopener">Android AOP-North_2016</a></p>
+<p><a href="https://blog.csdn.net/sw5131899/article/details/53885957" target="_blank" rel="noopener">Android进阶系列之AOP面向切面编程</a></p>
+<p><a href="https://blog.csdn.net/vonnie_jade/article/details/68955248" target="_blank" rel="noopener">AspectJ的基本用法</a></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/06/6. 样式处理/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -943,631 +1719,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/06/1. 打开书的流程/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sparky">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/logo_s.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Sparky">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/05/06/1. 打开书的流程/" itemprop="url">未命名</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-06T20:31:21+08:00">
-                2019-05-06
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="FBReader"><a href="#FBReader" class="headerlink" title="FBReader"></a>FBReader</h3><p>FBReader是程序的入口类，程序启动后首先出发FBReader.onCreate方法。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/06/《Android高级进阶》/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sparky">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/logo_s.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Sparky">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/05/06/《Android高级进阶》/" itemprop="url">Android高级进阶（目录结构）</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-06T20:29:37+08:00">
-                2019-05-06
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="Android高级进阶（目录结构）"><a href="#Android高级进阶（目录结构）" class="headerlink" title="Android高级进阶（目录结构）"></a>Android高级进阶（目录结构）</h1><ul>
-<li>基础篇。Android View，动画，support library，gradle，ndk，anr，异步技术，注解，数据序列化和hybrid等。</li>
-<li>系统架构篇。主要包括UI架构，时间总线，编码规范和技术堆栈等。</li>
-<li>经验总结篇。主要包括实际开发中的一些经验总结。64K方法数限制，插件框架，推送原理，app瘦身和crash统计等。</li>
-<li>新技术篇。顾名思义，包括函数式编程，依赖注入，Kotlin，react native，hot fix，aop和Facebook buck等知识点。</li>
-<li>性能优化篇。常见的性能优化手段，包括代码优化，图片优化，电量优化，布局优化，网络优化。</li>
-<li>移动安全篇。主要包括混淆，反编译，秘钥隐藏，加固和如何编译安全的代码。</li>
-<li>工具篇。介绍几个工具，Android studio，stetho，leakcanary，redex等</li>
-<li>测试篇。包括Android单元测试，UI自动化测试，静态代码分析和自动化构建等</li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/06/阅读器标注/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sparky">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/logo_s.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Sparky">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/05/06/阅读器标注/" itemprop="url">未命名</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-06T20:11:39+08:00">
-                2019-05-06
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="阅读器取词标注"><a href="#阅读器取词标注" class="headerlink" title="阅读器取词标注"></a>阅读器取词标注</h2><h4 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h4><p>阅读器sdk一般会给出每一个文字的区域，如果要把需要的取词区域取出，需要将这些文字区域整合起来。</p>
-<ol>
-<li>找到所有的点: 每个文字是一个rect，首先需要将要取词的rect集合取出来</li>
-<li>行内合并: 判断如果是一行就把这一行的rect整合为一个大rect，可以得到几个行rect集合columnRect</li>
-<li>求出拐角点的集合: 分两次遍历columnRect，第一次正序，求出右侧的拐角点。第二次倒叙遍历，求出左侧的拐角点。</li>
-<li>绘制路径: 将这些拐角点连接起来就可以得到所有的文字区域。</li>
-</ol>
-<p>画下划线的话是要求出行rect的底线即可。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/06/FBReader源码分析-menu菜单/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sparky">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/logo_s.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Sparky">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/05/06/FBReader源码分析-menu菜单/" itemprop="url">未命名</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-06T20:11:39+08:00">
-                2019-05-06
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="FBReader源码分析-menu菜单"><a href="#FBReader源码分析-menu菜单" class="headerlink" title="FBReader源码分析-menu菜单"></a>FBReader源码分析-menu菜单</h2><h4 id="1-点击屏幕中部显示菜单流程"><a href="#1-点击屏幕中部显示菜单流程" class="headerlink" title="1. 点击屏幕中部显示菜单流程"></a>1. 点击屏幕中部显示菜单流程</h4><h4 id="2-显示菜单内容"><a href="#2-显示菜单内容" class="headerlink" title="2. 显示菜单内容"></a>2. 显示菜单内容</h4><p>在上一节的分析中我们已经知道，菜单的显示在页面的oncreateoptionmenu中完成的。</p>
-<pre><code>@Override
-public boolean onCreateOptionsMenu(Menu menu) {
-    super.onCreateOptionsMenu(menu);
-
-    setupMenu(menu);
-
-    return true;
-}
-</code></pre><p>这个方法代码很少,知识简单的调用了setupMenu(menu)方法。</p>
-<pre><code>private void setupMenu(Menu menu) {
-    final String menuLanguage = ZLResource.getLanguageOption().getValue();
-    if (menuLanguage.equals(myMenuLanguage)) {
-        return;
-    }
-    myMenuLanguage = menuLanguage;
-
-    menu.clear();
-    fillMenu(menu, MenuData.topLevelNodes());
-    synchronized (myPluginActions) {
-        int index = 0;
-        for (PluginApi.ActionInfo info : myPluginActions) {
-            if (info instanceof PluginApi.MenuActionInfo) {
-                addMenuItem(
-                    menu,
-                    PLUGIN_ACTION_PREFIX + index++,
-                    ((PluginApi.MenuActionInfo)info).MenuItemName
-                );
-            }
-        }
-    }
-
-    refresh();
-}
-</code></pre><p>这个方法中，MenuData.getTopLevelNodes()即是获取菜单条目数据的方法，fillMenu()是遍历这些条目，并调用addMenuItem()将条目设置给Android optionmenu</p>
-<pre><code>private void addMenuItem(Menu menu, String actionId, Integer iconId, String name) {
-    if (name == null) {
-        name = ZLResource.resource(&quot;menu&quot;).getResource(actionId).getValue();
-    }
-    final MenuItem menuItem = menu.add(name);
-    if (iconId != null) {
-        menuItem.setIcon(iconId);
-    }
-    menuItem.setOnMenuItemClickListener(myMenuListener);
-    myMenuItemMap.put(menuItem, actionId);
-}
-</code></pre><p>包括设置name，icon，以及点击事件。其中name是从assert文件中加载的，用的是sax解析。</p>
-<p>回到setmenu方法中，填充完menu会遍历myPluginActions集合，然后将myPluginActions的item添加到menu中。</p>
-<p>在addMenuItem中，会给每个条目设置点击事件，然后将item和actionid键值对保存到myMenuItemMap中。这个mymenulistener就是提供actionidid，然后由myIdToActionMap找到对应的actionid响应点击事件。</p>
-<p>myIdToActionMap添加数据是在ZLApplication.addAction()方法，这个方法的调用有几个地方，1，fbreader.myPluginInfoReceiver.onreceive 2， fbreader.oncreate 3. fbreaderapp的构造方法中。也就是说基本上这些事件都是在应用初始化的时候都定义好了。</p>
-<h4 id="3-设置相关-以设置翻页方式为例"><a href="#3-设置相关-以设置翻页方式为例" class="headerlink" title="3. 设置相关(以设置翻页方式为例)"></a>3. 设置相关(以设置翻页方式为例)</h4><p>在上一节我们分析了菜单条目的加载，主要就是要找到菜单对应的action，我们在fbreader.oncreate方法中发现ActionCode.SHOW_PREFERENCES即为我们要找的阅读设置相关设置</p>
-<pre><code>myFBReaderApp.addAction(ActionCode.SHOW_PREFERENCES, new ShowPreferencesAction(this, myFBReaderApp));
-</code></pre><p>在这个action的run方法中我们发现PreferenceActivity即是我们要找的activity文件。</p>
-<p>在它的父类的oncreate()方法中</p>
-<pre><code>@Override
-protected void onCreate(Bundle bundle) {
-    super.onCreate(bundle);
-
-    // 异常捕捉
-    Thread.setDefaultUncaughtExceptionHandler(new org.geometerplus.zlibrary.ui.android.library.UncaughtExceptionHandler(this));
-
-    // 创建数据库
-    SQLiteCookieDatabase.init(this);
-
-    // 创建preferencescreen
-    myScreen = getPreferenceManager().createPreferenceScreen(this);
-
-    final Intent intent = getIntent();
-    final Uri data = intent.getData();
-    final String screenId;
-    if (Intent.ACTION_VIEW.equals(intent.getAction())
-            &amp;&amp; data != null &amp;&amp; &quot;fbreader-preferences&quot;.equals(data.getScheme())) {
-        screenId = data.getEncodedSchemeSpecificPart();
-    } else {
-        screenId = intent.getStringExtra(SCREEN_KEY);
-    }
-
-    Config.Instance().runOnConnect(new Runnable() {
-        public void run() {
-            // 抽象方法，子类初始化
-            init(intent);
-
-            // 获取要显示的screen
-            final Screen screen = myScreenMap.get(screenId);
-
-            // 设置preferencescreen
-            setPreferenceScreen(screen != null ? screen.myScreen : myScreen);
-        }
-    });
-}
-</code></pre><p>设置页面采用了sharepreference的方式，并且采用过时的方法先获取preferencescreen再设置preferencescreen，这与我们常用的addPreferenceFromResource一样。</p>
-<p>init()方法是抽象方法，具体实现就是PreferenceActivity实现的，这个方法中的代码很多，但是主要做的都是创建各种preference，并把preference添加到preferscreen。</p>
-<h4 id="FBReader默认参数设置"><a href="#FBReader默认参数设置" class="headerlink" title="FBReader默认参数设置"></a>FBReader默认参数设置</h4><p>我们要在项目中使用fbreader的话，必须要对它做自己的处理，例如修改默认字体，默认背景，翻页方式，默认字体大小等等，上一节我们了解了fbreader是如何设置翻页方式的，我们讲到在init方法中会创建很多的preferencescreen，其中翻页的菜单对应的就是scrollingScreen，</p>
-<pre><code>scrollingScreen.addOption(pageTurningOptions.Animation, &quot;animation&quot;);
-scrollingScreen.addPreference(new AnimationSpeedPreference(
-    this,
-    scrollingScreen.Resource,
-    &quot;animationSpeed&quot;,
-    pageTurningOptions.AnimationSpeed
-));
-scrollingScreen.addOption(pageTurningOptions.Horizontal, &quot;horizontal&quot;);
-</code></pre><p>设置翻页的代码就这么多，一眼就能看出来第一行scrollingScreen.addOption(pageTurningOptions.Animation, “animation”);就是我们要找的翻页方式设置，</p>
-<pre><code>public &lt;T extends Enum&lt;T&gt;&gt; Preference addOption(ZLEnumOption&lt;T&gt; option, String key) {
-        return addPreference(
-            new ZLEnumPreference&lt;T&gt;(ZLPreferenceActivity.this, option, Resource.getResource(key))
-        );
-    }
-</code></pre><p>ZLEnumPreference是ListPreference的子类，用于显示列表菜单，相当于现在的radiugroup，option用于设置初始值，key用于加载对应的选项列表。</p>
-<p>我们知道了这个PageTurningOptions对象是用来设置初始值的，然后我们ctrl+鼠标左键看到，这个类是在FBReaderApp中实例化的，</p>
-<pre><code>public class PageTurningOptions {
-public static enum FingerScrollingType {
-    byTap, byFlick, byTapAndFlick
-}
-public final ZLEnumOption&lt;FingerScrollingType&gt; FingerScrolling =
-    new ZLEnumOption&lt;FingerScrollingType&gt;(&quot;Scrolling&quot;, &quot;Finger&quot;, FingerScrollingType.byTapAndFlick);
-
-// 设置默认翻页无动画
-//    public final ZLEnumOption&lt;ZLView.Animation&gt; Animation =
-//        new ZLEnumOption&lt;ZLView.Animation&gt;(&quot;Scrolling&quot;, &quot;Animation&quot;, ZLView.Animation.slide);
-public final ZLEnumOption&lt;ZLView.Animation&gt; Animation =
-    new ZLEnumOption&lt;ZLView.Animation&gt;(&quot;Scrolling&quot;, &quot;Animation&quot;, ZLView.Animation.none);
-public final ZLIntegerRangeOption AnimationSpeed =
-    new ZLIntegerRangeOption(&quot;Scrolling&quot;, &quot;AnimationSpeed&quot;, 1, 10, 7);
-
-public final ZLBooleanOption Horizontal =
-    new ZLBooleanOption(&quot;Scrolling&quot;, &quot;Horizontal&quot;, true);
-public final ZLStringOption TapZoneMap =
-    new ZLStringOption(&quot;Scrolling&quot;, &quot;TapZoneMap&quot;, &quot;&quot;);
-}
-</code></pre><p>所以就可以做如上的修改了。<br>其实打开PageTurningOption所在的目录，这个option目录下还包括ViewOption，ImageOption等，所以很多默认参数修改都可以在这里做。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1622,7 +1773,7 @@ public final ZLStringOption TapZoneMap =
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">105</span>
+                  <span class="site-state-item-count">109</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
